@@ -1,11 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "news_artikel",
+  "collectionName": "news_artikels",
   "info": {
     "singularName": "news-artikel",
     "pluralName": "news-artikels",
-    "displayName": "News-Artikel",
-    "description": "Nachrichten und Artikel des Vereins"
+    "displayName": "News-Artikel"
   },
   "options": {
     "draftAndPublish": true
@@ -14,27 +13,32 @@
   "attributes": {
     "titel": {
       "type": "string",
-      "required": true
+      "required": true,
+      "unique": false
     },
     "inhalt": {
-      "type": "richtext",
+      "type": "blocks",
       "required": true
     },
     "titelbild": {
       "type": "media",
       "multiple": false,
-      "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     },
     "datum": {
       "type": "date",
       "required": true
     },
-    "kategorie": {
+    "kategory": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::kategorie.kategorie",
-      "inversedBy": "newsArtikel"
+      "inversedBy": "news_artikels"
     }
   }
-} 
+}

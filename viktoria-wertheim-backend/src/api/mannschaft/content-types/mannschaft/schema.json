@@ -1,11 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "mannschaften",
+  "collectionName": "mannschafts",
   "info": {
     "singularName": "mannschaft",
-    "pluralName": "mannschaften",
-    "displayName": "Mannschaft",
-    "description": "Mannschaften des Vereins"
+    "pluralName": "mannschafts",
+    "displayName": "Mannschaft"
   },
   "options": {
     "draftAndPublish": true
@@ -20,28 +19,18 @@
     "teamfoto": {
       "type": "media",
       "multiple": false,
-      "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     },
     "trainer": {
-      "type": "string",
-      "required": false
+      "type": "string"
     },
-    "ligazugehoerigkeit": {
-      "type": "string",
-      "required": false
-    },
-    "spieler": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::spieler.spieler",
-      "mappedBy": "mannschaft"
-    },
-    "spiele": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::spiel.spiel",
-      "mappedBy": "mannschaft"
+    "liga": {
+      "type": "string"
     }
   }
-} 
+}

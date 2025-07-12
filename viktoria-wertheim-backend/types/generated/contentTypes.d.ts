@@ -411,15 +411,14 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
 }
 
 export interface ApiKategorieKategorie extends Struct.CollectionTypeSchema {
-  collectionName: 'kategorien';
+  collectionName: 'kategories';
   info: {
-    description: 'Kategorien f\u00FCr News-Artikel';
     displayName: 'Kategorie';
-    pluralName: 'kategorien';
+    pluralName: 'kategories';
     singularName: 'kategorie';
   };
   options: {
-    draftAndPublish: false;
+    draftAndPublish: true;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
@@ -434,7 +433,7 @@ export interface ApiKategorieKategorie extends Struct.CollectionTypeSchema {
     name: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
-    newsArtikel: Schema.Attribute.Relation<
+    news_artikels: Schema.Attribute.Relation<
       'oneToMany',
       'api::news-artikel.news-artikel'
     >;
@@ -446,11 +445,10 @@ export interface ApiKategorieKategorie extends Struct.CollectionTypeSchema {
 }
 
 export interface ApiMannschaftMannschaft extends Struct.CollectionTypeSchema {
-  collectionName: 'mannschaften';
+  collectionName: 'mannschafts';
   info: {
-    description: 'Mannschaften des Vereins';
     displayName: 'Mannschaft';
-    pluralName: 'mannschaften';
+    pluralName: 'mannschafts';
     singularName: 'mannschaft';
   };
   options: {
@@ -460,7 +458,7 @@ export interface ApiMannschaftMannschaft extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    ligazugehoerigkeit: Schema.Attribute.String;
+    liga: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -471,9 +469,7 @@ export interface ApiMannschaftMannschaft extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
     publishedAt: Schema.Attribute.DateTime;
-    spiele: Schema.Attribute.Relation<'oneToMany', 'api::spiel.spiel'>;
-    spieler: Schema.Attribute.Relation<'oneToMany', 'api::spieler.spieler'>;
-    teamfoto: Schema.Attribute.Media<'images'>;
+    teamfoto: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     trainer: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -482,9 +478,8 @@ export interface ApiMannschaftMannschaft extends Struct.CollectionTypeSchema {
 }
 
 export interface ApiNewsArtikelNewsArtikel extends Struct.CollectionTypeSchema {
-  collectionName: 'news_artikel';
+  collectionName: 'news_artikels';
   info: {
-    description: 'Nachrichten und Artikel des Vereins';
     displayName: 'News-Artikel';
     pluralName: 'news-artikels';
     singularName: 'news-artikel';
@@ -497,8 +492,8 @@ export interface ApiNewsArtikelNewsArtikel extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     datum: Schema.Attribute.Date & Schema.Attribute.Required;
-    inhalt: Schema.Attribute.RichText & Schema.Attribute.Required;
-    kategorie: Schema.Attribute.Relation<
+    inhalt: Schema.Attribute.Blocks & Schema.Attribute.Required;
+    kategory: Schema.Attribute.Relation<
       'manyToOne',
       'api::kategorie.kategorie'
     >;
@@ -510,97 +505,10 @@ export interface ApiNewsArtikelNewsArtikel extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     titel: Schema.Attribute.String & Schema.Attribute.Required;
-    titelbild: Schema.Attribute.Media<'images'>;
+    titelbild: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-  };
-}
-
-export interface ApiSpielSpiel extends Struct.CollectionTypeSchema {
-  collectionName: 'spiele';
-  info: {
-    description: 'Spiele der Mannschaften';
-    displayName: 'Spiel';
-    pluralName: 'spiele';
-    singularName: 'spiel';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    auswaertsmannschaft: Schema.Attribute.String & Schema.Attribute.Required;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    datum: Schema.Attribute.DateTime & Schema.Attribute.Required;
-    heimmannschaft: Schema.Attribute.String & Schema.Attribute.Required;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::spiel.spiel'> &
-      Schema.Attribute.Private;
-    mannschaft: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::mannschaft.mannschaft'
-    >;
-    publishedAt: Schema.Attribute.DateTime;
-    toreAuswaerts: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<0>;
-    toreHeim: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<0>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiSpielerSpieler extends Struct.CollectionTypeSchema {
-  collectionName: 'spieler';
-  info: {
-    description: 'Spieler der Mannschaften';
-    displayName: 'Spieler';
-    pluralName: 'spielers';
-    singularName: 'spieler';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    foto: Schema.Attribute.Media<'images'>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::spieler.spieler'
-    > &
-      Schema.Attribute.Private;
-    mannschaft: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::mannschaft.mannschaft'
-    >;
-    nachname: Schema.Attribute.String & Schema.Attribute.Required;
-    position: Schema.Attribute.Enumeration<
-      ['Torwart', 'Abwehr', 'Mittelfeld', 'Sturm']
-    > &
-      Schema.Attribute.Required;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    vorname: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -1117,8 +1025,6 @@ declare module '@strapi/strapi' {
       'api::kategorie.kategorie': ApiKategorieKategorie;
       'api::mannschaft.mannschaft': ApiMannschaftMannschaft;
       'api::news-artikel.news-artikel': ApiNewsArtikelNewsArtikel;
-      'api::spiel.spiel': ApiSpielSpiel;
-      'api::spieler.spieler': ApiSpielerSpieler;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

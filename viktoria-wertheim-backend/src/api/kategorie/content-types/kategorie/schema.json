@@ -1,14 +1,13 @@
 {
   "kind": "collectionType",
-  "collectionName": "kategorien",
+  "collectionName": "kategories",
   "info": {
     "singularName": "kategorie",
-    "pluralName": "kategorien",
-    "displayName": "Kategorie",
-    "description": "Kategorien für News-Artikel"
+    "pluralName": "kategories",
+    "displayName": "Kategorie"
   },
   "options": {
-    "draftAndPublish": false
+    "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
@@ -17,11 +16,11 @@
       "required": true,
       "unique": true
     },
-    "newsArtikel": {
+    "news_artikels": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::news-artikel.news-artikel",
-      "mappedBy": "kategorie"
+      "mappedBy": "kategory"
     }
   }
-} 
+}
