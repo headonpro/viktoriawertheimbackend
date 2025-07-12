@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "spiele",
+  "info": {
+    "singularName": "spiel",
+    "pluralName": "spiele",
+    "displayName": "Spiel",
+    "description": "Spiele der Mannschaften"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "datum": {
+      "type": "datetime",
+      "required": true
+    },
+    "heimmannschaft": {
+      "type": "string",
+      "required": true
+    },
+    "auswaertsmannschaft": {
+      "type": "string",
+      "required": true
+    },
+    "toreHeim": {
+      "type": "integer",
+      "required": false,
+      "default": 0,
+      "min": 0
+    },
+    "toreAuswaerts": {
+      "type": "integer",
+      "required": false,
+      "default": 0,
+      "min": 0
+    },
+    "mannschaft": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::mannschaft.mannschaft",
+      "inversedBy": "spiele"
+    }
+  }
+} 

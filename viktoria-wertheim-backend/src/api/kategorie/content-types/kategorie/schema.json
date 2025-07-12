@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "kategorien",
+  "info": {
+    "singularName": "kategorie",
+    "pluralName": "kategorien",
+    "displayName": "Kategorie",
+    "description": "Kategorien für News-Artikel"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "newsArtikel": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::news-artikel.news-artikel",
+      "mappedBy": "kategorie"
+    }
+  }
+} 
