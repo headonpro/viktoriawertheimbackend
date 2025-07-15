@@ -84,19 +84,19 @@ const TopScorers = () => {
   const displayedScorers = isExpanded ? topScorers : topScorers.slice(0, 3)
 
   return (
-    <AnimatedSection className="px-2 pt-0 pb-8" delay={0.2}>
-      <div className="container max-w-6xl">
-        <h2 className="text-xs font-normal text-gray-600 uppercase tracking-wide mb-4 text-center font-permanent-marker">
+    <AnimatedSection className="px-2 md:px-8 pt-0 pb-8" delay={0.2}>
+      <div className="container max-w-6xl md:max-w-7xl">
+        <h2 className="text-sm md:text-lg font-semibold text-gray-600 uppercase tracking-wide mb-4 md:mb-6 text-center">
           Torschützen König
         </h2>
         
         <div 
-          className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden cursor-pointer hover:bg-white/50 transition-all duration-300"
+          className="bg-white/40 backdrop-blur-sm rounded-xl md:rounded-2xl border border-white/20 overflow-hidden cursor-pointer hover:bg-white/50 transition-all duration-300 md:shadow-lg md:hover:shadow-xl"
           onClick={() => setIsExpanded(!isExpanded)}
         >
           {/* Header */}
-          <div className="bg-white/20 px-4 py-3 border-b border-white/20">
-            <div className="grid grid-cols-12 gap-2 text-xs font-medium text-gray-600 uppercase tracking-wide">
+          <div className="bg-white/20 px-4 md:px-8 py-3 md:py-4 border-b border-white/20">
+            <div className="grid grid-cols-12 gap-2 md:gap-4 text-xs md:text-sm font-medium text-gray-600 uppercase tracking-wide">
               <div className="col-span-1">#</div>
               <div className="col-span-7">Spieler</div>
               <div className="col-span-2 text-center">Spiele</div>
@@ -109,9 +109,9 @@ const TopScorers = () => {
             {displayedScorers.map((scorer, index) => (
               <div
                 key={scorer.position}
-                className={`px-4 py-3 transition-all duration-300 relative overflow-hidden ${
+                className={`px-4 md:px-8 py-3 md:py-4 transition-all duration-300 relative overflow-hidden ${
                   scorer.position === 1 
-                    ? 'bg-viktoria-blue-light rounded-lg hover:bg-viktoria-blue hover:shadow-lg hover:shadow-viktoria-blue/20 hover:scale-[1.02] cursor-pointer' 
+                    ? 'bg-viktoria-blue-light rounded-lg md:rounded-xl hover:bg-viktoria-blue hover:shadow-lg hover:shadow-viktoria-blue/20 hover:scale-[1.02] cursor-pointer' 
                     : 'hover:bg-white/30'
                 }`}
               >
@@ -161,13 +161,13 @@ const TopScorers = () => {
                     }}></div>
                   </>
                 )}
-                <div className="grid grid-cols-12 gap-2 items-center relative z-10">
+                <div className="grid grid-cols-12 gap-2 md:gap-4 items-center relative z-10">
                   {/* Position */}
                   <div className="col-span-1 flex items-center">
                     {scorer.position === 1 ? (
-                      <IconTrophy className="text-viktoria-yellow" size={20} />
+                      <IconTrophy className="text-viktoria-yellow w-5 h-5 md:w-6 md:h-6" />
                     ) : (
-                      <span className={`font-bold ${
+                      <span className={`font-bold text-sm md:text-lg ${
                         scorer.position === 2 ? 'text-gray-600' :
                         'text-gray-700'
                       }`}>
@@ -179,13 +179,13 @@ const TopScorers = () => {
                   {/* Player Name */}
                   <div className="col-span-7">
                     {scorer.position === 1 ? (
-                      <span className="text-viktoria-yellow font-semibold">
+                      <span className="text-viktoria-yellow font-semibold text-sm md:text-base">
                         <span className="font-light">{splitName(scorer.name).firstName}</span>
                         {' '}
                         <span className="font-bold">{splitName(scorer.name).lastName}</span>
                       </span>
                     ) : (
-                      <span className={`${
+                      <span className={`text-sm md:text-base ${
                         scorer.position === 2 ? 'text-gray-700 font-medium' :
                         'text-gray-700'
                       }`}>
@@ -197,7 +197,7 @@ const TopScorers = () => {
                   </div>
 
                   {/* Games */}
-                  <div className={`col-span-2 text-center text-sm ${
+                  <div className={`col-span-2 text-center text-sm md:text-base ${
                     scorer.position === 1 ? 'text-viktoria-yellow font-medium' : 'text-gray-600'
                   }`}>
                     {scorer.games}
@@ -206,9 +206,9 @@ const TopScorers = () => {
                   {/* Goals */}
                   <div className="col-span-2 text-center">
                     <span className={`font-bold ${
-                      scorer.position === 1 ? 'text-viktoria-yellow text-lg' :
-                      scorer.position === 2 ? 'text-gray-600' :
-                      'text-gray-800 text-sm'
+                      scorer.position === 1 ? 'text-viktoria-yellow text-lg md:text-xl' :
+                      scorer.position === 2 ? 'text-gray-600 text-sm md:text-base' :
+                      'text-gray-800 text-sm md:text-base'
                     }`}>
                       {scorer.goals}
                     </span>
@@ -219,10 +219,10 @@ const TopScorers = () => {
           </div>
           
           {/* Expand/Collapse Indicator */}
-          <div className="bg-white/30 px-4 py-4 border-t border-white/20 text-center hover:bg-white/40 transition-colors">
-            <div className="flex items-center justify-center space-x-2 text-sm font-semibold text-gray-700">
+          <div className="bg-white/30 px-4 md:px-8 py-4 md:py-5 border-t border-white/20 text-center hover:bg-white/40 transition-colors">
+            <div className="flex items-center justify-center space-x-2 text-sm md:text-base font-semibold text-gray-700">
               <span>{isExpanded ? 'Weniger anzeigen' : 'Alle Torschützen anzeigen'}</span>
-              {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              {isExpanded ? <ChevronUp size={16} className="md:w-5 md:h-5" /> : <ChevronDown size={16} className="md:w-5 md:h-5" />}
             </div>
           </div>
         </div>

@@ -107,43 +107,6 @@ export interface AdminApiTokenPermission extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface AdminAuditLog extends Struct.CollectionTypeSchema {
-  collectionName: 'strapi_audit_logs';
-  info: {
-    displayName: 'Audit Log';
-    pluralName: 'audit-logs';
-    singularName: 'audit-log';
-  };
-  options: {
-    draftAndPublish: false;
-    timestamps: false;
-  };
-  pluginOptions: {
-    'content-manager': {
-      visible: false;
-    };
-    'content-type-builder': {
-      visible: false;
-    };
-  };
-  attributes: {
-    action: Schema.Attribute.String & Schema.Attribute.Required;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    date: Schema.Attribute.DateTime & Schema.Attribute.Required;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'admin::audit-log'> &
-      Schema.Attribute.Private;
-    payload: Schema.Attribute.JSON;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<'oneToOne', 'admin::user'>;
-  };
-}
-
 export interface AdminPermission extends Struct.CollectionTypeSchema {
   collectionName: 'admin_permissions';
   info: {
@@ -410,105 +373,69 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiKategorieKategorie extends Struct.CollectionTypeSchema {
-  collectionName: 'kategories';
+export interface ApiMitgliedMitglied extends Struct.CollectionTypeSchema {
+  collectionName: 'mitglieds';
   info: {
-    displayName: 'Kategorie';
-    pluralName: 'kategories';
-    singularName: 'kategorie';
+    description: 'Vereinsmitglieder';
+    displayName: 'Mitglied';
+    pluralName: 'mitglieds';
+    singularName: 'mitglied';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
+    adresse: Schema.Attribute.Component<'shared.adresse', false>;
+    austrittsdatum: Schema.Attribute.Date;
+    beitrittsdatum: Schema.Attribute.Date & Schema.Attribute.Required;
+    bemerkungen: Schema.Attribute.Text;
+    benutzerrolle: Schema.Attribute.Enumeration<
+      ['mitglied', 'spieler', 'trainer', 'admin', 'vorstand']
+    > &
+      Schema.Attribute.DefaultTo<'mitglied'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::kategorie.kategorie'
-    > &
-      Schema.Attribute.Private;
-    name: Schema.Attribute.String &
+    datenschutz_akzeptiert: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
+    email: Schema.Attribute.Email &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
-    news_artikels: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::news-artikel.news-artikel'
-    >;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiMannschaftMannschaft extends Struct.CollectionTypeSchema {
-  collectionName: 'mannschafts';
-  info: {
-    displayName: 'Mannschaft';
-    pluralName: 'mannschafts';
-    singularName: 'mannschaft';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    liga: Schema.Attribute.String;
+    geburtsdatum: Schema.Attribute.Date;
+    letzter_beitrag: Schema.Attribute.Date;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::mannschaft.mannschaft'
+      'api::mitglied.mitglied'
     > &
       Schema.Attribute.Private;
-    name: Schema.Attribute.String &
+    mitgliedsnummer: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
-    publishedAt: Schema.Attribute.DateTime;
-    teamfoto: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    trainer: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiNewsArtikelNewsArtikel extends Struct.CollectionTypeSchema {
-  collectionName: 'news_artikels';
-  info: {
-    displayName: 'News-Artikel';
-    pluralName: 'news-artikels';
-    singularName: 'news-artikel';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    datum: Schema.Attribute.Date & Schema.Attribute.Required;
-    inhalt: Schema.Attribute.Blocks & Schema.Attribute.Required;
-    kategory: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::kategorie.kategorie'
-    >;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::news-artikel.news-artikel'
+    mitgliedsstatus: Schema.Attribute.Enumeration<
+      ['aktiv', 'inaktiv', 'ausgetreten', 'ausgeschlossen']
     > &
-      Schema.Attribute.Private;
+      Schema.Attribute.DefaultTo<'aktiv'>;
+    mitgliedstyp: Schema.Attribute.Enumeration<
+      ['spieler', 'trainer', 'fan', 'familie', 'ehrenmitglied', 'funktionaer']
+    > &
+      Schema.Attribute.Required;
+    nachname: Schema.Attribute.String & Schema.Attribute.Required;
+    newsletter_aktiv: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    notfallkontakt: Schema.Attribute.Component<'shared.notfallkontakt', false>;
+    profilfoto: Schema.Attribute.Media<'images'>;
     publishedAt: Schema.Attribute.DateTime;
-    titel: Schema.Attribute.String & Schema.Attribute.Required;
-    titelbild: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    telefon: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    vorname: Schema.Attribute.String & Schema.Attribute.Required;
+    zahlungsstatus: Schema.Attribute.Enumeration<
+      ['aktuell', 'rueckstaendig', 'befreit']
+    > &
+      Schema.Attribute.DefaultTo<'aktuell'>;
   };
 }
 
@@ -1016,15 +943,12 @@ declare module '@strapi/strapi' {
     export interface ContentTypeSchemas {
       'admin::api-token': AdminApiToken;
       'admin::api-token-permission': AdminApiTokenPermission;
-      'admin::audit-log': AdminAuditLog;
       'admin::permission': AdminPermission;
       'admin::role': AdminRole;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-      'api::kategorie.kategorie': ApiKategorieKategorie;
-      'api::mannschaft.mannschaft': ApiMannschaftMannschaft;
-      'api::news-artikel.news-artikel': ApiNewsArtikelNewsArtikel;
+      'api::mitglied.mitglied': ApiMitgliedMitglied;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

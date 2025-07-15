@@ -33,11 +33,11 @@ export default function MobileNav() {
   }, [lastScrollY])
 
   const navItems = [
-    { href: '/', label: 'Home', icon: IconBallFootball },
-    { href: '/news', label: 'Nachrichten', icon: IconNews },
-    { href: '/teams', label: 'Teams', icon: IconUsers },
-    { href: '/shop', label: 'Shop', icon: IconShirt },
-    { href: '/kontakt', label: 'Kontakt', icon: IconMail },
+    { href: '/', label: 'HEIM', icon: IconBallFootball },
+    { href: '/news', label: 'NEWS', icon: IconNews },
+    { href: '/teams', label: 'TEAMS', icon: IconUsers },
+    { href: '/shop', label: 'SHOP', icon: IconShirt },
+    { href: '/kontakt', label: 'KONTAKT', icon: IconMail },
   ]
 
   return (
@@ -54,20 +54,29 @@ export default function MobileNav() {
             <Link
               key={href}
               href={href}
-              className={`flex items-center justify-center py-4 px-4 rounded-lg transition-colors ${
+              className={`flex flex-col items-center justify-center py-1 px-3 rounded-lg transition-colors ${
                 isActive
                   ? ''
                   : 'hover:bg-gray-100'
               }`}
             >
               <Icon 
-                size={28} 
-                className={`transition-colors ${
+                size={32} 
+                className={`transition-colors mb-1 ${
                   isActive
                     ? 'text-viktoria-yellow'
                     : 'text-gray-600 hover:text-viktoria-blue-light'
                 }`}
               />
+              <span 
+                className={`text-[10px] font-medium transition-colors ${
+                  isActive
+                    ? 'text-viktoria-yellow'
+                    : 'text-gray-600 hover:text-viktoria-blue-light'
+                }`}
+              >
+                {label}
+              </span>
             </Link>
           )
         })}

@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Header from '@/components/Header'
-import MobileNav from '@/components/MobileNav'
+import PageLayout from '@/components/PageLayout'
 import dynamic from 'next/dynamic'
 import { IconUsers, IconTrophy, IconMapPin, IconCalendar, IconClock, IconStar, IconShield, IconX, IconUser } from '@tabler/icons-react'
 
@@ -103,11 +102,9 @@ export default function TeamDetailPage({ params }: { params: Promise<{ id: strin
   }, [teamId])
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      <div>
-        {/* Header Section */}
-        <div className="pt-[140px] md:pt-[80px]">
+    <PageLayout>
+      {/* Header Section - nur Mobile */}
+      <div className="pt-[60px] md:pt-[20px] lg:hidden">
           <AnimatedSection delay={0.1}>
             <div className="w-full header-gradient py-6 shadow-lg">
               <div className="container">
@@ -578,8 +575,6 @@ export default function TeamDetailPage({ params }: { params: Promise<{ id: strin
             </AnimatedDiv>
           </div>
         )}
-      </div>
-      <MobileNav />
-    </div>
+    </PageLayout>
   )
 } 

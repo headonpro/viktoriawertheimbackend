@@ -1,7 +1,6 @@
 'use client'
 
-import Header from '@/components/Header'
-import MobileNav from '@/components/MobileNav'
+import PageLayout from '@/components/PageLayout'
 import dynamic from 'next/dynamic'
 import { IconShirt, IconTrophy, IconUsers, IconMail, IconPhone, IconMapPin, IconClock, IconBallFootball } from '@tabler/icons-react'
 
@@ -18,11 +17,9 @@ const AnimatedDiv = dynamic(
 
 export default function ShopPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      <div>
-        {/* Header Section - wie News-Seite */}
-        <div className="pt-[140px] md:pt-[80px]">
+    <PageLayout>
+      {/* Header Section - nur Mobile */}
+      <div className="pt-[60px] md:pt-[20px] lg:hidden">
           <AnimatedSection delay={0.1}>
             <div className="w-full header-gradient py-6 shadow-lg">
               <div className="container">
@@ -70,7 +67,7 @@ export default function ShopPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
               {/* Trikots */}
               <AnimatedDiv 
-                className="group bg-white/70 backdrop-blur-sm rounded-xl p-5 border border-white/40 hover:bg-white/80 hover:shadow-lg transition-all duration-300"
+                className="group bg-white/70 backdrop-blur-sm rounded-xl p-5 border border-white/40 hover:bg-white/80 transition-all duration-300 md:shadow-lg md:hover:shadow-xl"
                 delay={0.4}
               >
                 <div className="text-center">
@@ -89,7 +86,7 @@ export default function ShopPage() {
 
               {/* Fanartikel */}
               <AnimatedDiv 
-                className="group bg-white/70 backdrop-blur-sm rounded-xl p-5 border border-white/40 hover:bg-white/80 hover:shadow-lg transition-all duration-300"
+                className="group bg-white/70 backdrop-blur-sm rounded-xl p-5 border border-white/40 hover:bg-white/80 transition-all duration-300 md:shadow-lg md:hover:shadow-xl"
                 delay={0.5}
               >
                 <div className="text-center">
@@ -108,7 +105,7 @@ export default function ShopPage() {
 
               {/* Mitgliedschaft */}
               <AnimatedDiv 
-                className="group bg-white/70 backdrop-blur-sm rounded-xl p-5 border border-white/40 hover:bg-white/80 hover:shadow-lg transition-all duration-300"
+                className="group bg-white/70 backdrop-blur-sm rounded-xl p-5 border border-white/40 hover:bg-white/80 transition-all duration-300 md:shadow-lg md:hover:shadow-xl"
                 delay={0.6}
               >
                 <div className="text-center">
@@ -132,7 +129,7 @@ export default function ShopPage() {
         <AnimatedSection className="px-4 py-6" delay={0.7}>
           <div className="container">
             <div className="max-w-4xl mx-auto">
-              <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-white/40 shadow-sm">
+              <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-white/40 md:shadow-lg">
                 <div className="text-center mb-4">
                   <h3 className="text-lg font-semibold text-viktoria-blue mb-1">Fragen zum Shop?</h3>
                   <p className="text-gray-600 text-sm">Meldet euch gerne bei uns!</p>
@@ -200,8 +197,6 @@ export default function ShopPage() {
             </div>
           </div>
         </AnimatedSection>
-      </div>
-      <MobileNav />
-    </div>
+    </PageLayout>
   )
 } 

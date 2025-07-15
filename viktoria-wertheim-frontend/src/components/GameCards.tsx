@@ -1,9 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { IconClock, IconMapPin, IconCalendar, IconX, IconUser, IconTrophy, IconCards } from '@tabler/icons-react'
 import dynamic from 'next/dynamic'
+import { strapi } from '@/lib/strapi'
+import { Spiel } from '@/types/strapi'
 
 const AnimatedSection = dynamic(
   () => import('@/components/AnimatedSection'),
@@ -112,41 +114,51 @@ const GameCard = ({ type, homeTeam, awayTeam, homeScore, awayScore, date, time, 
   
   return (
     <div 
-      className="bg-white/40 backdrop-blur-sm rounded-xl p-4 md:p-6 border border-white/20 hover:bg-white/50 transition-all duration-300 cursor-pointer"
+      className="bg-white/40 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-8 border border-white/20 hover:bg-white/50 transition-all duration-300 cursor-pointer md:min-h-[280px] md:shadow-lg md:hover:shadow-xl"
       onClick={onClick}
     >
-      <div className="flex items-center justify-between mb-3 md:mb-4">
-        <div className="text-xs font-normal text-gray-600 uppercase tracking-wide font-permanent-marker">
+      <div className="flex items-center justify-between mb-3 md:mb-6">
+        <div className="text-sm md:text-base font-semibold text-gray-600 uppercase tracking-wide">
           {type === 'last' ? 'Letztes Spiel' : 'Nächstes Spiel'}
         </div>
-        <div className="text-xs text-gray-500">
+        <div className="text-xs md:text-sm text-gray-500">
           {date}
         </div>
       </div>
       
-      <div className="flex items-center justify-between mb-3 md:mb-4">
-        <div className="flex items-center justify-center w-12 h-12">
-          {homeLogo ? (
-            <img 
-              src={homeLogo} 
-              alt={`${homeTeam} Logo`}
-              className="w-12 h-12 object-contain drop-shadow-sm"
-            />
-          ) : (
-            <div className="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-xs">{homeTeam.charAt(0)}</span>
-            </div>
-          )}
+      <div className="flex items-center justify-between mb-3 md:mb-8">
+        {/* Home Team */}
+        <div className="flex flex-col items-center flex-1">
+          <div className="flex items-center justify-center w-12 h-12 md:w-20 md:h-20 mb-0 md:mb-3">
+            {homeLogo ? (
+              <img 
+                src={homeLogo} 
+                alt={`${homeTeam} Logo`}
+                className="w-12 h-12 md:w-20 md:h-20 object-contain drop-shadow-sm"
+              />
+            ) : (
+              <div className="w-12 h-12 md:w-20 md:h-20 bg-gray-400 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-xs md:text-lg">{homeTeam.charAt(0)}</span>
+              </div>
+            )}
+          </div>
+          {/* Team Name - nur auf Desktop anzeigen */}
+          <div className="hidden md:block text-center px-2">
+            <p className="text-gray-800 text-sm font-semibold leading-tight max-w-32 line-clamp-2">
+              {homeTeam}
+            </p>
+          </div>
         </div>
         
-        <div className="text-center">
+        {/* Score/VS */}
+        <div className="text-center px-2 md:px-6 flex-shrink-0">
           {type === 'last' && homeScore !== undefined && awayScore !== undefined ? (
-            <div className={`font-bold text-xl md:text-2xl ${getResultColor()}`} style={{ letterSpacing: '-0.05em' }}>
+            <div className={`font-bold text-xl md:text-4xl ${getResultColor()}`} style={{ letterSpacing: '-0.05em' }}>
               {homeScore}:{awayScore}
             </div>
           ) : (
             <div 
-              className="font-bold text-viktoria-yellow text-lg font-permanent-marker"
+              className="font-bold text-viktoria-yellow text-lg md:text-3xl font-permanent-marker"
               style={{ 
                 WebkitTextStroke: '0.5px #4B5563'
               }}
@@ -156,29 +168,38 @@ const GameCard = ({ type, homeTeam, awayTeam, homeScore, awayScore, date, time, 
           )}
         </div>
         
-        <div className="flex items-center justify-center w-12 h-12">
-          {awayLogo ? (
-            <img 
-              src={awayLogo} 
-              alt={`${awayTeam} Logo`}
-              className="w-12 h-12 object-contain drop-shadow-sm"
-            />
-          ) : (
-            <div className="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-xs">{awayTeam.charAt(0)}</span>
-            </div>
-          )}
+        {/* Away Team */}
+        <div className="flex flex-col items-center flex-1">
+          <div className="flex items-center justify-center w-12 h-12 md:w-20 md:h-20 mb-0 md:mb-3">
+            {awayLogo ? (
+              <img 
+                src={awayLogo} 
+                alt={`${awayTeam} Logo`}
+                className="w-12 h-12 md:w-20 md:h-20 object-contain drop-shadow-sm"
+              />
+            ) : (
+              <div className="w-12 h-12 md:w-20 md:h-20 bg-gray-400 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-xs md:text-lg">{awayTeam.charAt(0)}</span>
+              </div>
+            )}
+          </div>
+          {/* Team Name - nur auf Desktop anzeigen */}
+          <div className="hidden md:block text-center px-2">
+            <p className="text-gray-800 text-sm font-semibold leading-tight max-w-32 line-clamp-2">
+              {awayTeam}
+            </p>
+          </div>
         </div>
       </div>
       
-      <div className="flex items-center justify-between text-xs text-gray-500">
-        <div className="flex items-center space-x-1">
-          <IconClock size={12} />
-          <span className="text-xs">{time}</span>
+      <div className="flex items-center justify-between text-xs md:text-sm text-gray-500">
+        <div className="flex items-center space-x-1 md:space-x-2">
+          <IconClock size={12} className="md:w-4 md:h-4" />
+          <span className="text-xs md:text-sm">{time}</span>
         </div>
-        <div className="flex items-center space-x-1">
-          <IconMapPin size={12} />
-          <span className="text-xs">{isHome ? 'Heim' : 'Auswärts'}</span>
+        <div className="flex items-center space-x-1 md:space-x-2">
+          <IconMapPin size={12} className="md:w-4 md:h-4" />
+          <span className="text-xs md:text-sm">{isHome ? 'Heim' : 'Auswärts'}</span>
         </div>
       </div>
     </div>
@@ -188,6 +209,8 @@ const GameCard = ({ type, homeTeam, awayTeam, homeScore, awayScore, date, time, 
 export default function GameCards() {
   const [selectedGame, setSelectedGame] = useState<GameDetails | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [games, setGames] = useState<Spiel[]>([])
+  const [loading, setLoading] = useState(true)
   
   const openGameModal = (game: GameDetails) => {
     setSelectedGame(game)
@@ -198,7 +221,72 @@ export default function GameCards() {
     setSelectedGame(null)
     setIsModalOpen(false)
   }
+
+  // Fetch games from API
+  useEffect(() => {
+    const fetchGames = async () => {
+      try {
+        setLoading(true)
+        const response = await strapi.get('/spiels', {
+          params: {
+            populate: ['mannschaft'],
+            sort: ['datum:desc'],
+            pagination: {
+              limit: 10
+            }
+          }
+        })
+        
+        const apiGames = response.data.data || []
+        setGames(apiGames)
+      } catch (err) {
+        console.error('Error fetching games:', err)
+        setGames([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+        fetchGames()
+  }, [])
+
+  // Convert Spiel to GameDetails
+  const convertSpielToGameDetails = (spiel: Spiel): GameDetails => {
+    const now = new Date()
+    const spielDatum = new Date(spiel.attributes.datum)
+    const isLastGame = spielDatum < now
+    const isViktoriaHome = spiel.attributes.isHeimspiel
+
+    return {
+      type: isLastGame ? 'last' : 'next',
+      homeTeam: isViktoriaHome ? 'SV Viktoria Wertheim' : spiel.attributes.auswaertsmannschaft,
+      awayTeam: isViktoriaHome ? spiel.attributes.auswaertsmannschaft : 'SV Viktoria Wertheim',
+      homeScore: isLastGame ? (isViktoriaHome ? spiel.attributes.toreHeim : spiel.attributes.toreAuswaerts) : undefined,
+      awayScore: isLastGame ? (isViktoriaHome ? spiel.attributes.toreAuswaerts : spiel.attributes.toreHeim) : undefined,
+      date: spielDatum.toLocaleDateString('de-DE'),
+      time: spielDatum.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
+      isHome: isViktoriaHome,
+      stadium: spiel.attributes.spielort || 'Sportplatz Wertheim',
+      referee: 'Schmidt, Michael', // TODO: Add referee field to schema
+      goalScorers: [], // TODO: Add goal scorers
+      yellowCards: [], // TODO: Add cards
+      redCards: [],
+      lastMeeting: !isLastGame ? {
+        date: '15.05.2024',
+        result: '2:1',
+        location: 'Heim'
+      } : undefined
+    }
+  }
+
+  // Get last and next game from API data
+  const now = new Date()
+  const pastGames = games.filter(game => new Date(game.attributes.datum) < now)
+  const futureGames = games.filter(game => new Date(game.attributes.datum) >= now)
   
+  const lastGame = pastGames.length > 0 ? convertSpielToGameDetails(pastGames[0]) : null
+  const nextGame = futureGames.length > 0 ? convertSpielToGameDetails(futureGames[futureGames.length - 1]) : null
+   
   // Funktion zur Bestimmung der Ergebnisfarbe für das letzte Aufeinandertreffen
   const getResultColor = (result: string, location: string) => {
     if (!result || !location) return 'text-gray-600'
@@ -241,7 +329,8 @@ export default function GameCards() {
     }
   }
   
-  const lastGameDetails: GameDetails = {
+  // Fallback mock data
+  const mockLastGameDetails: GameDetails = {
     type: 'last',
     homeTeam: 'SV Viktoria Wertheim',
     awayTeam: 'TSV Assamstadt',
@@ -257,7 +346,7 @@ export default function GameCards() {
     redCards: []
   }
   
-  const nextGameDetails: GameDetails = {
+  const mockNextGameDetails: GameDetails = {
     type: 'next',
     homeTeam: 'Türkgücü Wertheim',
     awayTeam: 'SV Viktoria Wertheim',
@@ -276,31 +365,23 @@ export default function GameCards() {
   return (
     <>
       <AnimatedSection className="pt-6 pb-0" delay={0}>
-        <div className="px-2 md:px-4 max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 gap-2 md:gap-4">
+        <div className="px-2 md:px-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 gap-2 md:gap-8">
             {/* Letztes Spiel */}
-            <GameCard
-              type="last"
-              homeTeam="SV Viktoria Wertheim"
-              awayTeam="TSV Assamstadt"
-              homeScore={3}
-              awayScore={0}
-              date="02.08.2025"
-              time="18:00"
-              isHome={true}
-              onClick={() => openGameModal(lastGameDetails)}
-            />
+            {(lastGame || mockLastGameDetails) && (
+              <GameCard
+                {...(lastGame || mockLastGameDetails)}
+                onClick={() => openGameModal(lastGame || mockLastGameDetails)}
+              />
+            )}
             
             {/* Nächstes Spiel */}
-            <GameCard
-              type="next"
-              homeTeam="Türkgücü Wertheim"
-              awayTeam="SV Viktoria Wertheim"
-              date="16.08.2025"
-              time="15:30"
-              isHome={false}
-              onClick={() => openGameModal(nextGameDetails)}
-            />
+            {(nextGame || mockNextGameDetails) && (
+              <GameCard
+                {...(nextGame || mockNextGameDetails)}
+                onClick={() => openGameModal(nextGame || mockNextGameDetails)}
+              />
+            )}
           </div>
         </div>
       </AnimatedSection>

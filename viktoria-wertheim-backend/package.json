@@ -18,16 +18,17 @@
     "@strapi/plugin-cloud": "5.18.0",
     "@strapi/plugin-users-permissions": "5.18.0",
     "@strapi/strapi": "5.18.0",
-    "better-sqlite3": "12.2.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.1",
-    "styled-components": "^6.1.19"
+    "bcryptjs": "^3.0.2",
+    "better-sqlite3": "11.3.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0",
+    "styled-components": "^6.0.0"
   },
   "devDependencies": {
-    "@types/node": "^24",
-    "@types/react": "^18.3.23",
-    "@types/react-dom": "^18.3.7",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
     "typescript": "^5"
   },
   "engines": {
@@ -35,10 +36,7 @@
     "npm": ">=6.0.0"
   },
   "strapi": {
-    "uuid": "a341097a-5b41-48a4-9d0f-9a7b071a73b9",
-    "installId": "84cd32302583f95cac6fbcaffa0c2b8f039ad42c8ec1604a74a9f839701208c8"
-  },
-  "overrides": {
-    "punycode": "^2.3.1"
+    "uuid": "665ec2a7-6be6-4279-8470-075832f91c80",
+    "installId": "c475251debd876eb9c9af4eb55f2bb5a0d7486b9192ad78605a09b9d686e48d1"
   }
 }

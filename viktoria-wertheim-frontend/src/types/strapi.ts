@@ -46,6 +46,9 @@ export interface Spieler {
     vorname: string;
     nachname: string;
     position: 'Torwart' | 'Abwehr' | 'Mittelfeld' | 'Sturm';
+    rueckennummer?: number;
+    tore: number;
+    spiele: number;
     foto?: {
       data: {
         id: number;
@@ -55,6 +58,14 @@ export interface Spieler {
           caption?: string;
           width: number;
           height: number;
+        };
+      };
+    };
+    mannschaft?: {
+      data: {
+        id: number;
+        attributes: {
+          name: string;
         };
       };
     };
@@ -69,7 +80,7 @@ export interface Mannschaft {
   attributes: {
     name: string;
     trainer?: string;
-    ligazugehoerigkeit?: string;
+    liga?: string;
     teamfoto?: {
       data: {
         id: number;
@@ -81,6 +92,12 @@ export interface Mannschaft {
           height: number;
         };
       };
+    };
+    spielers?: {
+      data: Spieler[];
+    };
+    spiele?: {
+      data: Spiel[];
     };
     publishedAt: string;
     createdAt: string;
@@ -96,6 +113,18 @@ export interface Spiel {
     auswaertsmannschaft: string;
     toreHeim?: number;
     toreAuswaerts?: number;
+    spielort?: string;
+    liga?: string;
+    isHeimspiel: boolean;
+    status: 'geplant' | 'live' | 'beendet' | 'abgesagt';
+    mannschaft?: {
+      data: {
+        id: number;
+        attributes: {
+          name: string;
+        };
+      };
+    };
     publishedAt: string;
     createdAt: string;
     updatedAt: string;

@@ -29,6 +29,24 @@ const shortenTeamName = (name: string): string => {
   return name.substring(0, 8);
 }
 
+// Responsive Team Name Component
+const TeamNameDisplay = ({ team }: { team: { name: string } }) => (
+  <>
+    {/* Mobile: Gekürzte Namen */}
+    <span className={`font-medium text-sm lg:hidden ${
+      team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-700'
+    }`}>
+      {shortenTeamName(team.name)}
+    </span>
+    {/* Desktop: Vollständige Namen */}
+    <span className={`font-medium text-base hidden lg:inline ${
+      team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-700'
+    }`}>
+      {team.name}
+    </span>
+  </>
+)
+
 // Funktion zur automatischen Zuweisung von Logos basierend auf Teamnamen
 const getTeamLogo = (teamName: string): string | undefined => {
   const teamLogos: { [key: string]: string } = {
@@ -304,26 +322,26 @@ const LeagueTable = () => {
   const toggleExpanded = () => setIsExpanded(!isExpanded)
 
   return (
-    <AnimatedSection className="px-2 pt-0 pb-8" delay={0.1}>
-      <div className="container max-w-6xl">
-        <h2 className="text-xs font-normal text-gray-600 uppercase tracking-wide mb-4 text-center font-permanent-marker">
+    <AnimatedSection className="px-2 md:px-8 pt-0 pb-8" delay={0.1}>
+      <div className="container max-w-6xl md:max-w-7xl">
+        <h2 className="text-sm md:text-lg font-semibold text-gray-600 uppercase tracking-wide mb-4 md:mb-6 text-center">
           Kreisliga Tauberbischofsheim
         </h2>
         
         <div 
-          className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden cursor-pointer hover:bg-white/50 transition-all duration-300"
+          className="bg-white/40 backdrop-blur-sm rounded-xl md:rounded-2xl border border-white/20 overflow-hidden cursor-pointer hover:bg-white/50 transition-all duration-300 md:shadow-lg md:hover:shadow-xl"
           onClick={toggleExpanded}
         >
           {/* Header */}
-          <div className="bg-white/20 px-4 py-3 border-b border-white/20">
-            <div className="grid grid-cols-12 gap-2 text-xs font-medium text-gray-600 uppercase tracking-wide">
+          <div className="bg-white/20 px-4 md:px-8 py-3 md:py-3 border-b border-white/20">
+            <div className="grid grid-cols-12 gap-2 md:gap-4 text-xs md:text-sm font-medium text-gray-600 uppercase tracking-wide">
               <div className="col-span-1">#</div>
-              <div className="col-span-4">Verein</div>
+              <div className="col-span-4 lg:col-span-5">Verein</div>
               <div className="col-span-1 text-center">Sp</div>
               <div className="col-span-1 text-center">S</div>
               <div className="col-span-1 text-center">U</div>
               <div className="col-span-1 text-center">N</div>
-              <div className="col-span-1 text-center">T</div>
+              <div className="col-span-1 lg:col-span-0 lg:hidden text-center">T</div>
               <div className="col-span-1 text-center">TD</div>
               <div className="col-span-1 text-center font-bold">Pkt</div>
             </div>
@@ -334,16 +352,16 @@ const LeagueTable = () => {
             {displayedTeams.map((team, index) => (
               <div
                 key={team.position}
-                className={`px-4 py-3 transition-all duration-300 ${
+                className={`px-4 md:px-8 py-2.5 md:py-3 transition-all duration-300 ${
                   team.name === 'SV Viktoria Wertheim' 
-                    ? 'bg-viktoria-blue-light rounded-lg hover:bg-viktoria-blue hover:shadow-lg hover:shadow-viktoria-blue/20 hover:scale-[1.02] cursor-pointer' 
+                    ? 'bg-viktoria-blue-light rounded-lg md:rounded-xl hover:bg-viktoria-blue hover:shadow-lg hover:shadow-viktoria-blue/20 hover:scale-[1.02] cursor-pointer' 
                     : 'hover:bg-white/20'
                 }`}
               >
-                <div className="grid grid-cols-12 gap-2 items-center text-sm">
+                <div className="grid grid-cols-12 gap-2 md:gap-4 items-center text-sm md:text-base">
                   {/* Position */}
                   <div className="col-span-1">
-                    <span className={`font-semibold ${
+                    <span className={`font-semibold text-sm md:text-lg ${
                       team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-700'
                     }`}>
                       {team.position}.
@@ -351,57 +369,53 @@ const LeagueTable = () => {
                   </div>
 
                   {/* Team Name & Logo */}
-                  <div className="col-span-4 flex items-center space-x-2">
+                  <div className="col-span-4 lg:col-span-5 flex items-center space-x-2 md:space-x-3">
                     {team.logo ? (
                       <img 
                         src={team.logo} 
                         alt={`${team.name} Logo`}
-                        className="w-6 h-6 object-contain drop-shadow-sm"
+                        className="w-6 h-6 md:w-8 md:h-8 object-contain drop-shadow-sm"
                       />
                     ) : (
-                      <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-xs">
+                      <div className="w-6 h-6 md:w-8 md:h-8 bg-gray-400 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-xs md:text-sm">
                           {team.name.charAt(0)}
                         </span>
                       </div>
                     )}
-                    <span className={`font-medium ${
-                      team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-700'
-                    }`}>
-                      {shortenTeamName(team.name)}
-                    </span>
+                    <TeamNameDisplay team={team} />
                   </div>
 
                   {/* Games */}
-                  <div className={`col-span-1 text-center ${
+                  <div className={`col-span-1 text-center text-sm md:text-base ${
                     team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
                   }`}>
                     {team.games}
                   </div>
 
                   {/* Wins */}
-                  <div className={`col-span-1 text-center ${
+                  <div className={`col-span-1 text-center text-sm md:text-base ${
                     team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
                   }`}>
                     {team.wins}
                   </div>
 
                   {/* Draws */}
-                  <div className={`col-span-1 text-center ${
+                  <div className={`col-span-1 text-center text-sm md:text-base ${
                     team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
                   }`}>
                     {team.draws}
                   </div>
 
                   {/* Losses */}
-                  <div className={`col-span-1 text-center ${
+                  <div className={`col-span-1 text-center text-sm md:text-base ${
                     team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
                   }`}>
                     {team.losses}
                   </div>
 
                   {/* Goals */}
-                  <div className={`col-span-1 text-center text-xs ${
+                  <div className={`col-span-1 lg:col-span-0 lg:hidden text-center text-xs md:text-sm ${
                     team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
                   }`}>
                     {team.goalsFor}:{team.goalsAgainst}
@@ -409,7 +423,7 @@ const LeagueTable = () => {
 
                   {/* Goal Difference */}
                   <div className="col-span-1 text-center">
-                    <span className={`text-xs ${
+                    <span className={`text-xs md:text-sm font-medium ${
                       team.name === 'SV Viktoria Wertheim' ? 'text-white' :
                       team.goalDifference > 0 ? 'text-green-600' : 
                       team.goalDifference < 0 ? 'text-red-600' : 'text-gray-600'
@@ -420,7 +434,7 @@ const LeagueTable = () => {
 
                   {/* Points */}
                   <div className="col-span-1 text-center">
-                    <span className={`font-bold text-sm ${
+                    <span className={`font-bold text-sm md:text-lg ${
                       team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-800'
                     }`}>
                       {team.points}
@@ -432,18 +446,18 @@ const LeagueTable = () => {
           </div>
           
           {/* Expand/Collapse Indicator */}
-          <div className="bg-white/30 px-4 py-4 border-t border-white/20 text-center hover:bg-white/40 transition-colors">
-            <div className="flex items-center justify-center space-x-2 text-sm font-semibold text-gray-700">
+          <div className="bg-white/30 px-4 md:px-8 py-4 md:py-5 border-t border-white/20 text-center hover:bg-white/40 transition-colors">
+            <div className="flex items-center justify-center space-x-2 text-sm md:text-base font-semibold text-gray-700">
               <span>{isExpanded ? 'Weniger anzeigen' : 'Vollständige Tabelle anzeigen'}</span>
-              {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              {isExpanded ? <ChevronUp size={16} className="md:w-5 md:h-5" /> : <ChevronDown size={16} className="md:w-5 md:h-5" />}
             </div>
           </div>
         </div>
 
         {/* Legend - only show when expanded */}
         {isExpanded && (
-          <div className="mt-4 text-center">
-            <div className="text-xs text-gray-500">
+          <div className="mt-4 md:mt-6 text-center">
+            <div className="text-xs md:text-sm text-gray-500 max-w-4xl mx-auto">
               Sp = Spiele, S = Siege, U = Unentschieden, N = Niederlagen, T = Tore, TD = Tordifferenz, Pkt = Punkte
             </div>
           </div>

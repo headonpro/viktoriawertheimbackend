@@ -15,7 +15,7 @@ export const strapi = axios.create({
 export const API_ENDPOINTS = {
   newsArtikel: '/news-artikels',
   kategorien: '/kategories',
-  mannschaften: '/mannschaften',
+  mannschaften: '/mannschafts',
   spieler: '/spielers',
   spiele: '/spiels',
 } as const;
