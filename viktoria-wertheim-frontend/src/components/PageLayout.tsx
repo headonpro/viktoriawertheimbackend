@@ -9,12 +9,12 @@ interface PageLayoutProps {
 
 export default function PageLayout({ children }: PageLayoutProps) {
   return (
-    <>
+    <div className="min-h-screen bg-gray-50">
       <Header />
-      <main className="pt-16 pb-20 md:pb-6 min-h-screen">
+      <main className="pt-[140px] md:pt-[85px] pb-6">
         {children}
       </main>
       <MobileNav />
-    </>
+    </div>
   )
 } 

@@ -17,8 +17,9 @@ const nextConfig = {
     ],
   },
   experimental: {
-    optimizeCss: true,
+    optimizePackageImports: ['framer-motion'],
   },
+  transpilePackages: ['framer-motion'],
 }
 
 module.exports = nextConfig 

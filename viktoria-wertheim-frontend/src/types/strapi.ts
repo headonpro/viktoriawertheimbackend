@@ -16,7 +16,7 @@ export interface NewsArtikel {
         };
       };
     };
-    kategorie?: {
+    kategory?: {
       data: {
         id: number;
         attributes: {

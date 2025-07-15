@@ -1,8 +1,13 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Permanent_Marker } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const permanentMarker = Permanent_Marker({ 
+  subsets: ['latin'], 
+  weight: '400',
+  variable: '--font-permanent-marker' 
+})
 
 export const metadata: Metadata = {
   title: 'Viktoria Wertheim - Fußballverein',
@@ -37,7 +42,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="de">
-      <body className={inter.className}>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body 
+        className={`${inter.variable} ${permanentMarker.variable} font-sans`}
+        suppressHydrationWarning={true}
+      >
         {children}
       </body>
     </html>

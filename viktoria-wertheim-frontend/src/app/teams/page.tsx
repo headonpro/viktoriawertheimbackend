@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import PageLayout from '@/components/PageLayout'
-import { Users, Trophy, MapPin } from 'lucide-react'
+import { IconUsers, IconTrophy, IconMapPin } from '@tabler/icons-react'
 
 export default function TeamsPage() {
   // Beispiel-Daten (später aus Strapi)
@@ -25,39 +25,28 @@ export default function TeamsPage() {
     },
     {
       id: 3,
-      name: 'A-Jugend',
+      name: '3. Mannschaft',
       trainer: 'Peter Schmidt',
-      ligazugehoerigkeit: 'Kreisliga Jugend A',
+      ligazugehoerigkeit: 'Kreisliga C',
       teamfoto: null,
       playerCount: 16,
-    },
-    {
-      id: 4,
-      name: 'B-Jugend',
-      trainer: 'Lisa Weber',
-      ligazugehoerigkeit: 'Kreisliga Jugend B',
-      teamfoto: null,
-      playerCount: 14,
     },
   ]
 
   return (
     <PageLayout>
       <div className="space-y-6">
-        {/* Page Header */}
+        {/* Header Section - direkt unter der Navbar */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-viktoria-blue text-white py-8 px-4"
+          className="w-full header-gradient py-6 shadow-lg"
         >
           <div className="container">
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">
-              Unsere Mannschaften
+            <h1 className="text-3xl md:text-4xl font-permanent-marker text-white text-center news-title">
+              <span className="text-viktoria-yellow font-permanent-marker news-title">M</span>annschaften
             </h1>
-            <p className="text-white/90">
-              Lerne unsere Teams und ihre Trainer kennen
-            </p>
           </div>
         </motion.section>
 
@@ -66,51 +55,64 @@ export default function TeamsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="px-4"
+          className="px-4 pb-8 pt-8"
         >
           <div className="container">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="space-y-4">
               {teams.map((team, index) => (
-                <motion.div
+                <motion.button
                   key={team.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 * index }}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => {
+                    // Navigation zur Team-Detail-Seite
+                    window.location.href = `/teams/${team.id}`
+                  }}
+                  className="w-full relative rounded-lg overflow-hidden hover:shadow-xl hover:scale-[1.01] transition-all duration-300 cursor-pointer aspect-[21/9] group text-left"
                 >
-                  {/* Team Photo */}
-                  <div className="h-48 bg-gray-200 flex items-center justify-center">
-                    <Users size={48} className="text-gray-400" />
-                  </div>
+                  {/* Team Photo Background */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-viktoria-blue-light to-viktoria-blue-light group-hover:from-viktoria-blue-light group-hover:to-viktoria-blue-light transition-all duration-300"></div>
+                  <div className="absolute inset-0 backdrop-blur-sm bg-black/20"></div>
                   
-                  {/* Team Info */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">
-                      {team.name}
-                    </h3>
-                    
-                    <div className="space-y-2 text-sm text-gray-600">
-                      <div className="flex items-center">
-                        <Users size={16} className="mr-2 text-viktoria-blue" />
-                        <span>Trainer: {team.trainer}</span>
-                      </div>
+                  {/* Team Info Overlay */}
+                  <div className="relative z-10 h-full flex items-center justify-between p-4 md:p-6">
+                    <div className="flex-1">
+                      {/* Team Name */}
+                      <h3 className="text-lg md:text-xl font-bold text-viktoria-yellow mb-3 group-hover:text-white transition-colors duration-300">
+                        {team.name}
+                      </h3>
                       
-                      <div className="flex items-center">
-                        <Trophy size={16} className="mr-2 text-viktoria-blue" />
-                        <span>{team.ligazugehoerigkeit}</span>
-                      </div>
-                      
-                      <div className="flex items-center">
-                        <MapPin size={16} className="mr-2 text-viktoria-blue" />
-                        <span>{team.playerCount} Spieler</span>
+                      {/* Team Details - Einheitliches Grid */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
+                        <div className="flex items-center">
+                          <IconUsers size={14} className="mr-2 text-viktoria-yellow flex-shrink-0" />
+                          <span className="text-sm text-white font-medium">Trainer: {team.trainer}</span>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          <IconTrophy size={14} className="mr-2 text-viktoria-yellow flex-shrink-0" />
+                          <span className="text-sm text-white font-medium">{team.ligazugehoerigkeit}</span>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          <IconMapPin size={14} className="mr-2 text-viktoria-yellow flex-shrink-0" />
+                          <span className="text-sm text-white font-medium">{team.playerCount} Spieler</span>
+                        </div>
                       </div>
                     </div>
                     
-                    <button className="mt-4 w-full bg-viktoria-blue text-white py-2 px-4 rounded-lg hover:bg-viktoria-blue/90 transition-colors">
-                      Team ansehen
-                    </button>
+                    {/* Click Indicator */}
+                    <div className="ml-4 text-right">
+                      <div className="text-viktoria-yellow text-2xl group-hover:scale-110 transition-transform duration-300">
+                        →
+                      </div>
+                      <div className="text-xs text-white/80 mt-1">
+                        Klicken
+                      </div>
+                    </div>
                   </div>
-                </motion.div>
+                </motion.button>
               ))}
             </div>
           </div>
