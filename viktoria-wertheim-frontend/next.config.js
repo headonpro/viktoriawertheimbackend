@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost', 'strapi.viktoria-wertheim.de'],
+    domains: ['localhost', 'strapi.viktoria-wertheim.de', 'reliable-morning-f369ca7d6e.strapiapp.com'],
     remotePatterns: [
       {
         protocol: 'http',
@@ -12,6 +12,11 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'strapi.viktoria-wertheim.de',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'reliable-morning-f369ca7d6e.strapiapp.com',
         pathname: '/uploads/**',
       },
     ],
