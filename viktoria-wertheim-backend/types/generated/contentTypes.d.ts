@@ -373,6 +373,73 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiMannschaftMannschaft extends Struct.CollectionTypeSchema {
+  collectionName: 'mannschaften';
+  info: {
+    description: 'Vereinsmannschaften und Teams';
+    displayName: 'Mannschaft';
+    pluralName: 'mannschaften';
+    singularName: 'mannschaft';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    altersklasse: Schema.Attribute.Enumeration<
+      [
+        'senioren',
+        'a-jugend',
+        'b-jugend',
+        'c-jugend',
+        'd-jugend',
+        'e-jugend',
+        'f-jugend',
+        'bambini',
+      ]
+    >;
+    bemerkungen: Schema.Attribute.Text;
+    beschreibung: Schema.Attribute.RichText;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    gruendungsjahr: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 2030;
+          min: 1900;
+        },
+        number
+      >;
+    kontaktperson: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::mitglied.mitglied'
+    >;
+    liga: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::mannschaft.mannschaft'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    saison: Schema.Attribute.String & Schema.Attribute.DefaultTo<'2024/25'>;
+    spielort: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Sportplatz Wertheim'>;
+    status: Schema.Attribute.Enumeration<['aktiv', 'inaktiv', 'aufgeloest']> &
+      Schema.Attribute.DefaultTo<'aktiv'>;
+    teamfoto: Schema.Attribute.Media<'images'>;
+    trainer: Schema.Attribute.Relation<'manyToOne', 'api::mitglied.mitglied'>;
+    trainingszeiten: Schema.Attribute.Text;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    vereinsfarben: Schema.Attribute.String;
+  };
+}
+
 export interface ApiMitgliedMitglied extends Struct.CollectionTypeSchema {
   collectionName: 'mitglieds';
   info: {
@@ -403,6 +470,10 @@ export interface ApiMitgliedMitglied extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
     geburtsdatum: Schema.Attribute.Date;
+    kontakt_mannschaften: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::mannschaft.mannschaft'
+    >;
     letzter_beitrag: Schema.Attribute.Date;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -427,7 +498,16 @@ export interface ApiMitgliedMitglied extends Struct.CollectionTypeSchema {
     notfallkontakt: Schema.Attribute.Component<'shared.notfallkontakt', false>;
     profilfoto: Schema.Attribute.Media<'images'>;
     publishedAt: Schema.Attribute.DateTime;
+    spieler: Schema.Attribute.Relation<'oneToOne', 'api::spieler.spieler'>;
     telefon: Schema.Attribute.String;
+    trainer_mannschaften: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::mannschaft.mannschaft'
+    >;
+    trainings_als_trainer: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::training.training'
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -436,6 +516,203 @@ export interface ApiMitgliedMitglied extends Struct.CollectionTypeSchema {
       ['aktuell', 'rueckstaendig', 'befreit']
     > &
       Schema.Attribute.DefaultTo<'aktuell'>;
+  };
+}
+
+export interface ApiSpielerSpieler extends Struct.CollectionTypeSchema {
+  collectionName: 'spielers';
+  info: {
+    description: 'Vereinsspieler mit Statistiken und Team-Zugeh\u00F6rigkeit';
+    displayName: 'Spieler';
+    pluralName: 'spielers';
+    singularName: 'spieler';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    assists: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    bemerkungen: Schema.Attribute.Text;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    einsatzminuten: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    gelbe_karten: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    hauptposition: Schema.Attribute.Enumeration<
+      [
+        'torwart',
+        'innenverteidiger',
+        'aussenverteidiger',
+        'defensives_mittelfeld',
+        'zentrales_mittelfeld',
+        'offensives_mittelfeld',
+        'fluegelstuermer',
+        'mittelstuermer',
+      ]
+    >;
+    kapitaen: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::spieler.spieler'
+    > &
+      Schema.Attribute.Private;
+    mannschaft: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::mannschaft.mannschaft'
+    >;
+    mitglied: Schema.Attribute.Relation<'oneToOne', 'api::mitglied.mitglied'>;
+    position: Schema.Attribute.Enumeration<
+      ['torwart', 'abwehr', 'mittelfeld', 'sturm']
+    > &
+      Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    rote_karten: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    rueckennummer: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 99;
+          min: 1;
+        },
+        number
+      >;
+    spiele_saison: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    spielerfoto: Schema.Attribute.Media<'images'>;
+    staerken: Schema.Attribute.Text;
+    status: Schema.Attribute.Enumeration<
+      ['aktiv', 'verletzt', 'gesperrt', 'pausiert', 'inaktiv']
+    > &
+      Schema.Attribute.DefaultTo<'aktiv'>;
+    tore_saison: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    verletzungshistorie: Schema.Attribute.Text;
+    vertragsende: Schema.Attribute.Date;
+    vizekapitaen: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+  };
+}
+
+export interface ApiTrainingTraining extends Struct.CollectionTypeSchema {
+  collectionName: 'trainings';
+  info: {
+    description: 'Trainingseinheiten und -planung';
+    displayName: 'Training';
+    pluralName: 'trainings';
+    singularName: 'training';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    abwesende: Schema.Attribute.Relation<'manyToMany', 'api::spieler.spieler'>;
+    ausruestung: Schema.Attribute.Text;
+    beschreibung: Schema.Attribute.RichText;
+    bewertung: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 5;
+          min: 1;
+        },
+        number
+      >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    datum: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    dauer: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 180;
+          min: 15;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<90>;
+    intensitaet: Schema.Attribute.Enumeration<
+      ['niedrig', 'mittel', 'hoch', 'maximal']
+    > &
+      Schema.Attribute.DefaultTo<'mittel'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::training.training'
+    > &
+      Schema.Attribute.Private;
+    mannschaft: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::mannschaft.mannschaft'
+    >;
+    naechstes_training: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::training.training'
+    >;
+    notizen: Schema.Attribute.RichText;
+    ort: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Sportplatz Wertheim'>;
+    publishedAt: Schema.Attribute.DateTime;
+    status: Schema.Attribute.Enumeration<
+      ['geplant', 'laufend', 'abgeschlossen', 'abgesagt']
+    > &
+      Schema.Attribute.DefaultTo<'geplant'>;
+    teilnehmer: Schema.Attribute.Relation<'manyToMany', 'api::spieler.spieler'>;
+    titel: Schema.Attribute.String & Schema.Attribute.Required;
+    trainer: Schema.Attribute.Relation<'manyToOne', 'api::mitglied.mitglied'>;
+    trainingsart: Schema.Attribute.Enumeration<
+      ['kondition', 'technik', 'taktik', 'spielform', 'regeneration', 'mixed']
+    > &
+      Schema.Attribute.DefaultTo<'mixed'>;
+    trainingsziel: Schema.Attribute.Text;
+    uebungen: Schema.Attribute.JSON;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    verletzungen: Schema.Attribute.Text;
+    wetter: Schema.Attribute.Enumeration<
+      ['sonnig', 'bewoelkt', 'regen', 'schnee', 'wind', 'unbekannt']
+    >;
   };
 }
 
@@ -948,7 +1225,10 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::mannschaft.mannschaft': ApiMannschaftMannschaft;
       'api::mitglied.mitglied': ApiMitgliedMitglied;
+      'api::spieler.spieler': ApiSpielerSpieler;
+      'api::training.training': ApiTrainingTraining;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

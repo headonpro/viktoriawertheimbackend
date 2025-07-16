@@ -1,4 +1,4 @@
-import { strapi } from './strapi'
+import { strapi, apiRequest, API_ENDPOINTS } from './strapi'
 import { AuthService } from './auth'
 
 export interface TrainerTeam {
@@ -135,29 +135,16 @@ export class TrainerApiService {
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      const response = await strapi.get('/mannschafts', {
+      const response = await strapi.get(API_ENDPOINTS.mannschaft.withTrainers, {
         params: {
-          filters: {
-            mitglieder: {
-              id: {
-                $eq: memberId
-              }
-            }
-          },
-          populate: {
-            teamfoto: true,
-            spielers: {
-              populate: ['foto']
-            },
-            mitglieder: true
-          }
+          trainerId: memberId
         },
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
 
-      return response.data?.data || []
+      return response.data || []
     } catch (error) {
       console.error('Error fetching trainer teams:', error)
       throw error
@@ -170,32 +157,16 @@ export class TrainerApiService {
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      const response = await strapi.get('/training-sessions', {
+      const response = await strapi.get(API_ENDPOINTS.training.byTeam(teamId), {
         params: {
-          filters: {
-            mannschaft: {
-              id: {
-                $eq: teamId
-              }
-            }
-          },
-          populate: {
-            trainer: true,
-            mannschaft: true,
-            teilnehmer: true,
-            abwesende: true
-          },
-          sort: ['datum:desc'],
-          pagination: {
-            limit: limit
-          }
+          limit: limit
         },
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
 
-      return response.data?.data || []
+      return response.data || []
     } catch (error) {
       console.error('Error fetching team training sessions:', error)
       throw error
@@ -208,15 +179,13 @@ export class TrainerApiService {
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      const response = await strapi.post('/training-sessions', {
-        data: data
-      }, {
+      const response = await strapi.post(API_ENDPOINTS.training.create, data, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
 
-      return response.data.data
+      return response.data
     } catch (error) {
       console.error('Error creating training session:', error)
       throw error
@@ -229,7 +198,7 @@ export class TrainerApiService {
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      const response = await strapi.put(`/training-sessions/${trainingId}`, {
+      const response = await strapi.put(`${API_ENDPOINTS.trainings}/${trainingId}`, {
         data: data
       }, {
         headers: {
@@ -250,7 +219,7 @@ export class TrainerApiService {
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      await strapi.delete(`/training-sessions/${trainingId}`, {
+      await strapi.delete(`${API_ENDPOINTS.trainings}/${trainingId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -267,7 +236,7 @@ export class TrainerApiService {
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      const response = await strapi.get(`/training-sessions/${trainingId}`, {
+      const response = await strapi.get(`${API_ENDPOINTS.trainings}/${trainingId}`, {
         params: {
           populate: {
             trainer: true,
@@ -300,11 +269,9 @@ export class TrainerApiService {
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      await strapi.put(`/training-sessions/${trainingId}`, {
-        data: {
-          teilnehmer: participantIds,
-          abwesende: absentIds
-        }
+      await strapi.post(API_ENDPOINTS.training.attendance(trainingId), {
+        participantIds,
+        absentIds
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -312,6 +279,46 @@ export class TrainerApiService {
       })
     } catch (error) {
       console.error('Error updating training attendance:', error)
+      throw error
+    }
+  }
+
+  // Complete training session
+  static async completeTrainingSession(trainingId: number, sessionData?: {
+    wetter?: string
+    notizen?: string
+    uebungen?: any
+  }): Promise<void> {
+    const token = AuthService.getToken()
+    if (!token) throw new Error('Nicht authentifiziert')
+
+    try {
+      await strapi.post(API_ENDPOINTS.training.complete(trainingId), sessionData || {}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+    } catch (error) {
+      console.error('Error completing training session:', error)
+      throw error
+    }
+  }
+
+  // Get trainings by trainer
+  static async getTrainingsByTrainer(trainerId: number): Promise<TrainingSessionFull[]> {
+    const token = AuthService.getToken()
+    if (!token) throw new Error('Nicht authentifiziert')
+
+    try {
+      const response = await strapi.get(API_ENDPOINTS.training.byTrainer(trainerId), {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      return response.data || []
+    } catch (error) {
+      console.error('Error fetching trainings by trainer:', error)
       throw error
     }
   }
@@ -328,58 +335,34 @@ export class TrainerApiService {
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      // Get team info
-      const teamResponse = await strapi.get(`/mannschafts/${teamId}`, {
-        params: {
-          populate: {
-            spielers: true,
-            mitglieder: true
-          }
-        },
+      // Get team details
+      const teamResponse = await strapi.get(API_ENDPOINTS.mannschaft.details(teamId), {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
 
-      // Get all training sessions
-      const trainingsResponse = await strapi.get('/training-sessions', {
-        params: {
-          filters: {
-            mannschaft: {
-              id: {
-                $eq: teamId
-              }
-            }
-          },
-          populate: {
-            teilnehmer: true,
-            abwesende: true
-          }
-        },
+      // Get team training sessions
+      const trainingsResponse = await strapi.get(API_ENDPOINTS.training.byTeam(teamId), {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
 
-      const team = teamResponse.data.data
-      const trainings = trainingsResponse.data?.data || []
+      const teamData = teamResponse.data || {}
+      const trainings = trainingsResponse.data || []
 
-      const totalPlayers = (team.attributes.spielers?.data?.length || 0) + 
-                          (team.attributes.mitglieder?.data?.length || 0)
-      
-      const completedTrainings = trainings.filter((t: any) => t.attributes.status === 'abgeschlossen')
+      const totalPlayers = teamData.totalPlayers || 0
+      const completedTrainings = trainings.filter((t: any) => t.status === 'abgeschlossen')
       const upcomingTrainings = trainings.filter((t: any) => 
-        t.attributes.status === 'geplant' && new Date(t.attributes.datum) > new Date()
+        t.status === 'geplant' && new Date(t.datum) > new Date()
       )
 
       // Calculate average attendance
       let totalAttendance = 0
       completedTrainings.forEach((training: any) => {
-        const participants = training.attributes.teilnehmer?.data?.length || 0
-        const absent = training.attributes.abwesende?.data?.length || 0
-        const totalInvited = participants + absent
-        if (totalInvited > 0) {
-          totalAttendance += (participants / totalInvited) * 100
+        if (training.attendanceRate) {
+          totalAttendance += training.attendanceRate
         }
       })
 
@@ -413,73 +396,54 @@ export class TrainerApiService {
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      // Get team members
-      const teamResponse = await strapi.get(`/mannschafts/${teamId}`, {
+      // Use the team details endpoint which includes attendance stats
+      const response = await strapi.get(API_ENDPOINTS.mannschaft.details(teamId), {
         params: {
-          populate: {
-            mitglieder: true
-          }
+          includeAttendance: true
         },
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
 
-      // Get completed training sessions
-      const trainingsResponse = await strapi.get('/training-sessions', {
-        params: {
-          filters: {
-            mannschaft: {
-              id: {
-                $eq: teamId
-              }
-            },
-            status: {
-              $eq: 'abgeschlossen'
-            }
-          },
-          populate: {
-            teilnehmer: true,
-            abwesende: true
-          }
-        },
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-
-      const members = teamResponse.data.data.attributes.mitglieder?.data || []
-      const trainings = trainingsResponse.data?.data || []
-
-      return members.map((member: any) => {
-        let attended = 0
-        let missed = 0
-
-        trainings.forEach((training: any) => {
-          const participants = training.attributes.teilnehmer?.data || []
-          const absent = training.attributes.abwesende?.data || []
-          
-          const wasPresent = participants.some((p: any) => p.id === member.id)
-          const wasAbsent = absent.some((p: any) => p.id === member.id)
-          
-          if (wasPresent) attended++
-          else if (wasAbsent) missed++
-        })
-
-        const totalSessions = attended + missed
-        const attendanceRate = totalSessions > 0 ? (attended / totalSessions) * 100 : 0
-
-        return {
-          playerId: member.id,
-          playerName: `${member.attributes.vorname} ${member.attributes.nachname}`,
-          totalSessions,
-          attended,
-          missed,
-          attendanceRate: Math.round(attendanceRate * 100) / 100
-        }
-      })
+      return response.data?.playerAttendance || []
     } catch (error) {
       console.error('Error fetching player attendance stats:', error)
+      throw error
+    }
+  }
+
+  // Get active teams
+  static async getActiveTeams(): Promise<TrainerTeam[]> {
+    const token = AuthService.getToken()
+    if (!token) throw new Error('Nicht authentifiziert')
+
+    try {
+      const response = await strapi.get(API_ENDPOINTS.mannschaft.active, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      return response.data || []
+    } catch (error) {
+      console.error('Error fetching active teams:', error)
+      throw error
+    }
+  }
+
+  // Get teams by age group  
+  static async getTeamsByAgeGroup(ageGroup: string): Promise<TrainerTeam[]> {
+    try {
+      const response = await strapi.get(API_ENDPOINTS.mannschaft.byAgeGroup, {
+        params: {
+          ageGroup: ageGroup
+        }
+      })
+
+      return response.data || []
+    } catch (error) {
+      console.error('Error fetching teams by age group:', error)
       throw error
     }
   }

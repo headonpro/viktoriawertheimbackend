@@ -364,8 +364,8 @@ export default function GameCards() {
   
   return (
     <>
-      <AnimatedSection className="pt-6 pb-0" delay={0}>
-        <div className="px-2 md:px-8 max-w-7xl mx-auto">
+      <AnimatedSection className="py-0" delay={0}>
+        <div className="px-2 md:px-6 max-w-6xl mx-auto">
           <div className="grid grid-cols-2 gap-2 md:gap-8">
             {/* Letztes Spiel */}
             {(lastGame || mockLastGameDetails) && (

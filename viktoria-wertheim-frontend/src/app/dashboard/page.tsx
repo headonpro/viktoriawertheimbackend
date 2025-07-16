@@ -19,6 +19,12 @@ const TrainerDashboard = dynamic(
   { ssr: false }
 )
 
+// Dynamic Import für AdminDashboard
+const AdminDashboard = dynamic(
+  () => import('@/components/AdminMemberManagement').then(mod => ({ default: mod.AdminDashboard })),
+  { ssr: false }
+)
+
 // Dynamic Import für animierte Komponenten
 const AnimatedSection = dynamic(
   () => import('@/components/AnimatedSection'),
@@ -32,13 +38,24 @@ const AnimatedDiv = dynamic(
 
 function DashboardContent() {
   const { user } = useAuth()
-  const { isAdmin, isTrainer, isPlayer, userRole, memberType } = useRoles()
+  const { isAdmin, isTrainer, isPlayer, userRole, memberType, isStrapiAdmin } = useRoles()
 
   const getName = () => {
     if (user?.mitglied?.attributes?.vorname && user?.mitglied?.attributes?.nachname) {
       return `${user.mitglied.attributes.vorname} ${user.mitglied.attributes.nachname}`
     }
     return user?.username || 'Mitglied'
+  }
+
+  // Show specialized dashboard for admins (including Strapi Super Admin)
+  if (isAdmin) {
+    return (
+      <PageLayout>
+        <div className="min-h-screen">
+          <AdminDashboard />
+        </div>
+      </PageLayout>
+    )
   }
 
   const getMemberTypeLabel = () => {
@@ -169,17 +186,7 @@ function DashboardContent() {
   return (
     <PageLayout>
       {/* Header Section - nur Mobile */}
-      <div className="pt-[60px] md:pt-[20px] lg:hidden">
-        <AnimatedSection delay={0.1}>
-          <div className="w-full header-gradient py-6 shadow-lg">
-            <div className="container">
-              <h1 className="text-3xl md:text-4xl font-permanent-marker text-white text-center news-title">
-                <span className="text-viktoria-yellow font-permanent-marker news-title">D</span>ashboard
-              </h1>
-            </div>
-          </div>
-        </AnimatedSection>
-      </div>
+      
 
       {/* Desktop Intro Section */}
       <div className="hidden lg:block py-8">

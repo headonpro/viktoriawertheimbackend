@@ -198,14 +198,21 @@ export function useAuthStatus() {
 export function useRoles() {
   const { hasRole, isMemberType, user } = useAuth()
   
+  // Check if user is Strapi Super Admin (has no mitglied relation but is authenticated)
+  const isStrapiAdmin = user && !user.mitglied && user.confirmed && !user.blocked
+  const isFrontendAdmin = hasRole(['admin', 'vorstand'])
+  const isAnyAdmin = isStrapiAdmin || isFrontendAdmin
+  
   return {
     hasRole,
     isMemberType,
-    isAdmin: hasRole(['admin', 'vorstand']),
+    isAdmin: isAnyAdmin,
+    isStrapiAdmin,
+    isFrontendAdmin,
     isTrainer: hasRole('trainer'),
     isPlayer: hasRole('spieler'),
     isFan: isMemberType('fan'),
-    userRole: user?.mitglied?.attributes?.benutzerrolle,
+    userRole: user?.mitglied?.attributes?.benutzerrolle || (isStrapiAdmin ? 'super-admin' : 'authenticated'),
     memberType: user?.mitglied?.attributes?.mitgliedstyp
   }
 } 

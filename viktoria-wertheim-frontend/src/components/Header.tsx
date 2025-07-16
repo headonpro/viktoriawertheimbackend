@@ -174,8 +174,11 @@ export default function Header() {
                         </svg>
                       </button>
                       
+                      {/* Invisible bridge to prevent gap */}
+                      <div className="absolute right-0 top-full w-48 h-2 z-40"></div>
+                      
                       {/* Dropdown Menu */}
-                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                      <div className="absolute right-0 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50" style={{ top: 'calc(100% + 2px)' }}>
                         <div className="py-2">
                           <Link
                             href="/dashboard"

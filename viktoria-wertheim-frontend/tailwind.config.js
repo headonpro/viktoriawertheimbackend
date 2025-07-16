@@ -25,6 +25,7 @@ module.exports = {
         'shimmer': 'shimmer 3s ease-in-out infinite',
         'shimmer-slow': 'shimmerSlow 4s ease-in-out infinite',
         'prisma-shift': 'prismaShift 5s ease-in-out infinite',
+        'scroll-left': 'scrollLeft 20s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -60,6 +61,10 @@ module.exports = {
           '50%': { transform: 'translateX(50%) rotate(90deg)', opacity: '0.6' },
           '75%': { transform: 'translateX(125%) rotate(135deg)', opacity: '0.4' },
           '100%': { transform: 'translateX(200%) rotate(180deg)', opacity: '0' },
+        },
+        scrollLeft: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(-100%)' },
         },
       },
     },

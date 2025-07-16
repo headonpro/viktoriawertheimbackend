@@ -116,6 +116,30 @@
     "newsletter_aktiv": {
       "type": "boolean",
       "default": true
+    },
+    "spieler": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::spieler.spieler",
+      "mappedBy": "mitglied"
+    },
+    "trainer_mannschaften": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::mannschaft.mannschaft",
+      "mappedBy": "trainer"
+    },
+    "kontakt_mannschaften": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::mannschaft.mannschaft",
+      "mappedBy": "kontaktperson"
+    },
+    "trainings_als_trainer": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::training.training",
+      "mappedBy": "trainer"
     }
   }
 } 

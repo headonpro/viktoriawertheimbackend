@@ -26,9 +26,9 @@ export default function AdminPage() {
         setUser(userData);
 
         // Prüfe ob der Benutzer Admin-Berechtigung hat
-        const hasAdminAccess = userData.member?.benutzerrolle === 'admin' || 
-                              userData.member?.benutzerrolle === 'vorstand' ||
-                              userData.member?.mitgliedstyp === 'funktionaer';
+        const hasAdminAccess = userData.mitglied?.attributes.benutzerrolle === 'admin' || 
+                              userData.mitglied?.attributes.benutzerrolle === 'vorstand' ||
+                              userData.mitglied?.attributes.mitgliedstyp === 'funktionaer';
 
         if (!hasAdminAccess) {
           router.push('/dashboard');

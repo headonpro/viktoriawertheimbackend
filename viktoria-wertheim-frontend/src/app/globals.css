@@ -442,4 +442,36 @@ p, span, div, h1, h2, h3, h4, h5, h6, a, button, input, textarea, select, label,
     opacity: 0.9;
     transform: scale(1.1);
   }
+}
+
+/* News Ticker Progress Animation */
+@keyframes newsTickerProgress {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+.news-ticker-progress {
+  animation: newsTickerProgress 4s linear infinite;
+}
+
+.news-ticker-progress.paused {
+  animation-play-state: paused;
+}
+
+/* News Ticker Scroll Animation */
+@keyframes newsTickerScroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.news-ticker-scroll {
+  animation: newsTickerScroll 60s linear infinite;
+}
+
+.news-ticker-scroll.paused {
+  animation-play-state: paused;
 } 

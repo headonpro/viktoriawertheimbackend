@@ -80,18 +80,7 @@ export default function TeamsPage() {
     return (
       <PageLayout>
         <div className="space-y-6">
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="w-full header-gradient py-6 shadow-lg lg:hidden"
-          >
-            <div className="container">
-              <h1 className="text-3xl md:text-4xl font-permanent-marker text-white text-center news-title">
-                <span className="text-viktoria-yellow font-permanent-marker news-title">M</span>annschaften
-              </h1>
-            </div>
-          </motion.section>
+
           
           <div className="px-4 pb-8 pt-8">
             <div className="container">
@@ -112,18 +101,7 @@ export default function TeamsPage() {
     <PageLayout>
       <div className="space-y-6">
         {/* Header Section - nur Mobile */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="w-full header-gradient py-6 shadow-lg lg:hidden"
-        >
-          <div className="container">
-            <h1 className="text-3xl md:text-4xl font-permanent-marker text-white text-center news-title">
-              <span className="text-viktoria-yellow font-permanent-marker news-title">M</span>annschaften
-            </h1>
-          </div>
-        </motion.section>
+
 
         {/* Desktop Statistics Dashboard - Only visible on desktop */}
         <motion.section

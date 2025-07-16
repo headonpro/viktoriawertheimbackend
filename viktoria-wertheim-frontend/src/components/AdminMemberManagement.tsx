@@ -3,6 +3,343 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { adminApi, CreateMemberData, MemberWithUser } from '../lib/adminApi';
+import { IconUsers, IconShirt, IconCalendar, IconTrophy, IconChartBar, IconSettings, IconShield, IconBell, IconFileText, IconMail } from '@tabler/icons-react';
+
+// Admin Dashboard Hauptkomponente
+export function AdminDashboard() {
+  const [stats, setStats] = useState({
+    totalMembers: 0,
+    totalTeams: 0,
+    totalPlayers: 0,
+    totalTrainings: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const dashboardStats = await adminApi.getDashboardStats();
+        setStats(dashboardStats);
+      } catch (error) {
+        console.error('Fehler beim Laden der Dashboard-Statistiken:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStats();
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="bg-white/70 backdrop-blur-md rounded-2xl p-6 mb-8 border border-white/20">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
+                <IconShield className="text-red-500" size={32} />
+                Admin Dashboard
+              </h1>
+              <p className="text-slate-600 mt-2">Vollständige Vereinsverwaltung und Übersicht</p>
+            </div>
+            <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg">
+              <span className="text-sm font-medium">Super Admin</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Statistiken */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white/70 backdrop-blur-md rounded-xl p-6 border border-white/20"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-slate-600 text-sm">Mitglieder gesamt</p>
+                <p className="text-2xl font-bold text-slate-800">
+                  {loading ? '...' : stats.totalMembers}
+                </p>
+              </div>
+              <div className="bg-blue-100 rounded-lg p-3">
+                <IconUsers className="text-blue-600" size={24} />
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white/70 backdrop-blur-md rounded-xl p-6 border border-white/20"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-slate-600 text-sm">Mannschaften</p>
+                <p className="text-2xl font-bold text-slate-800">
+                  {loading ? '...' : stats.totalTeams}
+                </p>
+              </div>
+              <div className="bg-green-100 rounded-lg p-3">
+                <IconShirt className="text-green-600" size={24} />
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white/70 backdrop-blur-md rounded-xl p-6 border border-white/20"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-slate-600 text-sm">Aktive Spieler</p>
+                <p className="text-2xl font-bold text-slate-800">
+                  {loading ? '...' : stats.totalPlayers}
+                </p>
+              </div>
+              <div className="bg-yellow-100 rounded-lg p-3">
+                <IconTrophy className="text-yellow-600" size={24} />
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white/70 backdrop-blur-md rounded-xl p-6 border border-white/20"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-slate-600 text-sm">Trainings gesamt</p>
+                <p className="text-2xl font-bold text-slate-800">
+                  {loading ? '...' : stats.totalTrainings}
+                </p>
+              </div>
+              <div className="bg-purple-100 rounded-lg p-3">
+                <IconCalendar className="text-purple-600" size={24} />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Hauptfunktionen */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+          
+          {/* Mitgliederverwaltung */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="bg-white/70 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:shadow-lg transition-all duration-300"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="bg-blue-100 rounded-lg p-3">
+                <IconUsers className="text-blue-600" size={24} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-800">Mitgliederverwaltung</h3>
+                <p className="text-slate-600 text-sm">Mitglieder erstellen, bearbeiten und verwalten</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <button className="w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-blue-700 font-medium">
+                → Alle Mitglieder anzeigen
+              </button>
+              <button className="w-full text-left p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors text-green-700 font-medium">
+                → Neues Mitglied erstellen
+              </button>
+              <button className="w-full text-left p-3 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors text-yellow-700 font-medium">
+                → Mitgliedsdaten exportieren
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Mannschaftsverwaltung */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="bg-white/70 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:shadow-lg transition-all duration-300"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="bg-green-100 rounded-lg p-3">
+                <IconShirt className="text-green-600" size={24} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-800">Mannschaftsverwaltung</h3>
+                <p className="text-slate-600 text-sm">Teams und Spielerzuordnungen verwalten</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <button className="w-full text-left p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors text-green-700 font-medium">
+                → Alle Mannschaften
+              </button>
+              <button className="w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-blue-700 font-medium">
+                → Neue Mannschaft erstellen
+              </button>
+              <button className="w-full text-left p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors text-purple-700 font-medium">
+                → Trainer zuweisen
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Trainings & Events */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="bg-white/70 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:shadow-lg transition-all duration-300"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="bg-purple-100 rounded-lg p-3">
+                <IconCalendar className="text-purple-600" size={24} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-800">Training & Events</h3>
+                <p className="text-slate-600 text-sm">Trainings und Veranstaltungen organisieren</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <button className="w-full text-left p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors text-purple-700 font-medium">
+                → Trainingskalender
+              </button>
+              <button className="w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-blue-700 font-medium">
+                → Event erstellen
+              </button>
+              <button className="w-full text-left p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors text-green-700 font-medium">
+                → Teilnehmerlisten
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Berichte & Statistiken */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="bg-white/70 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:shadow-lg transition-all duration-300"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="bg-yellow-100 rounded-lg p-3">
+                <IconChartBar className="text-yellow-600" size={24} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-800">Berichte & Analytics</h3>
+                <p className="text-slate-600 text-sm">Statistiken und Auswertungen</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <button className="w-full text-left p-3 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors text-yellow-700 font-medium">
+                → Mitgliederstatistiken
+              </button>
+              <button className="w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-blue-700 font-medium">
+                → Trainingsberichte
+              </button>
+              <button className="w-full text-left p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors text-green-700 font-medium">
+                → Finanzübersicht
+              </button>
+            </div>
+          </motion.div>
+
+          {/* System & Einstellungen */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 }}
+            className="bg-white/70 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:shadow-lg transition-all duration-300"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="bg-red-100 rounded-lg p-3">
+                <IconSettings className="text-red-600" size={24} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-800">System & Einstellungen</h3>
+                <p className="text-slate-600 text-sm">Systemkonfiguration und Verwaltung</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <button className="w-full text-left p-3 bg-red-50 hover:bg-red-100 rounded-lg transition-colors text-red-700 font-medium">
+                → Benutzerrollen verwalten
+              </button>
+              <button className="w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-blue-700 font-medium">
+                → System-Backup
+              </button>
+              <button className="w-full text-left p-3 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors text-yellow-700 font-medium">
+                → Einstellungen
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Kommunikation */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0 }}
+            className="bg-white/70 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:shadow-lg transition-all duration-300"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="bg-indigo-100 rounded-lg p-3">
+                <IconMail className="text-indigo-600" size={24} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-800">Kommunikation</h3>
+                <p className="text-slate-600 text-sm">Newsletter und Benachrichtigungen</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <button className="w-full text-left p-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors text-indigo-700 font-medium">
+                → Newsletter versenden
+              </button>
+              <button className="w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-blue-700 font-medium">
+                → Mitteilungen erstellen
+              </button>
+              <button className="w-full text-left p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors text-green-700 font-medium">
+                → E-Mail-Vorlagen
+              </button>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="bg-white/70 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+          <h2 className="text-xl font-semibold text-slate-800 mb-4">Schnellzugriff</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <button className="flex flex-col items-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg hover:from-blue-100 hover:to-blue-200 transition-all duration-200 group">
+              <IconUsers className="text-blue-600 mb-2 group-hover:scale-110 transition-transform" size={24} />
+              <span className="text-blue-700 text-sm font-medium">Mitglieder</span>
+            </button>
+            <button className="flex flex-col items-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg hover:from-green-100 hover:to-green-200 transition-all duration-200 group">
+              <IconShirt className="text-green-600 mb-2 group-hover:scale-110 transition-transform" size={24} />
+              <span className="text-green-700 text-sm font-medium">Teams</span>
+            </button>
+            <button className="flex flex-col items-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg hover:from-purple-100 hover:to-purple-200 transition-all duration-200 group">
+              <IconCalendar className="text-purple-600 mb-2 group-hover:scale-110 transition-transform" size={24} />
+              <span className="text-purple-700 text-sm font-medium">Events</span>
+            </button>
+            <button className="flex flex-col items-center p-4 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg hover:from-yellow-100 hover:to-yellow-200 transition-all duration-200 group">
+              <IconChartBar className="text-yellow-600 mb-2 group-hover:scale-110 transition-transform" size={24} />
+              <span className="text-yellow-700 text-sm font-medium">Berichte</span>
+            </button>
+            <button className="flex flex-col items-center p-4 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg hover:from-indigo-100 hover:to-indigo-200 transition-all duration-200 group">
+              <IconMail className="text-indigo-600 mb-2 group-hover:scale-110 transition-transform" size={24} />
+              <span className="text-indigo-700 text-sm font-medium">Newsletter</span>
+            </button>
+            <button className="flex flex-col items-center p-4 bg-gradient-to-br from-red-50 to-red-100 rounded-lg hover:from-red-100 hover:to-red-200 transition-all duration-200 group">
+              <IconSettings className="text-red-600 mb-2 group-hover:scale-110 transition-transform" size={24} />
+              <span className="text-red-700 text-sm font-medium">Settings</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 interface FormErrors {
   [key: string]: string;

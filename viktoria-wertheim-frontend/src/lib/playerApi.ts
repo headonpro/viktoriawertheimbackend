@@ -1,4 +1,4 @@
-import { strapi } from './strapi'
+import { strapi, apiRequest, API_ENDPOINTS } from './strapi'
 import { AuthService } from './auth'
 
 export interface PlayerStats {
@@ -100,7 +100,7 @@ export class PlayerApiService {
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      const response = await strapi.get('/spielers', {
+      const response = await strapi.get(API_ENDPOINTS.spieler.byTeam(0), {
         params: {
           filters: {
             mitglied: {
@@ -129,39 +129,41 @@ export class PlayerApiService {
     }
   }
 
+  // Get player statistics
+  static async getPlayerStats(playerId: number): Promise<PlayerStats> {
+    const token = AuthService.getToken()
+    if (!token) throw new Error('Nicht authentifiziert')
+
+    try {
+      const response = await strapi.get(API_ENDPOINTS.spieler.stats(playerId), {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      return response.data
+    } catch (error) {
+      console.error('Error fetching player stats:', error)
+      throw error
+    }
+  }
+
   // Get training sessions for a team
   static async getTrainingSessions(teamId: number, limit = 10): Promise<TrainingSession[]> {
     const token = AuthService.getToken()
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      const response = await strapi.get('/training-sessions', {
+      const response = await strapi.get(API_ENDPOINTS.training.byTeam(teamId), {
         params: {
-          filters: {
-            mannschaft: {
-              id: {
-                $eq: teamId
-              }
-            }
-          },
-          populate: {
-            trainer: {
-              populate: ['mitglied']
-            },
-            teilnehmer: true,
-            abwesende: true
-          },
-          sort: ['datum:desc'],
-          pagination: {
-            limit: limit
-          }
+          limit: limit
         },
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
 
-      return response.data?.data || []
+      return response.data || []
     } catch (error) {
       console.error('Error fetching training sessions:', error)
       throw error
@@ -169,117 +171,44 @@ export class PlayerApiService {
   }
 
   // Get upcoming training sessions
-  static async getUpcomingTrainingSessions(teamId: number): Promise<TrainingSession[]> {
+  static async getUpcomingTrainingSessions(teamId?: number): Promise<TrainingSession[]> {
     const token = AuthService.getToken()
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      const now = new Date().toISOString()
-      const response = await strapi.get('/training-sessions', {
-        params: {
-          filters: {
-            mannschaft: {
-              id: {
-                $eq: teamId
-              }
-            },
-            datum: {
-              $gte: now
-            },
-            status: {
-              $ne: 'abgesagt'
-            }
-          },
-          populate: {
-            trainer: true,
-            teilnehmer: true
-          },
-          sort: ['datum:asc'],
-          pagination: {
-            limit: 5
-          }
-        },
+      let endpoint = API_ENDPOINTS.training.upcoming
+      let params: any = {}
+
+      if (teamId) {
+        params.teamId = teamId
+      }
+
+      const response = await strapi.get(endpoint, {
+        params,
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
 
-      return response.data?.data || []
+      return response.data || []
     } catch (error) {
       console.error('Error fetching upcoming training sessions:', error)
       throw error
     }
   }
 
-  // Get games for a team
+  // Get games for a team (placeholder - no games content type yet)
   static async getTeamGames(teamId: number, limit = 10): Promise<Game[]> {
-    const token = AuthService.getToken()
-    if (!token) throw new Error('Nicht authentifiziert')
-
-    try {
-      const response = await strapi.get('/spiels', {
-        params: {
-          filters: {
-            mannschaft: {
-              id: {
-                $eq: teamId
-              }
-            }
-          },
-          sort: ['datum:desc'],
-          pagination: {
-            limit: limit
-          }
-        },
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-
-      return response.data?.data || []
-    } catch (error) {
-      console.error('Error fetching team games:', error)
-      throw error
-    }
+    // TODO: Implement when games content type is created
+    console.warn('Games content type not implemented yet')
+    return []
   }
 
-  // Get upcoming games
+  // Get upcoming games (placeholder)
   static async getUpcomingGames(teamId: number): Promise<Game[]> {
-    const token = AuthService.getToken()
-    if (!token) throw new Error('Nicht authentifiziert')
-
-    try {
-      const now = new Date().toISOString()
-      const response = await strapi.get('/spiels', {
-        params: {
-          filters: {
-            mannschaft: {
-              id: {
-                $eq: teamId
-              }
-            },
-            datum: {
-              $gte: now
-            },
-            status: {
-              $ne: 'abgesagt'
-            }
-          },
-          sort: ['datum:asc'],
-          pagination: {
-            limit: 3
-          }
-        },
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-
-      return response.data?.data || []
-    } catch (error) {
-      console.error('Error fetching upcoming games:', error)
-      throw error
-    }
+    // TODO: Implement when games content type is created
+    console.warn('Games content type not implemented yet')
+    return []
   }
 
   // Register for training session
@@ -288,32 +217,9 @@ export class PlayerApiService {
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      // Get current training session
-      const trainingResponse = await strapi.get(`/training-sessions/${trainingId}`, {
-        params: {
-          populate: ['teilnehmer', 'abwesende']
-        },
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-
-      const training = trainingResponse.data.data
-      const currentParticipants = training.attributes.teilnehmer?.data || []
-      const currentAbsent = training.attributes.abwesende?.data || []
-
-      // Add member to participants, remove from absent if present
-      const newParticipants = [
-        ...currentParticipants.filter((p: any) => p.id !== memberId),
-        { id: memberId }
-      ]
-      const newAbsent = currentAbsent.filter((p: any) => p.id !== memberId)
-
-      await strapi.put(`/training-sessions/${trainingId}`, {
-        data: {
-          teilnehmer: newParticipants.map((p: any) => p.id),
-          abwesende: newAbsent.map((p: any) => p.id)
-        }
+      await strapi.post(API_ENDPOINTS.training.attendance(trainingId), {
+        action: 'register',
+        memberId: memberId
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -331,32 +237,9 @@ export class PlayerApiService {
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      // Get current training session
-      const trainingResponse = await strapi.get(`/training-sessions/${trainingId}`, {
-        params: {
-          populate: ['teilnehmer', 'abwesende']
-        },
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-
-      const training = trainingResponse.data.data
-      const currentParticipants = training.attributes.teilnehmer?.data || []
-      const currentAbsent = training.attributes.abwesende?.data || []
-
-      // Add member to absent, remove from participants if present
-      const newParticipants = currentParticipants.filter((p: any) => p.id !== memberId)
-      const newAbsent = [
-        ...currentAbsent.filter((p: any) => p.id !== memberId),
-        { id: memberId }
-      ]
-
-      await strapi.put(`/training-sessions/${trainingId}`, {
-        data: {
-          teilnehmer: newParticipants.map((p: any) => p.id),
-          abwesende: newAbsent.map((p: any) => p.id)
-        }
+      await strapi.post(API_ENDPOINTS.training.attendance(trainingId), {
+        action: 'absent',
+        memberId: memberId
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -379,43 +262,25 @@ export class PlayerApiService {
     if (!token) throw new Error('Nicht authentifiziert')
 
     try {
-      // Get all training sessions for the team
-      const allSessionsResponse = await strapi.get('/training-sessions', {
+      // Use the new backend endpoint for training statistics
+      const response = await strapi.get(API_ENDPOINTS.training.byTeam(teamId), {
         params: {
-          filters: {
-            mannschaft: {
-              id: {
-                $eq: teamId
-              }
-            },
-            status: {
-              $eq: 'abgeschlossen'
-            }
-          },
-          populate: {
-            teilnehmer: true,
-            abwesende: true
-          }
+          memberId: memberId,
+          includeStats: true
         },
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
 
-      const sessions = allSessionsResponse.data?.data || []
+      const sessions = response.data || []
       let attended = 0
       let missed = 0
 
       sessions.forEach((session: any) => {
-        const participants = session.attributes.teilnehmer?.data || []
-        const absent = session.attributes.abwesende?.data || []
-        
-        const wasPresent = participants.some((p: any) => p.id === memberId)
-        const wasAbsent = absent.some((p: any) => p.id === memberId)
-        
-        if (wasPresent) {
+        if (session.participated) {
           attended++
-        } else if (wasAbsent) {
+        } else if (session.wasAbsent) {
           missed++
         }
       })
@@ -431,6 +296,72 @@ export class PlayerApiService {
       }
     } catch (error) {
       console.error('Error fetching training stats:', error)
+      throw error
+    }
+  }
+
+  // Get team players
+  static async getTeamPlayers(teamId: number): Promise<any[]> {
+    const token = AuthService.getToken()
+    if (!token) throw new Error('Nicht authentifiziert')
+
+    try {
+      const response = await strapi.get(API_ENDPOINTS.spieler.byTeam(teamId), {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      return response.data || []
+    } catch (error) {
+      console.error('Error fetching team players:', error)
+      throw error
+    }
+  }
+
+  // Get top scorers
+  static async getTopScorers(limit = 10): Promise<any[]> {
+    try {
+      const response = await strapi.get(API_ENDPOINTS.spieler.topScorers, {
+        params: {
+          limit: limit
+        }
+      })
+
+      return response.data || []
+    } catch (error) {
+      console.error('Error fetching top scorers:', error)
+      throw error
+    }
+  }
+
+  // Get players by position
+  static async getPlayersByPosition(position: string): Promise<any[]> {
+    try {
+      const response = await strapi.get(API_ENDPOINTS.spieler.byPosition(position))
+
+      return response.data || []
+    } catch (error) {
+      console.error('Error fetching players by position:', error)
+      throw error
+    }
+  }
+
+  // Get injured players
+  static async getInjuredPlayers(): Promise<any[]> {
+    const token = AuthService.getToken()
+    if (!token) throw new Error('Nicht authentifiziert')
+
+    try {
+      const response = await strapi.get(API_ENDPOINTS.spieler.injured, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      return response.data || []
+    } catch (error) {
+      console.error('Error fetching injured players:', error)
       throw error
     }
   }

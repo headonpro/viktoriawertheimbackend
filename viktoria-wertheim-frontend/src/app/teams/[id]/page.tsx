@@ -103,19 +103,7 @@ export default function TeamDetailPage({ params }: { params: Promise<{ id: strin
 
   return (
     <PageLayout>
-      {/* Header Section - nur Mobile */}
-      <div className="pt-[60px] md:pt-[20px] lg:hidden">
-          <AnimatedSection delay={0.1}>
-            <div className="w-full header-gradient py-6 shadow-lg">
-              <div className="container">
-                <h1 className="text-3xl md:text-4xl font-permanent-marker text-white text-center news-title">
-                  <span className="text-viktoria-yellow font-permanent-marker news-title">{team.name.charAt(0)}</span>
-                  {team.name.slice(1)}
-                </h1>
-              </div>
-            </div>
-          </AnimatedSection>
-        </div>
+
 
         {/* Liga Banner */}
         <AnimatedSection className="px-4 pt-6 pb-4" delay={0.2}>

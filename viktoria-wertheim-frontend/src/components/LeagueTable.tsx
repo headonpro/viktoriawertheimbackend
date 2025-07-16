@@ -322,9 +322,9 @@ const LeagueTable = () => {
   const toggleExpanded = () => setIsExpanded(!isExpanded)
 
   return (
-    <AnimatedSection className="px-2 md:px-8 pt-0 pb-8" delay={0.1}>
-      <div className="container max-w-6xl md:max-w-7xl">
-        <h2 className="text-sm md:text-lg font-semibold text-gray-600 uppercase tracking-wide mb-4 md:mb-6 text-center">
+                      <AnimatedSection className="px-2 md:px-6 py-0" delay={0.1}>
+              <div className="container max-w-6xl">
+                                      <h2 className="text-sm md:text-lg font-semibold text-gray-600 uppercase tracking-wide mb-2 md:mb-3 text-center">
           Kreisliga Tauberbischofsheim
         </h2>
         
