@@ -283,7 +283,7 @@ export default function HomePage() {
                       <div 
                         className="absolute inset-0 bg-contain bg-center bg-no-repeat z-10"
                         style={{
-                          backgroundImage: "url('/okan_normal.png')",
+                          backgroundImage: "url('/Okan_normal.png')",
                           filter: 'drop-shadow(4px 4px 12px rgba(0,0,0,0.6))'
                         }}
                       ></div>
