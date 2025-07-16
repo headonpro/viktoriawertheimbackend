@@ -444,6 +444,97 @@ p, span, div, h1, h2, h3, h4, h5, h6, a, button, input, textarea, select, label,
   }
 }
 
+/* Holo Effect für Torschützenkönig - Realistisch und subtil */
+.holo-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.holo-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -200%;
+  width: 200%;
+  height: 100%;
+  background: 
+    linear-gradient(
+      110deg,
+      transparent 25%,
+      rgba(255, 255, 255, 0.03) 35%,
+      rgba(255, 255, 255, 0.08) 45%,
+      rgba(255, 255, 255, 0.12) 50%,
+      rgba(255, 255, 255, 0.08) 55%,
+      rgba(255, 255, 255, 0.03) 65%,
+      transparent 75%
+    ),
+    /* Subtile Prisma-Textur */
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      rgba(255, 255, 255, 0.01) 2px,
+      transparent 3px
+    );
+  animation: holoRealistic 4s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 30;
+  mix-blend-mode: screen;
+}
+
+.holo-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    /* Sehr subtile Interferenz-Muster */
+    radial-gradient(
+      ellipse 800px 400px at 50% 50%,
+      rgba(255, 255, 255, 0.01) 0%,
+      transparent 50%
+    ),
+    /* Minimale Textur für Realismus */
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(255, 255, 255, 0.005) 9px,
+      transparent 10px
+    );
+  opacity: 0.7;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 25;
+  mix-blend-mode: soft-light;
+}
+
+@keyframes holoRealistic {
+  0% {
+    left: -200%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.3;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.3;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
 /* News Ticker Progress Animation */
 @keyframes newsTickerProgress {
   0% { transform: scaleX(0); }

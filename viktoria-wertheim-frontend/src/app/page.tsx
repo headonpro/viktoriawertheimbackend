@@ -164,6 +164,8 @@ export default function HomePage() {
   const [newsArticles, setNewsArticles] = useState<NewsArtikel[]>([])
   const [loading, setLoading] = useState(true)
 
+
+
   // Mock data wurde als stabile Konstanten außerhalb der Komponente definiert
 
   // Mock data wurde als stabile Konstanten außerhalb der Komponente definiert
@@ -269,7 +271,7 @@ export default function HomePage() {
                   {/* Top Scorers Content */}
                   <div className="divide-y divide-white/10 py-2 md:py-3">
                     {/* Torschützenkönig - Modernes Design mit Hintergrundbild */}
-                    <div className="relative overflow-hidden rounded-xl md:rounded-2xl transition-all duration-300 hover:shadow-xl md:hover:shadow-2xl cursor-pointer group h-full flex flex-col shadow-lg mb-2 md:mb-4">
+                    <div className="holo-card relative overflow-hidden rounded-xl md:rounded-2xl transition-all duration-300 hover:shadow-xl md:hover:shadow-2xl cursor-pointer group h-full flex flex-col shadow-lg mb-2 md:mb-4">
                       {/* Overlay für Lesbarkeit - Header-Hintergrund */}
                       <div className="absolute inset-0 backdrop-blur-[0.5px] z-0 header-gradient"></div>
                       
