@@ -158,10 +158,7 @@ const GameCard = ({ type, homeTeam, awayTeam, homeScore, awayScore, date, time, 
             </div>
           ) : (
             <div 
-              className="font-bold text-viktoria-yellow text-lg md:text-3xl font-permanent-marker"
-              style={{ 
-                WebkitTextStroke: '0.5px #4B5563'
-              }}
+              className="font-bold text-viktoria-blue text-lg md:text-3xl font-permanent-marker"
             >
               VS
             </div>
