@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost', 'strapi.viktoria-wertheim.de', 'reliable-morning-f369ca7d6e.strapiapp.com'],
     remotePatterns: [
       {
         protocol: 'http',
