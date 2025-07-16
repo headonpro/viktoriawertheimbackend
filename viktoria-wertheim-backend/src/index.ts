@@ -17,6 +17,9 @@ export default {
    * run jobs, or perform some special logic.
    */
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
+    // Konfiguriere Authentication-Endpunkte ZUERST
+    await configureAuthenticationEndpoints(strapi);
+
     // Stelle sicher, dass die authenticated Rolle existiert
     const authenticatedRole = await strapi.db.query('plugin::users-permissions.role').findOne({
       where: { type: 'authenticated' }
@@ -99,6 +102,100 @@ export default {
     await configureApiPermissions(strapi);
   },
 };
+
+async function configureAuthenticationEndpoints(strapi: Core.Strapi) {
+  console.log('🔧 Konfiguriere Authentication-Endpunkte...');
+
+  // Stelle sicher, dass public und authenticated Rollen existieren
+  let publicRole = await strapi.db.query('plugin::users-permissions.role').findOne({
+    where: { type: 'public' }
+  });
+
+  if (!publicRole) {
+    publicRole = await strapi.db.query('plugin::users-permissions.role').create({
+      data: {
+        name: 'Public',
+        description: 'Default role given to unauthenticated user.',
+        type: 'public',
+      }
+    });
+  }
+
+  let authenticatedRole = await strapi.db.query('plugin::users-permissions.role').findOne({
+    where: { type: 'authenticated' }
+  });
+
+  if (!authenticatedRole) {
+    authenticatedRole = await strapi.db.query('plugin::users-permissions.role').create({
+      data: {
+        name: 'Authenticated',
+        description: 'Default role given to authenticated user.',
+        type: 'authenticated',
+      }
+    });
+  }
+
+  // Konfiguriere Authentication-Permissions für public Rolle
+  const authEndpoints = [
+    'plugin::users-permissions.auth.callback',
+    'plugin::users-permissions.auth.connect',
+    'plugin::users-permissions.auth.forgotPassword',
+    'plugin::users-permissions.auth.resetPassword',
+    'plugin::users-permissions.auth.register',
+    'plugin::users-permissions.auth.emailConfirmation'
+  ];
+
+  for (const endpoint of authEndpoints) {
+    const existingPermission = await strapi.db.query('plugin::users-permissions.permission').findOne({
+      where: {
+        action: endpoint,
+        role: publicRole.id
+      }
+    });
+
+    if (!existingPermission) {
+      await strapi.db.query('plugin::users-permissions.permission').create({
+        data: {
+          action: endpoint,
+          role: publicRole.id,
+          enabled: true
+        }
+      });
+      console.log(`  ✅ Aktiviert: ${endpoint}`);
+    }
+  }
+
+  // Konfiguriere User-Management-Permissions für authenticated Rolle
+  const userEndpoints = [
+    'plugin::users-permissions.user.me',
+    'plugin::users-permissions.user.find',
+    'plugin::users-permissions.user.findOne',
+    'plugin::users-permissions.user.update',
+    'plugin::users-permissions.user.destroy'
+  ];
+
+  for (const endpoint of userEndpoints) {
+    const existingPermission = await strapi.db.query('plugin::users-permissions.permission').findOne({
+      where: {
+        action: endpoint,
+        role: authenticatedRole.id
+      }
+    });
+
+    if (!existingPermission) {
+      await strapi.db.query('plugin::users-permissions.permission').create({
+        data: {
+          action: endpoint,
+          role: authenticatedRole.id,
+          enabled: true
+        }
+      });
+      console.log(`  ✅ Aktiviert: ${endpoint}`);
+    }
+  }
+
+  console.log('✅ Authentication-Endpunkte erfolgreich konfiguriert');
+}
 
 async function configureApiPermissions(strapi: Core.Strapi) {
   console.log('🔧 Konfiguriere API-Permissions...');
