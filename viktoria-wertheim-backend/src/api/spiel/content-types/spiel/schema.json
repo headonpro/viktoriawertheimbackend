@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "spiels",
+  "info": {
+    "singularName": "spiel",
+    "pluralName": "spiels",
+    "displayName": "Spiel"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "datum": {
+      "type": "date",
+      "required": true
+    },
+    "heimmannschaft": {
+      "type": "string"
+    },
+    "auswaertsmannschaft": {
+      "type": "string"
+    },
+    "toreHeim": {
+      "type": "integer"
+    },
+    "toreAuswaerts": {
+      "type": "integer"
+    },
+    "spielort": {
+      "type": "string"
+    },
+    "liga": {
+      "type": "string"
+    },
+    "spielstatus": {
+      "type": "string"
+    }
+  }
+}

@@ -558,6 +558,71 @@ export interface ApiMitgliedMitglied extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiNewsArtikelNewsArtikel extends Struct.CollectionTypeSchema {
+  collectionName: 'news_artikels';
+  info: {
+    displayName: 'news-artikel';
+    pluralName: 'news-artikels';
+    singularName: 'news-artikel';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    autor: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    datum: Schema.Attribute.Date & Schema.Attribute.Required;
+    inhalt: Schema.Attribute.Blocks & Schema.Attribute.Required;
+    kategorie: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::news-artikel.news-artikel'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    titel: Schema.Attribute.String & Schema.Attribute.Required;
+    titelbild: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSpielSpiel extends Struct.CollectionTypeSchema {
+  collectionName: 'spiels';
+  info: {
+    displayName: 'Spiel';
+    pluralName: 'spiels';
+    singularName: 'spiel';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    auswaertsmannschaft: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    datum: Schema.Attribute.Date & Schema.Attribute.Required;
+    heimmannschaft: Schema.Attribute.String;
+    liga: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::spiel.spiel'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    spielort: Schema.Attribute.String;
+    spielstatus: Schema.Attribute.String;
+    toreAuswaerts: Schema.Attribute.Integer;
+    toreHeim: Schema.Attribute.Integer;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiSpielerSpieler extends Struct.CollectionTypeSchema {
   collectionName: 'spielers';
   info: {
@@ -1267,6 +1332,8 @@ declare module '@strapi/strapi' {
       'api::leaderboard-entry.leaderboard-entry': ApiLeaderboardEntryLeaderboardEntry;
       'api::mannschaft.mannschaft': ApiMannschaftMannschaft;
       'api::mitglied.mitglied': ApiMitgliedMitglied;
+      'api::news-artikel.news-artikel': ApiNewsArtikelNewsArtikel;
+      'api::spiel.spiel': ApiSpielSpiel;
       'api::spieler.spieler': ApiSpielerSpieler;
       'api::training.training': ApiTrainingTraining;
       'plugin::content-releases.release': PluginContentReleasesRelease;
