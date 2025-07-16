@@ -373,6 +373,45 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiLeaderboardEntryLeaderboardEntry
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'leaderboard_entries';
+  info: {
+    displayName: 'leaderboard-entry';
+    pluralName: 'leaderboard-entries';
+    singularName: 'leaderboard-entry';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    gegentore: Schema.Attribute.Integer;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::leaderboard-entry.leaderboard-entry'
+    > &
+      Schema.Attribute.Private;
+    logo: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    niederlagen: Schema.Attribute.Integer;
+    position: Schema.Attribute.Integer & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    punkte: Schema.Attribute.Integer;
+    siege: Schema.Attribute.Integer;
+    spiele: Schema.Attribute.Integer;
+    teamname: Schema.Attribute.String & Schema.Attribute.Required;
+    tordifferenz: Schema.Attribute.Integer;
+    tore: Schema.Attribute.Integer;
+    unentschieden: Schema.Attribute.Integer;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiMannschaftMannschaft extends Struct.CollectionTypeSchema {
   collectionName: 'mannschaften';
   info: {
@@ -1225,6 +1264,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::leaderboard-entry.leaderboard-entry': ApiLeaderboardEntryLeaderboardEntry;
       'api::mannschaft.mannschaft': ApiMannschaftMannschaft;
       'api::mitglied.mitglied': ApiMitgliedMitglied;
       'api::spieler.spieler': ApiSpielerSpieler;

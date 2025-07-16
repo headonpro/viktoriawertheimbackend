@@ -3,6 +3,7 @@
 import PageLayout from '@/components/PageLayout'
 import dynamic from 'next/dynamic'
 import { IconUsers, IconHeart, IconTrophy, IconGift, IconMail, IconDownload, IconCheck, IconStar } from '@tabler/icons-react'
+import Image from "next/image";
 
 // Dynamic Import für animierte Komponenten
 const AnimatedSection = dynamic(
@@ -107,10 +108,13 @@ export default function MembershipPage() {
           {/* Einleitung */}
           <AnimatedSection delay={0.2}>
             <div className="text-center mb-8">
-              <img 
+              <Image 
                 src="/viktorialogo.png" 
                 alt="Viktoria Wertheim Logo"
+                width={64}
+                height={64}
                 className="w-16 h-16 mx-auto mb-4 drop-shadow-lg"
+                priority
               />
               <h2 className="text-xl font-bold text-viktoria-blue mb-4">
                 Werde Teil der Viktoria-Familie!

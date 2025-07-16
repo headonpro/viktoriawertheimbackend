@@ -6,6 +6,7 @@ import { IconClock, IconMapPin, IconCalendar, IconX, IconUser, IconTrophy, IconC
 import dynamic from 'next/dynamic'
 import { strapi } from '@/lib/strapi'
 import { Spiel } from '@/types/strapi'
+import Image from "next/image";
 
 const AnimatedSection = dynamic(
   () => import('@/components/AnimatedSection'),
@@ -59,15 +60,26 @@ const getTeamLogo = (teamName: string): string | undefined => {
     'TSV Assamstadt': '/Assamstadt.png',
     'Türkgücü Wertheim': '/Türkgücü.png',
     'TSV Tauberbischofsheim': '/Tauberbischofsheim.png',
+    'FV Brehmbachtal': '/Brehmbachtal.png',
     'SV Brehmbachtal': '/Brehmbachtal.png',
+    'SV Pülfringen': '/Pülfringen.png',
     'SG Pülfringen': '/Pülfringen.png',
+    'TSV Kreuzwertheim': '/Kreuzwertheim.png',
     'SV Kreuzwertheim': '/Kreuzwertheim.png',
+    'FC Hundheim-Steinbach': '/Hundheim.png',
     'TSV Hundheim': '/Hundheim.png',
+    'SpG Schwabhausen/Windischbuch': '/Scwabhausen.png',
     'SV Schwabhausen': '/Scwabhausen.png',
+    'FC Umpfertal': '/Umpfertal.png',
     'SG Umpfertal': '/Umpfertal.png',
     'SV Schönfeld': '/Schönfeld.png',
+    'Kickers DHK Wertheim': '/Kickers.png',
     'Kickers Würzburg': '/Kickers.png',
-    'FC Kickers': '/Kickers.png'
+    'FC Kickers': '/Kickers.png',
+    'SG RaMBo': '/Rambo.png',
+    'VfR Gerlachsheim': '/Gerlachsheim.png',
+    'VfB Reicholzheim': '/Reichholzheim.png',
+    'TuS Großrinderfeld': '/Großrinderfeld.png',
   }
   
   // Exakte Übereinstimmung
@@ -131,10 +143,13 @@ const GameCard = ({ type, homeTeam, awayTeam, homeScore, awayScore, date, time, 
         <div className="flex flex-col items-center flex-1">
           <div className="flex items-center justify-center w-12 h-12 md:w-20 md:h-20 mb-0 md:mb-3">
             {homeLogo ? (
-              <img 
+              <Image 
                 src={homeLogo} 
                 alt={`${homeTeam} Logo`}
+                width={80}
+                height={80}
                 className="w-12 h-12 md:w-20 md:h-20 object-contain drop-shadow-sm"
+                priority
               />
             ) : (
               <div className="w-12 h-12 md:w-20 md:h-20 bg-gray-400 rounded-full flex items-center justify-center">
@@ -169,10 +184,13 @@ const GameCard = ({ type, homeTeam, awayTeam, homeScore, awayScore, date, time, 
         <div className="flex flex-col items-center flex-1">
           <div className="flex items-center justify-center w-12 h-12 md:w-20 md:h-20 mb-0 md:mb-3">
             {awayLogo ? (
-              <img 
+              <Image 
                 src={awayLogo} 
                 alt={`${awayTeam} Logo`}
+                width={80}
+                height={80}
                 className="w-12 h-12 md:w-20 md:h-20 object-contain drop-shadow-sm"
+                priority
               />
             ) : (
               <div className="w-12 h-12 md:w-20 md:h-20 bg-gray-400 rounded-full flex items-center justify-center">
@@ -401,10 +419,13 @@ export default function GameCards() {
                 <div className="flex flex-col items-center">
                   <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center mb-1 md:mb-2">
                     {getTeamLogo(selectedGame.homeTeam) ? (
-                      <img 
-                        src={getTeamLogo(selectedGame.homeTeam)} 
+                      <Image 
+                        src={getTeamLogo(selectedGame.homeTeam)!} 
                         alt={`${selectedGame.homeTeam} Logo`}
+                        width={64}
+                        height={64}
                         className="w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-sm"
+                        priority
                       />
                     ) : (
                       <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-400 rounded-full flex items-center justify-center">
@@ -432,10 +453,13 @@ export default function GameCards() {
                 <div className="flex flex-col items-center">
                   <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center mb-1 md:mb-2">
                     {getTeamLogo(selectedGame.awayTeam) ? (
-                      <img 
-                        src={getTeamLogo(selectedGame.awayTeam)} 
+                      <Image 
+                        src={getTeamLogo(selectedGame.awayTeam)!} 
                         alt={`${selectedGame.awayTeam} Logo`}
+                        width={64}
+                        height={64}
                         className="w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-sm"
+                        priority
                       />
                     ) : (
                       <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-400 rounded-full flex items-center justify-center">

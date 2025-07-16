@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { PlayerApiService, TrainingSession, Game } from '@/lib/playerApi'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from "next/image";
 
 interface PlayerData {
   id: number
@@ -225,10 +226,13 @@ export default function PlayerDashboard() {
           <div className="relative">
             <div className="w-20 h-20 rounded-full overflow-hidden bg-white/20 flex items-center justify-center">
               {playerData.attributes.foto?.data ? (
-                <img 
+                <Image 
                   src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${playerData.attributes.foto.data.attributes.url}`}
                   alt="Spielerfoto"
+                  width={80}
+                  height={80}
                   className="w-full h-full object-cover"
+                  priority
                 />
               ) : (
                 <span className="text-3xl">{getPositionIcon(playerData.attributes.position)}</span>
@@ -475,10 +479,13 @@ export default function PlayerDashboard() {
             <div className="space-y-4">
               {playerData.attributes.mannschaft.data.attributes.teamfoto?.data && (
                 <div className="text-center">
-                  <img 
+                  <Image 
                     src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${playerData.attributes.mannschaft.data.attributes.teamfoto.data.attributes.url}`}
                     alt="Teamfoto"
+                    width={400}
+                    height={128}
                     className="w-full h-32 object-cover rounded-lg"
+                    priority
                   />
                 </div>
               )}

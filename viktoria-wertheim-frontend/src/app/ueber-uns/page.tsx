@@ -3,6 +3,7 @@
 import PageLayout from '@/components/PageLayout'
 import dynamic from 'next/dynamic'
 import { IconUsers, IconTrophy, IconHeart, IconMapPin, IconCalendar, IconStar } from '@tabler/icons-react'
+import Image from "next/image";
 
 // Dynamic Import für animierte Komponenten
 const AnimatedSection = dynamic(
@@ -27,10 +28,13 @@ export default function AboutPage() {
           {/* Vereinslogo und Einleitung */}
           <AnimatedSection delay={0.2}>
             <div className="text-center mb-8">
-              <img 
+              <Image 
                 src="/viktorialogo.png" 
                 alt="Viktoria Wertheim Logo"
+                width={80}
+                height={80}
                 className="w-20 h-20 mx-auto mb-4 drop-shadow-lg"
+                priority
               />
               <h2 className="text-2xl font-bold text-viktoria-blue mb-4">
                 SV Viktoria Wertheim

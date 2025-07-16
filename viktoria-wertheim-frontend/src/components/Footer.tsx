@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { IconStar } from '@tabler/icons-react'
+import Image from "next/image";
 
 // Dynamic Import für animierte Komponenten
 const AnimatedSection = dynamic(
@@ -17,10 +18,13 @@ export default function Footer() {
     >
       <div className="container">
         <div className="text-center mb-8">
-          <img 
+          <Image 
             src="/viktorialogo.png" 
             alt="Viktoria Wertheim Logo"
+            width={80}
+            height={80}
             className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-4 drop-shadow-lg"
+            priority
           />
           <h1 className="text-3xl md:text-4xl font-bold mb-2">
             SV Viktoria Wertheim

@@ -1,18 +1,19 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import PageLayout from '@/components/PageLayout'
 import { IconUsers, IconTrophy, IconMapPin } from '@tabler/icons-react'
 import { strapi } from '@/lib/strapi'
 import { Mannschaft } from '@/types/strapi'
+import Image from "next/image";
 
 export default function TeamsPage() {
   const [teams, setTeams] = useState<Mannschaft[]>([])
   const [loading, setLoading] = useState(true)
 
   // Mock-Daten als Fallback
-  const mockTeams: Mannschaft[] = [
+  const mockTeams: Mannschaft[] = useMemo(() => [
     {
       id: 1,
       attributes: {
@@ -49,7 +50,7 @@ export default function TeamsPage() {
         updatedAt: '2024-01-01T00:00:00.000Z'
       }
     }
-  ]
+  ], []);
 
   // Fetch teams from API
   useEffect(() => {
@@ -73,7 +74,7 @@ export default function TeamsPage() {
     }
 
     fetchTeams()
-  }, [])
+  }, [mockTeams])
 
   // Loading state
   if (loading) {
@@ -246,10 +247,13 @@ export default function TeamsPage() {
                     {/* Team Header */}
                     <div className="relative h-32 bg-gradient-to-br from-viktoria-blue-light to-viktoria-blue overflow-hidden">
                       {team.attributes.teamfoto?.data ? (
-                        <img
+                        <Image
                           src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${team.attributes.teamfoto.data.attributes.url}`}
                           alt={team.attributes.teamfoto.data.attributes.alternativeText || team.attributes.name}
+                          width={400}
+                          height={128}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          priority
                         />
                       ) : (
                         <div className="h-full flex items-center justify-center">

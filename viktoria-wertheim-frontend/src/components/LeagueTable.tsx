@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import dynamic from 'next/dynamic'
+import Image from "next/image";
 
 const AnimatedSection = dynamic(
   () => import('@/components/AnimatedSection'),
@@ -71,7 +72,11 @@ const getTeamLogo = (teamName: string): string | undefined => {
     'SV Schönfeld': '/Schönfeld.png',
     'Kickers DHK Wertheim': '/Kickers.png',
     'Kickers Würzburg': '/Kickers.png',
-    'FC Kickers': '/Kickers.png'
+    'FC Kickers': '/Kickers.png',
+    'SG RaMBo': '/Rambo.png',
+    'VfR Gerlachsheim': '/Gerlachsheim.png',
+    'VfB Reicholzheim': '/Reichholzheim.png',
+    'TuS Großrinderfeld': '/Großrinderfeld.png',
   }
   
   // Exakte Übereinstimmung
@@ -371,10 +376,13 @@ const LeagueTable = () => {
                   {/* Team Name & Logo */}
                   <div className="col-span-4 lg:col-span-5 flex items-center space-x-2 md:space-x-3">
                     {team.logo ? (
-                      <img 
+                      <Image 
                         src={team.logo} 
                         alt={`${team.name} Logo`}
+                        width={32}
+                        height={32}
                         className="w-6 h-6 md:w-8 md:h-8 object-contain drop-shadow-sm"
+                        priority
                       />
                     ) : (
                       <div className="w-6 h-6 md:w-8 md:h-8 bg-gray-400 rounded-full flex items-center justify-center">

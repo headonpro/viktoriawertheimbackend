@@ -11,6 +11,7 @@ import {
   ProfileUpdateData 
 } from '@/types/auth'
 import { motion } from 'framer-motion'
+import Image from "next/image";
 
 interface ProfileFormProps {
   onSuccess?: () => void
@@ -221,10 +222,13 @@ export default function ProfileForm({ onSuccess }: ProfileFormProps) {
           <div className="relative">
             <div className="w-24 h-24 rounded-full overflow-hidden bg-white/20 flex items-center justify-center">
               {user?.mitglied?.attributes?.profilfoto?.data ? (
-                <img 
+                <Image 
                   src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${user.mitglied.attributes.profilfoto.data.attributes.url}`}
                   alt="Profilfoto"
+                  width={96}
+                  height={96}
                   className="w-full h-full object-cover"
+                  priority
                 />
               ) : (
                 <span className="text-4xl">👤</span>

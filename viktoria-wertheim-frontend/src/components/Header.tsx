@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuth, useAuthStatus } from '@/contexts/AuthContext'
+import Image from "next/image";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -51,17 +52,18 @@ export default function Header() {
             <div className="flex items-center">
               <Link href="/" className="flex items-center">
                 <div className="flex-shrink-0 logo-container">
-                  <img 
+                  <Image 
                     src="/viktorialogo.png" 
                     alt="Viktoria Wertheim Logo"
-                    className="object-contain drop-shadow-lg"
                     width={48}
                     height={48}
+                    className="object-contain drop-shadow-lg"
                     style={{ 
                       filter: 'contrast(1.1) brightness(1.05)',
                       width: '48px',
                       height: '48px'
                     }}
+                    priority
                   />
                 </div>
               </Link>
@@ -97,13 +99,16 @@ export default function Header() {
             <div className="flex items-center">
               <Link href="/" className="flex items-center space-x-3">
                 <div className="flex-shrink-0">
-                  <img 
+                  <Image 
                     src="/viktorialogo.png" 
                     alt="Viktoria Wertheim Logo"
+                    width={48}
+                    height={48}
                     className="w-12 h-12 object-contain drop-shadow-sm"
                     style={{ 
                       filter: 'contrast(1.1) brightness(1.05)'
                     }}
+                    priority
                   />
                 </div>
                 <div className="flex items-center" style={{ gap: '6px' }}>
