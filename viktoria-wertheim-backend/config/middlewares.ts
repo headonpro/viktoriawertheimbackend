@@ -8,7 +8,7 @@ export default [
       origin: [
         'http://localhost:3000',
         'https://localhost:3000', 
-        'https://viktoria-wertheim-backend-wecb.vercel.app',
+        'https://viktoria-wertheim-backend-wscb.vercel.app',
         'https://*.vercel.app',
         'https://viktoria-wertheim.de',
         'https://www.viktoria-wertheim.de'
