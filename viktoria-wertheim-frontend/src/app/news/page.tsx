@@ -460,7 +460,7 @@ export default function NewsPage() {
                             src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://192.168.178.59:1337'}${(getArticleImage(filteredArticles[0]) as any)?.url || (getArticleImage(filteredArticles[0]) as any)?.attributes?.url}`}
                             alt={(getArticleImage(filteredArticles[0]) as any)?.alternativeText || (getArticleImage(filteredArticles[0]) as any)?.attributes?.alternativeText || getArticleTitle(filteredArticles[0])}
                             fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
                           />
                         ) : (
                           <div className="h-full flex items-center justify-center">
@@ -473,16 +473,9 @@ export default function NewsPage() {
                           </div>
                         )}
                         
-                        {/* Featured Badge */}
+                        {/* Category Badge */}
                         <div className="absolute top-4 left-4">
                           <span className="bg-viktoria-yellow text-gray-900 text-sm px-3 py-1.5 rounded-full font-semibold shadow-sm">
-                            ⭐ Featured
-                          </span>
-                        </div>
-
-                        {/* Category Badge */}
-                        <div className="absolute top-4 right-4">
-                          <span className="bg-white/95 text-gray-700 text-sm px-3 py-1.5 rounded-full font-medium backdrop-blur-sm">
                             {getKategorieName(filteredArticles[0])}
                           </span>
                         </div>
@@ -543,7 +536,7 @@ export default function NewsPage() {
                               src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://192.168.178.59:1337'}${(getArticleImage(article) as any)?.url || (getArticleImage(article) as any)?.attributes?.url}`}
                               alt={(getArticleImage(article) as any)?.alternativeText || (getArticleImage(article) as any)?.attributes?.alternativeText || getArticleTitle(article)}
                               fill
-                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                              className="object-cover object-top group-hover:scale-105 transition-transform duration-300"
                             />
                           ) : (
                             <div className="h-full flex items-center justify-center">

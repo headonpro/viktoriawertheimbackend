@@ -156,7 +156,7 @@ export default function Header() {
                             : 'text-white group-hover:text-viktoria-yellow'
                         }`}
                       >
-                        {item.label.toUpperCase()}
+                        {item.label}
                       </span>
                     </Link>
                   )

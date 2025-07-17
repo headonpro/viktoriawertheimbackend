@@ -1,282 +1,215 @@
-'use client'
+"use client"
 
 import PageLayout from '@/components/PageLayout'
-import dynamic from 'next/dynamic'
-import { IconUsers, IconHeart, IconTrophy, IconGift, IconMail, IconDownload, IconCheck, IconStar } from '@tabler/icons-react'
-import Image from "next/image";
+import AnimatedSection from '@/components/AnimatedSection'
+import { IconUsers, IconTrophy, IconHeart, IconCheck, IconMail, IconPhone, IconCalendar, IconMapPin, IconStar } from '@tabler/icons-react'
 
-// Dynamic Import für animierte Komponenten
-const AnimatedSection = dynamic(
-  () => import('@/components/AnimatedSection'),
-  { ssr: false }
-)
-
-const AnimatedDiv = dynamic(
-  () => import('@/components/AnimatedSection').then(mod => ({ default: mod.AnimatedDiv })),
-  { ssr: false }
-)
-
-interface MembershipCategory {
-  name: string
-  price: string
-  description: string
-  benefits: string[]
-  icon: any
-  color: string
-  popular?: boolean
-}
-
-export default function MembershipPage() {
-  const membershipCategories: MembershipCategory[] = [
-    {
-      name: 'Aktive Mitglieder',
-      price: '15€/Monat',
-      description: 'Für alle aktiven Spieler und Spielerinnen aller Altersklassen',
-      benefits: [
-        'Teilnahme am Trainings- und Spielbetrieb',
-        'Kostenlose Nutzung der Vereinsanlage',
-        'Vereinstrikot und Trainingskleidung',
-        'Teilnahme an Vereinsveranstaltungen',
-        'Versicherungsschutz über den Verein'
-      ],
-      icon: IconTrophy,
-      color: 'viktoria-blue',
-      popular: true
-    },
-    {
-      name: 'Passive Mitglieder',
-      price: '8€/Monat',
-      description: 'Für Unterstützer und Fans, die den Verein fördern möchten',
-      benefits: [
-        'Stimmrecht bei Vereinsversammlungen',
-        'Ermäßigungen bei Vereinsveranstaltungen',
-        'Regelmäßige Vereinsinformationen',
-        'Nutzung des Vereinsheims',
-        'Teilnahme an Vereinsfeiern'
-      ],
-      icon: IconHeart,
-      color: 'viktoria-yellow'
-    },
-    {
-      name: 'Jugendmitglieder',
-      price: '10€/Monat',
-      description: 'Für Kinder und Jugendliche bis 18 Jahre',
-      benefits: [
-        'Altersgerechtes Training und Spiele',
-        'Qualifizierte Jugendtrainer',
-        'Teilnahme an Jugendturnieren',
-        'Vereinskleidung für Jugendliche',
-        'Kostenlose Vereinsveranstaltungen'
-      ],
-      icon: IconUsers,
-      color: 'green-600'
-    },
-    {
-      name: 'Ehrenmitglieder',
-      price: 'Kostenfrei',
-      description: 'Für verdiente Mitglieder mit besonderen Leistungen für den Verein',
-      benefits: [
-        'Alle Rechte der aktiven Mitgliedschaft',
-        'Beitragsbefreiung',
-        'Besondere Ehrungen bei Veranstaltungen',
-        'Lebenslanges Stimmrecht',
-        'Bevorzugter Zugang zu Vereinsveranstaltungen'
-      ],
-      icon: IconStar,
-      color: 'purple-600'
-    }
-  ]
-
-  const getColorClasses = (color: string) => {
-    switch (color) {
-      case 'viktoria-blue': return 'text-viktoria-blue bg-viktoria-blue/10 border-viktoria-blue'
-      case 'viktoria-yellow': return 'text-viktoria-yellow bg-viktoria-yellow/10 border-viktoria-yellow'
-      case 'green-600': return 'text-green-600 bg-green-100 border-green-600'
-      case 'purple-600': return 'text-purple-600 bg-purple-100 border-purple-600'
-      default: return 'text-gray-600 bg-gray-100 border-gray-600'
-    }
-  }
-
+export default function MitgliedschaftPage() {
   return (
     <PageLayout>
-      {/* Header Section - nur Mobile */}
-      
-
-      <main className="pt-8 pb-6">
-        <div className="container space-y-8">
+      <main className="px-4 py-6">
+        <div className="container max-w-4xl space-y-6">
           
           {/* Einleitung */}
-          <AnimatedSection delay={0.2}>
-            <div className="text-center mb-8">
-              <Image 
-                src="/viktorialogo.png" 
-                alt="Viktoria Wertheim Logo"
-                width={64}
-                height={64}
-                className="w-16 h-16 mx-auto mb-4 drop-shadow-lg"
-                priority
-              />
-              <h2 className="text-xl font-bold text-viktoria-blue mb-4">
+          <AnimatedSection delay={0.1}>
+            <div className="text-center mb-6">
+              <div className="w-20 h-20 bg-viktoria-blue rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <IconUsers size={32} className="text-viktoria-yellow" />
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-viktoria-blue mb-4">
                 Werde Teil der Viktoria-Familie!
-              </h2>
-              <p className="text-gray-700 leading-relaxed px-4">
-                Bei uns findest du mehr als nur Fußball – wir sind eine Gemeinschaft, 
-                die zusammenhält und gemeinsam Erfolge feiert. Wähle die Mitgliedschaft, 
-                die zu dir passt.
+              </h1>
+              <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed text-sm md:text-base">
+                Entdecke die Freude am Fußball beim SV Viktoria Wertheim. 
+                Als Mitglied unseres Vereins kannst du aktiv mitspielen, trainieren und Teil unserer Gemeinschaft werden.
               </p>
             </div>
           </AnimatedSection>
 
-          {/* Mitgliedschaftskategorien */}
-          <div className="space-y-4">
-            {membershipCategories.map((category, index) => (
-              <AnimatedDiv 
-                key={index} 
-                delay={0.3 + index * 0.1}
-                className={`relative bg-white/40 backdrop-blur-sm rounded-xl border-2 border-white/20 p-6 hover:bg-white/50 transition-all duration-300 ${
-                  category.popular ? 'ring-2 ring-viktoria-yellow/50' : ''
-                }`}
-              >
-                {category.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-viktoria-yellow text-viktoria-blue text-xs font-bold px-3 py-1 rounded-full">
-                      BELIEBT
-                    </span>
-                  </div>
-                )}
+          {/* Mitgliedschaft Info */}
+          <AnimatedSection delay={0.2}>
+            <div className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden shadow-lg">
+              <div className="bg-white/30 px-4 py-3 border-b border-white/20 text-center">
+                <h2 className="text-lg font-bold text-viktoria-blue flex items-center justify-center">
+                  <IconTrophy className="mr-3 text-viktoria-yellow" size={24} />
+                  Vereinsmitgliedschaft
+                </h2>
+              </div>
+              <div className="p-6 text-center">
+                <div className="w-16 h-16 bg-viktoria-yellow rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <IconUsers className="text-viktoria-blue" size={28} />
+                </div>
+                <h3 className="text-xl font-bold text-viktoria-blue mb-4">Aktive Mitgliedschaft</h3>
+                <p className="text-gray-700 mb-6 text-sm leading-relaxed">
+                  Als Mitglied des SV Viktoria Wertheim erhältst du die Möglichkeit, aktiv am Vereinsleben teilzunehmen, 
+                  zu trainieren und in unseren Mannschaften zu spielen.
+                </p>
                 
-                <div className="flex items-start space-x-4">
-                  {/* Icon & Price */}
-                  <div className="flex-shrink-0 text-center">
-                    <div className={`${getColorClasses(category.color)} p-3 rounded-lg mb-2`}>
-                      <category.icon size={24} />
+                <div className="bg-viktoria-blue/5 rounded-lg p-4 border border-viktoria-blue/20 mb-6">
+                  <h4 className="font-semibold text-viktoria-blue mb-3">Was bietet dir die Mitgliedschaft?</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <IconCheck className="text-green-500 flex-shrink-0" size={16} />
+                      <span className="text-gray-700">Regelmäßiges Training</span>
                     </div>
-                    <div className="text-lg font-bold text-viktoria-blue">
-                      {category.price}
+                    <div className="flex items-center space-x-2">
+                      <IconCheck className="text-green-500 flex-shrink-0" size={16} />
+                      <span className="text-gray-700">Spielberechtigung</span>
                     </div>
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="flex-1">
-                    <h3 className="font-bold text-viktoria-blue text-lg mb-2">
-                      {category.name}
-                    </h3>
-                    <p className="text-gray-700 text-sm leading-relaxed mb-4">
-                      {category.description}
-                    </p>
-                    
-                    {/* Benefits */}
-                    <div>
-                      <h4 className="font-semibold text-gray-800 text-sm mb-2">Vorteile:</h4>
-                      <ul className="space-y-1">
-                        {category.benefits.map((benefit, benefitIndex) => (
-                          <li key={benefitIndex} className="flex items-start space-x-2 text-sm text-gray-700">
-                            <IconCheck className="text-green-600 mt-0.5 flex-shrink-0" size={14} />
-                            <span>{benefit}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    <div className="flex items-center space-x-2">
+                      <IconCheck className="text-green-500 flex-shrink-0" size={16} />
+                      <span className="text-gray-700">Vereinsgemeinschaft</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <IconCheck className="text-green-500 flex-shrink-0" size={16} />
+                      <span className="text-gray-700">Vereinsveranstaltungen</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <IconCheck className="text-green-500 flex-shrink-0" size={16} />
+                      <span className="text-gray-700">Professionelle Betreuung</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <IconCheck className="text-green-500 flex-shrink-0" size={16} />
+                      <span className="text-gray-700">Sportliche Entwicklung</span>
                     </div>
                   </div>
                 </div>
-              </AnimatedDiv>
-            ))}
-          </div>
-
-          {/* Beitrittsformular Info */}
-          <AnimatedSection delay={0.8}>
-            <div className="bg-gradient-to-r from-viktoria-blue-light to-viktoria-blue rounded-xl p-6 text-white text-center">
-              <IconGift className="text-viktoria-yellow mx-auto mb-4" size={48} />
-              <h2 className="text-xl font-bold text-viktoria-yellow mb-4">
-                So einfach geht&apos;s!
-              </h2>
-              <p className="text-white/90 mb-6 leading-relaxed">
-                Der Beitritt zu unserem Verein ist ganz einfach. Fülle das Beitrittsformular aus 
-                oder komm einfach bei uns vorbei. Wir freuen uns auf dich!
-              </p>
-              <div className="grid grid-cols-1 gap-3">
-                <a 
-                  href="mailto:info@viktoria-wertheim.de?subject=Beitrittsformular%20anfordern"
-                  className="bg-viktoria-yellow text-viktoria-blue px-6 py-3 rounded-lg font-semibold hover:bg-viktoria-yellow/90 transition-colors duration-300 flex items-center justify-center space-x-2"
-                >
-                  <IconMail size={20} />
-                  <span>Beitrittsformular anfordern</span>
-                </a>
-                <a 
-                  href="#"
-                  className="bg-white/20 text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/30 transition-colors duration-300 flex items-center justify-center space-x-2"
-                >
-                  <IconDownload size={20} />
-                  <span>Formular herunterladen (PDF)</span>
-                </a>
               </div>
             </div>
           </AnimatedSection>
 
-          {/* Warum Mitglied werden */}
-          <AnimatedSection delay={0.9}>
-            <div className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 p-6">
-              <h2 className="text-xl font-bold text-viktoria-blue mb-6 text-center">
-                Warum Viktoria Wertheim?
-              </h2>
-              <div className="grid grid-cols-1 gap-4">
-                <AnimatedDiv delay={1.0} className="flex items-center space-x-3">
-                  <div className="bg-viktoria-blue/10 p-2 rounded-lg">
-                    <IconUsers className="text-viktoria-blue" size={20} />
+          {/* Training & Spielbetrieb */}
+          <AnimatedSection delay={0.3}>
+            <div className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden shadow-lg">
+              <div className="bg-white/30 px-4 py-3 border-b border-white/20 text-center">
+                <h2 className="text-lg font-bold text-viktoria-blue flex items-center justify-center">
+                  <IconCalendar className="mr-3 text-viktoria-yellow" size={24} />
+                  Training & Spielbetrieb
+                </h2>
+              </div>
+              <div className="p-6 space-y-4 text-gray-700 text-sm">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-viktoria-blue/5 rounded-lg p-4 border border-viktoria-blue/20">
+                    <h3 className="font-semibold text-viktoria-blue mb-3">Trainingszeiten</h3>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <IconCalendar size={16} className="text-viktoria-blue" />
+                        <span>Dienstag: 19:00 - 20:30 Uhr</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <IconCalendar size={16} className="text-viktoria-blue" />
+                        <span>Donnerstag: 19:00 - 20:30 Uhr</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <IconCalendar size={16} className="text-viktoria-blue" />
+                        <span>Samstag: 15:00 - 16:30 Uhr</span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-800 text-sm">Starke Gemeinschaft</h3>
-                    <p className="text-gray-600 text-xs">Über 250 Mitglieder, die zusammenhalten</p>
+                  
+                  <div className="bg-viktoria-yellow/5 rounded-lg p-4 border border-viktoria-yellow/20">
+                    <h3 className="font-semibold text-viktoria-blue mb-3">Unser Sportplatz</h3>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <IconMapPin size={16} className="text-viktoria-blue" />
+                        <span>Haslocher Weg 85</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <IconMapPin size={16} className="text-viktoria-blue" />
+                        <span>97877 Wertheim-Bestenheid</span>
+                      </div>
+                      <p className="text-xs text-gray-600 mt-2">
+                        Moderner Rasenplatz mit Vereinsheim und Umkleidekabinen
+                      </p>
+                    </div>
                   </div>
-                </AnimatedDiv>
+                </div>
                 
-                <AnimatedDiv delay={1.1} className="flex items-center space-x-3">
-                  <div className="bg-viktoria-yellow/10 p-2 rounded-lg">
-                    <IconTrophy className="text-viktoria-yellow" size={20} />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-800 text-sm">Erfolgreiche Tradition</h3>
-                    <p className="text-gray-600 text-xs">Über 100 Jahre Vereinsgeschichte</p>
-                  </div>
-                </AnimatedDiv>
-                
-                <AnimatedDiv delay={1.2} className="flex items-center space-x-3">
-                  <div className="bg-green-100 p-2 rounded-lg">
-                    <IconHeart className="text-green-600" size={20} />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-800 text-sm">Faire Beiträge</h3>
-                    <p className="text-gray-600 text-xs">Transparente und soziale Preisgestaltung</p>
-                  </div>
-                </AnimatedDiv>
+                <div className="bg-gradient-to-r from-viktoria-blue/5 to-viktoria-yellow/5 rounded-lg p-4 border border-viktoria-blue/20">
+                  <h3 className="font-semibold text-viktoria-blue mb-2">Für wen ist die Mitgliedschaft geeignet?</h3>
+                  <p className="text-sm leading-relaxed">
+                    Unsere Mitgliedschaft richtet sich an alle fußballbegeisterten Menschen, die gerne in einer Mannschaft spielen möchten. 
+                    Egal ob Anfänger oder erfahrener Spieler – bei uns findest du deinen Platz im Team.
+                  </p>
+                </div>
               </div>
             </div>
           </AnimatedSection>
 
-          {/* Kontakt für Fragen */}
-          <AnimatedSection delay={1.3}>
-            <div className="bg-viktoria-yellow/20 rounded-xl p-6 text-center">
-              <h2 className="text-lg font-bold text-viktoria-blue mb-4">
-                Noch Fragen?
+          {/* Warum Viktoria Wertheim */}
+          <AnimatedSection delay={0.4}>
+            <div className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden shadow-lg">
+              <div className="bg-white/30 px-4 py-3 border-b border-white/20 text-center">
+                <h2 className="text-lg font-bold text-viktoria-blue">
+                  Warum SV Viktoria Wertheim?
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-viktoria-blue rounded-full flex items-center justify-center mx-auto mb-3">
+                      <IconUsers className="text-viktoria-yellow" size={24} />
+                    </div>
+                    <h3 className="font-semibold text-viktoria-blue mb-2 text-sm">Gemeinschaft</h3>
+                    <p className="text-xs text-gray-600 leading-relaxed">
+                      Werde Teil einer großen Familie mit über 75 Jahren Vereinstradition
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-viktoria-yellow rounded-full flex items-center justify-center mx-auto mb-3">
+                      <IconTrophy className="text-viktoria-blue" size={24} />
+                    </div>
+                    <h3 className="font-semibold text-viktoria-blue mb-2 text-sm">Erfolg</h3>
+                    <p className="text-xs text-gray-600 leading-relaxed">
+                      Erreiche deine sportlichen Ziele in einem ambitionierten Verein
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <IconHeart className="text-white" size={24} />
+                    </div>
+                    <h3 className="font-semibold text-viktoria-blue mb-2 text-sm">Leidenschaft</h3>
+                    <p className="text-xs text-gray-600 leading-relaxed">
+                      Lebe deine Begeisterung für den Fußball mit Gleichgesinnten
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </AnimatedSection>
+
+          {/* Mitglied werden */}
+          <AnimatedSection delay={0.5}>
+            <div className="bg-viktoria-yellow/20 rounded-xl p-6 text-center border border-viktoria-yellow/30">
+              <div className="w-16 h-16 bg-viktoria-blue rounded-full flex items-center justify-center mx-auto mb-4">
+                <IconStar className="text-viktoria-yellow" size={28} />
+              </div>
+              <h2 className="text-xl font-bold text-viktoria-blue mb-4">
+                Bereit für den ersten Schritt?
               </h2>
               <p className="text-gray-700 mb-6 text-sm leading-relaxed">
-                Unser Vorstandsteam beantwortet gerne alle deine Fragen zur Mitgliedschaft. 
-                Ruf einfach an oder schreib uns eine E-Mail!
+                Komm einfach zu einem unserer Trainings vorbei oder kontaktiere uns für weitere Informationen. 
+                Ein Probetraining ist jederzeit möglich!
               </p>
-              <div className="grid grid-cols-1 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <a 
-                  href="tel:09342123456"
-                  className="bg-viktoria-blue text-white px-6 py-3 rounded-lg font-semibold hover:bg-viktoria-blue-light transition-colors duration-300"
+                  href="mailto:info@viktoria-wertheim.de"
+                  className="bg-viktoria-blue text-white px-6 py-3 rounded-lg font-semibold hover:bg-viktoria-blue-light transition-colors duration-300 flex items-center justify-center space-x-2 text-sm"
                 >
-                  (09342) 123-456
+                  <IconMail size={18} />
+                  <span>E-Mail senden</span>
                 </a>
                 <a 
-                  href="/kontakt"
-                  className="bg-viktoria-yellow text-viktoria-blue px-6 py-3 rounded-lg font-semibold hover:bg-viktoria-yellow/90 transition-colors duration-300"
+                  href="tel:+4993421234567"
+                  className="bg-viktoria-yellow text-viktoria-blue px-6 py-3 rounded-lg font-semibold hover:bg-viktoria-yellow/90 transition-colors duration-300 flex items-center justify-center space-x-2 text-sm"
                 >
-                  Kontaktformular
+                  <IconPhone size={18} />
+                  <span>Anrufen</span>
                 </a>
               </div>
+              <p className="text-xs text-gray-600 mt-4">
+                Oder komm einfach zu einem Training vorbei – wir freuen uns auf dich!
+              </p>
             </div>
           </AnimatedSection>
 
@@ -284,4 +217,4 @@ export default function MembershipPage() {
       </main>
     </PageLayout>
   )
-} 
+}

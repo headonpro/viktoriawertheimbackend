@@ -25,7 +25,7 @@ export default function ShopPage() {
         <AnimatedSection className="px-4 pt-6 pb-4" delay={0.2}>
           <div className="container">
             <div className="max-w-4xl mx-auto">
-              <div className="bg-gradient-to-r from-viktoria-yellow/10 to-viktoria-blue/10 border border-viktoria-yellow/30 rounded-2xl p-6 text-center shadow-sm">
+              <div className="bg-gradient-to-r from-viktoria-yellow/10 to-viktoria-blue/10 border border-viktoria-yellow/30 rounded-2xl p-6 text-center shadow-lg">
                 <div className="flex items-center justify-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-viktoria-yellow rounded-xl flex items-center justify-center shadow-md">
                     <IconShirt size={24} className="text-viktoria-blue" />
@@ -57,7 +57,7 @@ export default function ShopPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
               {/* Trikots */}
               <AnimatedDiv 
-                className="group bg-white/70 backdrop-blur-sm rounded-xl p-5 border border-white/40 hover:bg-white/80 transition-all duration-300 md:shadow-lg md:hover:shadow-xl"
+                className="group bg-white/70 backdrop-blur-sm rounded-xl p-5 border border-white/40 hover:bg-white/80 transition-all duration-300 shadow-lg hover:shadow-xl"
                 delay={0.4}
               >
                 <div className="text-center">
@@ -76,7 +76,7 @@ export default function ShopPage() {
 
               {/* Fanartikel */}
               <AnimatedDiv 
-                className="group bg-white/70 backdrop-blur-sm rounded-xl p-5 border border-white/40 hover:bg-white/80 transition-all duration-300 md:shadow-lg md:hover:shadow-xl"
+                className="group bg-white/70 backdrop-blur-sm rounded-xl p-5 border border-white/40 hover:bg-white/80 transition-all duration-300 shadow-lg hover:shadow-xl"
                 delay={0.5}
               >
                 <div className="text-center">
@@ -95,7 +95,7 @@ export default function ShopPage() {
 
               {/* Mitgliedschaft */}
               <AnimatedDiv 
-                className="group bg-white/70 backdrop-blur-sm rounded-xl p-5 border border-white/40 hover:bg-white/80 transition-all duration-300 md:shadow-lg md:hover:shadow-xl"
+                className="group bg-white/70 backdrop-blur-sm rounded-xl p-5 border border-white/40 hover:bg-white/80 transition-all duration-300 shadow-lg hover:shadow-xl"
                 delay={0.6}
               >
                 <div className="text-center">
@@ -115,51 +115,7 @@ export default function ShopPage() {
           </div>
         </AnimatedSection>
 
-        {/* Shop Kontakt - Kompakt */}
-        <AnimatedSection className="px-4 py-6" delay={0.7}>
-          <div className="container">
-            <div className="max-w-4xl mx-auto">
-              <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-white/40 md:shadow-lg">
-                <div className="text-center mb-4">
-                  <h3 className="text-lg font-semibold text-viktoria-blue mb-1">Fragen zum Shop?</h3>
-                  <p className="text-gray-600 text-sm">Meldet euch gerne bei uns!</p>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                  <div className="flex flex-col items-center space-y-2">
-                    <div className="w-10 h-10 bg-viktoria-blue rounded-lg flex items-center justify-center">
-                      <IconMail size={16} className="text-viktoria-yellow" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-medium text-gray-700">Email</p>
-                      <p className="text-xs text-gray-600 break-all">shop@viktoria-wertheim.de</p>
-                    </div>
-                  </div>
 
-                  <div className="flex flex-col items-center space-y-2">
-                    <div className="w-10 h-10 bg-viktoria-blue rounded-lg flex items-center justify-center">
-                      <IconPhone size={16} className="text-viktoria-yellow" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-medium text-gray-700">Telefon</p>
-                      <p className="text-xs text-gray-600">(09342) 123-456</p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col items-center space-y-2">
-                    <div className="w-10 h-10 bg-viktoria-blue rounded-lg flex items-center justify-center">
-                      <IconMapPin size={16} className="text-viktoria-yellow" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-medium text-gray-700">Abholung</p>
-                      <p className="text-xs text-gray-600">Sportplatz Wertheim</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </AnimatedSection>
 
         {/* Newsletter Signup - Bonus Section */}
         <AnimatedSection className="px-4 py-6" delay={0.8}>

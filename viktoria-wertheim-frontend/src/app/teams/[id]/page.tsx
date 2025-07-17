@@ -105,19 +105,7 @@ export default function TeamDetailPage({ params }: { params: Promise<{ id: strin
     <PageLayout>
 
 
-        {/* Liga Banner */}
-        <AnimatedSection className="px-4 pt-6 pb-4" delay={0.2}>
-          <div className="container">
-            <div className="header-gradient rounded-xl p-4 shadow-sm border border-white/20">
-              <div className="flex items-center justify-center space-x-3">
-                <IconTrophy className="text-viktoria-yellow" size={20} />
-                <h2 className="text-xl md:text-2xl font-permanent-marker text-white">
-                  {team.ligazugehoerigkeit}
-                </h2>
-              </div>
-            </div>
-          </div>
-        </AnimatedSection>
+
 
 
 

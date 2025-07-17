@@ -17,21 +17,21 @@ export default function Footer() {
       delay={0.7}
     >
       <div className="container">
-        <div className="text-center mb-8">
+        <div className="text-center mb-10">
           <Image 
             src="/viktorialogo.png" 
             alt="Viktoria Wertheim Logo"
             width={80}
             height={80}
-            className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-4 drop-shadow-lg"
+            className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-5 drop-shadow-lg"
             priority
           />
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">
             SV Viktoria Wertheim
           </h1>
-          <div className="flex items-center justify-center space-x-2 text-viktoria-yellow mb-6">
+          <div className="flex items-center justify-center space-x-2 text-viktoria-yellow">
             <IconStar size={20} fill="currentColor" />
-            <span className="font-semibold">Seit 1920</span>
+            <span className="font-semibold">Seit 1945</span>
             <IconStar size={20} fill="currentColor" />
           </div>
         </div>
@@ -58,7 +58,6 @@ export default function Footer() {
             </h3>
             <div className="space-y-2 text-sm text-white/90">
               <a href="/ueber-uns" className="block hover:text-viktoria-yellow transition-colors">Über uns</a>
-              <a href="/geschichte" className="block hover:text-viktoria-yellow transition-colors">Geschichte</a>
               <a href="/vorstand" className="block hover:text-viktoria-yellow transition-colors">Vorstand</a>
               <a href="/mitgliedschaft" className="block hover:text-viktoria-yellow transition-colors">Mitgliedschaft</a>
               <a href="/sponsoren" className="block hover:text-viktoria-yellow transition-colors">Sponsoren</a>

@@ -1,52 +1,76 @@
-'use client'
+"use client"
 
 import PageLayout from '@/components/PageLayout'
-import dynamic from 'next/dynamic'
-import { IconMail, IconPhone, IconMapPin, IconUser, IconBuilding } from '@tabler/icons-react'
-
-// Dynamic Import für animierte Komponenten
-const AnimatedSection = dynamic(
-  () => import('@/components/AnimatedSection'),
-  { ssr: false }
-)
+import AnimatedSection from '@/components/AnimatedSection'
+import { IconMail, IconPhone, IconMapPin, IconUser, IconBuilding, IconFileText } from '@tabler/icons-react'
 
 export default function ImpressumPage() {
   return (
     <PageLayout>
-      {/* Header Section - nur Mobile */}
-      
-
-      <main className="pt-8 pb-6">
-        <div className="container space-y-8">
+      <main className="px-4 py-6">
+        <div className="container max-w-4xl space-y-6">
           
-          {/* Verantwortlich */}
+          {/* Angaben gemäß § 5 TMG */}
+          <AnimatedSection delay={0.1}>
+            <div className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden shadow-lg">
+              <div className="bg-white/30 px-4 py-3 border-b border-white/20">
+                <h2 className="text-lg font-bold text-viktoria-blue flex items-center">
+                  <IconBuilding className="mr-3 text-viktoria-yellow" size={24} />
+                  Angaben gemäß § 5 TMG
+                </h2>
+              </div>
+              <div className="p-6 space-y-4 text-gray-700">
+                <div>
+                  <h3 className="font-semibold text-viktoria-blue mb-2">Vereinsname:</h3>
+                  <p>SV Viktoria Wertheim</p>
+                </div>
+                
+                <div>
+                  <h3 className="font-semibold text-viktoria-blue mb-2">Anschrift:</h3>
+                  <p>
+                    Haslocher Weg 85<br/>
+                    97877 Wertheim
+                  </p>
+                </div>
+              </div>
+            </div>
+          </AnimatedSection>
+
+          {/* Vorstand */}
           <AnimatedSection delay={0.2}>
-            <div className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 p-6">
-              <h2 className="text-xl font-bold text-viktoria-blue mb-4 flex items-center">
-                <IconBuilding className="mr-3 text-viktoria-yellow" size={24} />
-                Angaben gemäß § 5 TMG
-              </h2>
-              <div className="space-y-4 text-gray-700">
-                <div>
-                  <h3 className="font-semibold text-viktoria-blue">Vereinsname:</h3>
-                  <p>SV Viktoria Wertheim e.V.</p>
-                </div>
-                
-                <div>
-                  <h3 className="font-semibold text-viktoria-blue">Anschrift:</h3>
-                  <p>
-                    Sportstraße 1<br/>
-                    97877 Wertheim<br/>
-                    Deutschland
-                  </p>
-                </div>
-                
-                <div>
-                  <h3 className="font-semibold text-viktoria-blue">Vereinsregister:</h3>
-                  <p>
-                    Registergericht: Amtsgericht Würzburg<br/>
-                    Vereinsregisternummer: VR 123456
-                  </p>
+            <div className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden shadow-lg">
+              <div className="bg-white/30 px-4 py-3 border-b border-white/20">
+                <h2 className="text-lg font-bold text-viktoria-blue flex items-center">
+                  <IconUser className="mr-3 text-viktoria-yellow" size={24} />
+                  Vertreten durch die gleichberechtigten Vorsitzenden
+                </h2>
+              </div>
+              <div className="p-6 space-y-4 text-gray-700">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h3 className="font-semibold text-viktoria-blue mb-1">1. Vorsitzender:</h3>
+                    <p>Fabian Väthröder</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-viktoria-blue mb-1">2. Vorsitzender:</h3>
+                    <p>Christian Först</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-viktoria-blue mb-1">Schatzmeister:</h3>
+                    <p>Tobias Mittag</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-viktoria-blue mb-1">Spielausschußvorsitzender:</h3>
+                    <p>Kevin Niedens</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-viktoria-blue mb-1">Jugendleiter:</h3>
+                    <p>Christian Först</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-viktoria-blue mb-1">Schriftführer:</h3>
+                    <p>Eduard Helfenstein</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -54,79 +78,88 @@ export default function ImpressumPage() {
 
           {/* Kontakt */}
           <AnimatedSection delay={0.3}>
-            <div className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 p-6">
-              <h2 className="text-xl font-bold text-viktoria-blue mb-4 flex items-center">
-                <IconMail className="mr-3 text-viktoria-yellow" size={24} />
-                Kontakt
-              </h2>
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3">
-                  <IconPhone className="text-viktoria-blue" size={20} />
-                  <span className="text-gray-700">Telefon: (09342) 123-456</span>
-                </div>
+            <div className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden shadow-lg">
+              <div className="bg-white/30 px-4 py-3 border-b border-white/20">
+                <h2 className="text-lg font-bold text-viktoria-blue flex items-center">
+                  <IconMail className="mr-3 text-viktoria-yellow" size={24} />
+                  Kontakt
+                </h2>
+              </div>
+              <div className="p-6">
                 <div className="flex items-center space-x-3">
                   <IconMail className="text-viktoria-blue" size={20} />
-                  <span className="text-gray-700">E-Mail: info@viktoria-wertheim.de</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <IconMapPin className="text-viktoria-blue" size={20} />
-                  <span className="text-gray-700">Website: www.viktoria-wertheim.de</span>
+                  <span className="text-gray-700">E-Mail: 
+                    <a href="mailto:info@viktoria-wertheim.de" className="text-viktoria-blue hover:underline ml-1">
+                      info@viktoria-wertheim.de
+                    </a>
+                  </span>
                 </div>
               </div>
             </div>
           </AnimatedSection>
 
-          {/* Vorstand */}
+          {/* Vereinsregister */}
           <AnimatedSection delay={0.4}>
-            <div className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 p-6">
-              <h2 className="text-xl font-bold text-viktoria-blue mb-4 flex items-center">
-                <IconUser className="mr-3 text-viktoria-yellow" size={24} />
-                Vertretungsberechtigte Personen
-              </h2>
-              <div className="space-y-4 text-gray-700">
+            <div className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden shadow-lg">
+              <div className="bg-white/30 px-4 py-3 border-b border-white/20">
+                <h2 className="text-lg font-bold text-viktoria-blue flex items-center">
+                  <IconFileText className="mr-3 text-viktoria-yellow" size={24} />
+                  Eintragung im Vereinsregister
+                </h2>
+              </div>
+              <div className="p-6 space-y-3 text-gray-700">
                 <div>
-                  <h3 className="font-semibold text-viktoria-blue">1. Vorsitzender:</h3>
-                  <p>Hans Müller</p>
+                  <span className="font-semibold text-viktoria-blue">Registergericht:</span>
+                  <span className="ml-2">Amtsgericht Wertheim</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-viktoria-blue">2. Vorsitzende:</h3>
-                  <p>Maria Schmidt</p>
+                  <span className="font-semibold text-viktoria-blue">Registernummer:</span>
+                  <span className="ml-2">306</span>
                 </div>
               </div>
             </div>
           </AnimatedSection>
 
-          {/* Haftungshinweis */}
+          {/* Verantwortlich für den Inhalt */}
           <AnimatedSection delay={0.5}>
-            <div className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 p-6">
-              <h2 className="text-lg font-bold text-viktoria-blue mb-4">Haftungsausschluss</h2>
-              <div className="space-y-4 text-gray-700 text-sm">
+            <div className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden shadow-lg">
+              <div className="bg-white/30 px-4 py-3 border-b border-white/20">
+                <h2 className="text-lg font-bold text-viktoria-blue">
+                  Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV
+                </h2>
+              </div>
+              <div className="p-6 text-gray-700">
                 <div>
-                  <h3 className="font-semibold text-viktoria-blue mb-2">Haftung für Inhalte</h3>
+                  <h3 className="font-semibold text-viktoria-blue mb-2">Spielberichte:</h3>
                   <p>
-                    Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, 
-                    Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.
+                    Gregor Scheurich<br/>
+                    Lange Str. 44<br/>
+                    97877 Wertheim
                   </p>
                 </div>
-                
-                <div>
-                  <h3 className="font-semibold text-viktoria-blue mb-2">Haftung für Links</h3>
-                  <p>
-                    Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir 
-                    keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine 
-                    Gewähr übernehmen.
-                  </p>
-                </div>
-                
-                <div>
-                  <h3 className="font-semibold text-viktoria-blue mb-2">Urheberrecht</h3>
-                  <p>
-                    Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten 
-                    unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, 
-                    Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes 
-                    bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
-                  </p>
-                </div>
+              </div>
+            </div>
+          </AnimatedSection>
+
+          {/* Disclaimer */}
+          <AnimatedSection delay={0.6}>
+            <div className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden shadow-lg">
+              <div className="bg-white/30 px-4 py-3 border-b border-white/20">
+                <h2 className="text-lg font-bold text-viktoria-blue">Disclaimer</h2>
+              </div>
+              <div className="p-6 text-gray-700 text-sm leading-relaxed space-y-4">
+                <p>
+                  Inhalt und Werke dieser Website sind urheberrechtlich geschützt. Trotz höchster Sorgfalt kann nicht für die Richtigkeit der wiedergegebenen Informationen oder die permanente technische Erreichbarkeit garantiert werden.
+                </p>
+                <p>
+                  Es wird keine Haftung für den Inhalt von extern verlinkten Websites übernommen. Auf deren Inhalte haben wir keinen Einfluss und distanzieren uns ausdrücklich.
+                </p>
+                <p>
+                  Sollten Sie dennoch etwas an unseren Seiten zu beanstanden haben, bitten wir um einen einfachen entsprechenden Hinweis, damit wir die Inhalte schnellstmöglich entfernen können.
+                </p>
+                <p className="text-xs text-gray-500 mt-6 pt-4 border-t border-gray-200">
+                  Quelle: Impressum-Generator von anwalt.de speziell für Eingetragener Verein (e.V.).
+                </p>
               </div>
             </div>
           </AnimatedSection>
@@ -135,4 +168,4 @@ export default function ImpressumPage() {
       </main>
     </PageLayout>
   )
-} 
+}
