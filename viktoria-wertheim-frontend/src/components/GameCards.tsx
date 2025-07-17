@@ -270,14 +270,14 @@ export default function GameCards() {
     const now = new Date()
     const spielDatum = new Date(spiel.attributes.datum)
     const isLastGame = spielDatum < now
-    const isViktoriaHome = spiel.attributes.isHeimspiel
+    const isViktoriaHome = spiel.attributes.heimmannschaft?.data?.attributes?.name === 'SV Viktoria Wertheim';
 
     return {
       type: isLastGame ? 'last' : 'next',
-      homeTeam: isViktoriaHome ? 'SV Viktoria Wertheim' : spiel.attributes.auswaertsmannschaft,
-      awayTeam: isViktoriaHome ? spiel.attributes.auswaertsmannschaft : 'SV Viktoria Wertheim',
-      homeScore: isLastGame ? (isViktoriaHome ? spiel.attributes.toreHeim : spiel.attributes.toreAuswaerts) : undefined,
-      awayScore: isLastGame ? (isViktoriaHome ? spiel.attributes.toreAuswaerts : spiel.attributes.toreHeim) : undefined,
+      homeTeam: isViktoriaHome ? 'SV Viktoria Wertheim' : spiel.attributes.auswaertsmannschaft?.data?.attributes?.name || '',
+      awayTeam: isViktoriaHome ? spiel.attributes.auswaertsmannschaft?.data?.attributes?.name || '' : 'SV Viktoria Wertheim',
+      homeScore: isLastGame ? (isViktoriaHome ? spiel.attributes.tore_heim : spiel.attributes.tore_auswaerts) : undefined,
+      awayScore: isLastGame ? (isViktoriaHome ? spiel.attributes.tore_auswaerts : spiel.attributes.tore_heim) : undefined,
       date: spielDatum.toLocaleDateString('de-DE'),
       time: spielDatum.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
       isHome: isViktoriaHome,

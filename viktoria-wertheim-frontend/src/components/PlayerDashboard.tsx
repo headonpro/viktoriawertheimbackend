@@ -144,15 +144,23 @@ export default function PlayerDashboard() {
     })
   }
 
+  // Mapping für Backend-Enum zu UI-Label
+  const POSITION_LABELS: Record<string, string> = {
+    torwart: 'Torwart',
+    abwehr: 'Abwehr',
+    mittelfeld: 'Mittelfeld',
+    sturm: 'Sturm'
+  };
+  const POSITION_EMOJIS: Record<string, string> = {
+    torwart: '🧤',
+    abwehr: '🛡️',
+    mittelfeld: '⚽',
+    sturm: '🎯'
+  };
+
   const getPositionIcon = (position: string) => {
-    const icons = {
-      'Torwart': '🥅',
-      'Abwehr': '🛡️',
-      'Mittelfeld': '⚽',
-      'Sturm': '🎯'
-    }
-    return icons[position as keyof typeof icons] || '⚽'
-  }
+    return POSITION_EMOJIS[position] || '⚽';
+  };
 
   const getStatusColor = (status: string) => {
     const colors = {
@@ -251,7 +259,7 @@ export default function PlayerDashboard() {
               {playerData.attributes.vorname} {playerData.attributes.nachname}
             </h1>
             <p className="text-green-100 mb-2">
-              {playerData.attributes.position}
+              {POSITION_LABELS[playerData.attributes.position]}
               {playerData.attributes.mannschaft?.data && (
                 <> • {playerData.attributes.mannschaft.data.attributes.name}</>
               )}

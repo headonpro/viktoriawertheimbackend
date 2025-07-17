@@ -435,7 +435,7 @@ export class TrainerApiService {
   // Get teams by age group  
   static async getTeamsByAgeGroup(ageGroup: string): Promise<TrainerTeam[]> {
     try {
-      const response = await strapi.get(API_ENDPOINTS.mannschaft.byAgeGroup, {
+      const response = await strapi.get(API_ENDPOINTS.mannschaft.byAgeGroup(ageGroup), {
         params: {
           ageGroup: ageGroup
         }

@@ -28,12 +28,20 @@ const mockTopScorers: Spieler[] = [
   {
     id: 1,
     attributes: {
-      vorname: 'Okan',
-      nachname: 'Cirakoglu',
-      position: 'Sturm',
+      position: 'sturm',
       rueckennummer: 9,
-      tore: 19,
-      spiele: 16,
+      tore_saison: 19,
+      spiele_saison: 16,
+      mitglied: {
+        data: {
+          id: 1,
+          attributes: {
+            vorname: 'Okan',
+            nachname: 'Cirakoglu',
+            email: 'okan@example.com'
+          }
+        }
+      },
       publishedAt: '2024-01-01T00:00:00.000Z',
       createdAt: '2024-01-01T00:00:00.000Z',
       updatedAt: '2024-01-01T00:00:00.000Z'
@@ -42,12 +50,20 @@ const mockTopScorers: Spieler[] = [
   {
     id: 2,
     attributes: {
-      vorname: 'Silas',
-      nachname: 'Jacob',
-      position: 'Sturm',
-      rueckennummer: 11,
-      tore: 15,
-      spiele: 18,
+      position: 'sturm',
+      rueckennummer: 10,
+      tore_saison: 12,
+      spiele_saison: 14,
+      mitglied: {
+        data: {
+          id: 2,
+          attributes: {
+            vorname: 'Max',
+            nachname: 'Mustermann',
+            email: 'max@example.com'
+          }
+        }
+      },
       publishedAt: '2024-01-01T00:00:00.000Z',
       createdAt: '2024-01-01T00:00:00.000Z',
       updatedAt: '2024-01-01T00:00:00.000Z'
@@ -56,12 +72,20 @@ const mockTopScorers: Spieler[] = [
   {
     id: 3,
     attributes: {
-      vorname: 'Justin',
-      nachname: 'Schulz',
-      position: 'Mittelfeld',
+      position: 'mittelfeld',
       rueckennummer: 8,
-      tore: 12,
-      spiele: 17,
+      tore_saison: 5,
+      spiele_saison: 12,
+      mitglied: {
+        data: {
+          id: 3,
+          attributes: {
+            vorname: 'Lukas',
+            nachname: 'Beispiel',
+            email: 'lukas@example.com'
+          }
+        }
+      },
       publishedAt: '2024-01-01T00:00:00.000Z',
       createdAt: '2024-01-01T00:00:00.000Z',
       updatedAt: '2024-01-01T00:00:00.000Z'
@@ -70,12 +94,20 @@ const mockTopScorers: Spieler[] = [
   {
     id: 4,
     attributes: {
-      vorname: 'Marco',
-      nachname: 'Klein',
-      position: 'Sturm',
-      rueckennummer: 10,
-      tore: 11,
-      spiele: 18,
+      position: 'sturm',
+      rueckennummer: 11,
+      tore_saison: 7,
+      spiele_saison: 10,
+      mitglied: {
+        data: {
+          id: 4,
+          attributes: {
+            vorname: 'Jonas',
+            nachname: 'Test',
+            email: 'jonas@example.com'
+          }
+        }
+      },
       publishedAt: '2024-01-01T00:00:00.000Z',
       createdAt: '2024-01-01T00:00:00.000Z',
       updatedAt: '2024-01-01T00:00:00.000Z'
@@ -84,12 +116,20 @@ const mockTopScorers: Spieler[] = [
   {
     id: 5,
     attributes: {
-      vorname: 'David',
-      nachname: 'Bauer',
-      position: 'Mittelfeld',
-      rueckennummer: 7,
-      tore: 10,
-      spiele: 16,
+      position: 'mittelfeld',
+      rueckennummer: 6,
+      tore_saison: 3,
+      spiele_saison: 8,
+      mitglied: {
+        data: {
+          id: 5,
+          attributes: {
+            vorname: 'Paul',
+            nachname: 'Demo',
+            email: 'paul@example.com'
+          }
+        }
+      },
       publishedAt: '2024-01-01T00:00:00.000Z',
       createdAt: '2024-01-01T00:00:00.000Z',
       updatedAt: '2024-01-01T00:00:00.000Z'
@@ -295,20 +335,20 @@ export default function HomePage() {
                           {/* Spieler Name */}
                           <div className="col-span-8">
                             <span className="text-white font-semibold text-2xl md:text-4xl leading-tight drop-shadow-2xl" style={{textShadow: '2px 2px 8px rgba(0,0,0,0.8)'}}>
-                              <span className="font-light">{topScorers[0]?.attributes.vorname || 'Okan'}</span><br/>
-                              <span className="font-bold">{topScorers[0]?.attributes.nachname || 'Cirakoglu'}</span>
+                              <span className="font-light">{topScorers[0]?.attributes.mitglied?.data?.attributes.vorname || 'Okan'}</span><br/>
+                              <span className="font-bold">{topScorers[0]?.attributes.mitglied?.data?.attributes.nachname || 'Cirakoglu'}</span>
                             </span>
                           </div>
 
                           {/* Spiele */}
                           <div className="col-span-2 text-center text-base md:text-lg text-viktoria-yellow font-medium drop-shadow">
-                            {topScorers[0]?.attributes.spiele || 16}
+                            {topScorers[0]?.attributes.spiele_saison || 16}
                           </div>
 
                           {/* Tore */}
                           <div className="col-span-2 text-center">
                             <span className="font-bold text-viktoria-yellow text-xl md:text-2xl drop-shadow-lg">
-                              {topScorers[0]?.attributes.tore || 19}
+                              {topScorers[0]?.attributes.tore_saison || 19}
                             </span>
                           </div>
         </div>
@@ -317,7 +357,7 @@ export default function HomePage() {
                         <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-6">
                           <div className="text-center">
                             <div className="text-viktoria-yellow font-bold text-base md:text-lg drop-shadow">
-                              {topScorers[0] ? (topScorers[0].attributes.tore / topScorers[0].attributes.spiele).toFixed(2) : '1.19'}
+                              {topScorers[0] ? (topScorers[0].attributes.tore_saison / topScorers[0].attributes.spiele_saison).toFixed(2) : '1.19'}
                             </div>
                             <div className="text-white/90 text-sm md:text-base drop-shadow">Tore/Spiel</div>
                           </div>
@@ -342,16 +382,16 @@ export default function HomePage() {
                           </div>
                           <div className="col-span-7">
                             <span className="text-sm md:text-base text-gray-700 font-medium">
-                              <span className="font-light">{player.attributes.vorname}</span>{' '}
-                              <span className="font-semibold">{player.attributes.nachname}</span>
+                              <span className="font-light">{player.attributes.mitglied?.data?.attributes.vorname}</span>{' '}
+                              <span className="font-semibold">{player.attributes.mitglied?.data?.attributes.nachname}</span>
                             </span>
                           </div>
                           <div className="col-span-2 text-center text-sm md:text-base text-gray-600">
-                            {player.attributes.spiele}
+                            {player.attributes.spiele_saison}
                           </div>
                           <div className="col-span-2 text-center">
                             <span className="font-bold text-sm md:text-base text-gray-600">
-                              {player.attributes.tore}
+                              {player.attributes.tore_saison}
                             </span>
                           </div>
                         </div>

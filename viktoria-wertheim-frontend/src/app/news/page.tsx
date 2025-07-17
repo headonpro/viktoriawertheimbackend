@@ -162,6 +162,27 @@ const mockCategories: Kategorie[] = [
   }
 ]
 
+// Utility für Kategorie-Name (API und Mockdaten) - robuste Version
+function getKategorieName(article: NewsArtikel): string {
+  if (!article || !article.attributes) {
+    return 'Keine Kategorie';
+  }
+  
+  const kategorie = article.attributes.kategorie;
+  
+  // Kategorie ist optional, kann undefined sein
+  if (!kategorie || !kategorie.data) {
+    return 'Keine Kategorie';
+  }
+  
+  // Kategorie.data kann null sein (Strapi kann null zurückgeben)
+  if (!kategorie.data.attributes || !kategorie.data.attributes.name) {
+    return 'Keine Kategorie';
+  }
+  
+  return kategorie.data.attributes.name;
+}
+
 export default function NewsPage() {
   const [newsArticles, setNewsArticles] = useState<NewsArtikel[]>([])
   const [categories, setCategories] = useState<Kategorie[]>([])
@@ -196,8 +217,16 @@ export default function NewsPage() {
         const apiNewsArticles = newsResponse.data.data || []
         const apiCategories = categoriesResponse.data.data || []
         
+        // Debug logging
+        console.log('API Categories:', apiCategories)
+        console.log('Mock Categories:', mockCategories)
+        
+        // Ensure categories are properly structured
+        const validCategories = (apiCategories.length > 0 ? apiCategories : mockCategories)
+          .filter((cat: Kategorie) => cat && cat.attributes && cat.attributes.name)
+        
         setNewsArticles(apiNewsArticles.length > 0 ? apiNewsArticles : mockNewsArticles)
-        setCategories(apiCategories.length > 0 ? apiCategories : mockCategories)
+        setCategories(validCategories)
       } catch (err) {
         console.error('Error fetching news, using mock data:', err)
         // Use mock data as fallback
@@ -259,12 +288,17 @@ export default function NewsPage() {
     setSelectedArticle(null)
   }
 
-  // Filter articles by category
+  // Filter articles by category - mit Artikel-Validierung
   const filteredArticles = selectedCategory === 'Alle' 
-    ? newsArticles 
-    : newsArticles.filter(article => 
-        article.attributes.kategorie?.data?.attributes.name === selectedCategory
-      )
+    ? newsArticles.filter(article => article && article.attributes && article.attributes.titel)
+    : newsArticles
+        .filter(article => article && article.attributes && article.attributes.titel)
+        .filter(article => getKategorieName(article) === selectedCategory)
+
+  // Kategorien-Filter (Dropdown und Chips) - robuste Verarbeitung
+  const categoryNames = ['Alle', ...categories
+    .filter(cat => cat && cat.attributes && cat.attributes.name)
+    .map(cat => cat.attributes.name)];
 
   // Loading state
   if (loading) {
@@ -314,7 +348,7 @@ export default function NewsPage() {
                 {isDropdownOpen && (
                   <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 min-w-[200px] z-10">
                     <div className="py-2">
-                      {['Alle', ...categories.map(cat => cat.attributes.name)].map((category) => (
+                      {categoryNames.map((category) => (
                         <button
                           key={category}
                           onClick={() => {
@@ -347,7 +381,7 @@ export default function NewsPage() {
                 </div>
               </div>
               <div className="flex flex-wrap gap-3">
-                {['Alle', ...categories.map(cat => cat.attributes.name)].map((category) => (
+                {categoryNames.map((category) => (
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
@@ -386,7 +420,7 @@ export default function NewsPage() {
           ) : (
             <>
               {/* Featured Article - Desktop Only */}
-              {filteredArticles.length > 0 && (
+              {filteredArticles.length > 0 && filteredArticles[0] && filteredArticles[0].attributes && (
                 <div className="hidden lg:block mb-8">
                   <div className="bg-white/40 backdrop-blur-sm rounded-2xl border border-white/20 overflow-hidden group hover:bg-white/50 transition-all duration-300 md:shadow-lg md:hover:shadow-xl">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
@@ -417,11 +451,11 @@ export default function NewsPage() {
                           </span>
                         </div>
 
-                        {/* Category Badge */}
+                        {/* Category Badge - Featured Article */}
                         {filteredArticles[0].attributes.kategorie?.data && (
                           <div className="absolute top-4 right-4">
                             <span className="bg-white/90 text-gray-800 text-sm px-3 py-1 rounded-full font-medium backdrop-blur-sm">
-                              {filteredArticles[0].attributes.kategorie.data.attributes.name}
+                              {getKategorieName(filteredArticles[0])}
                             </span>
                           </div>
                         )}
@@ -465,83 +499,84 @@ export default function NewsPage() {
 
               {/* Articles Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {(filteredArticles.length > 1 ? filteredArticles.slice(1) : filteredArticles).map((article, index) => (
-                  <motion.div
-                    key={article.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="group"
-                  >
-                    <div 
-                      className="bg-white/40 backdrop-blur-sm border border-white/20 rounded-xl overflow-hidden hover:bg-white/50 transition-all duration-300 group-hover:border-viktoria-yellow/50 cursor-pointer h-full flex flex-col md:shadow-lg md:hover:shadow-xl"
-                      onClick={() => openArticleModal(article.id)}
+                {(filteredArticles.length > 1 ? filteredArticles.slice(1) : filteredArticles)
+                  .filter(article => article && article.attributes && article.attributes.titel) // Filtere defekte Artikel aus
+                  .map((article, index) => {
+                  return (
+                    <motion.div
+                      key={article.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="group"
                     >
-                      {/* Image */}
-                      <div className="relative h-40 lg:h-48 bg-gradient-to-br from-viktoria-blue-light to-viktoria-blue overflow-hidden flex-shrink-0">
-                        {article.attributes.titelbild?.data ? (
-                          <Image
-                            src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${article.attributes.titelbild.data.attributes.url}`}
-                            alt={article.attributes.titelbild.data.attributes.alternativeText || article.attributes.titel}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        ) : (
-                          <div className="h-full flex items-center justify-center">
-                            <div className="text-center">
-                              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-viktoria-yellow/20 rounded-full flex items-center justify-center mx-auto mb-2">
-                                <IconEye className="w-6 h-6 lg:w-8 lg:h-8 text-viktoria-yellow" />
+                      <div 
+                        className="bg-white/40 backdrop-blur-sm border border-white/20 rounded-xl overflow-hidden hover:bg-white/50 transition-all duration-300 group-hover:border-viktoria-yellow/50 cursor-pointer h-full flex flex-col md:shadow-lg md:hover:shadow-xl"
+                        onClick={() => openArticleModal(article.id)}
+                      >
+                        {/* Image */}
+                        <div className="relative h-40 lg:h-48 bg-gradient-to-br from-viktoria-blue-light to-viktoria-blue overflow-hidden flex-shrink-0">
+                          {article.attributes.titelbild?.data ? (
+                            <Image
+                              src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${article.attributes.titelbild.data.attributes.url}`}
+                              alt={article.attributes.titelbild.data.attributes.alternativeText || article.attributes.titel}
+                              fill
+                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          ) : (
+                            <div className="h-full flex items-center justify-center">
+                              <div className="text-center">
+                                <div className="w-12 h-12 lg:w-16 lg:h-16 bg-viktoria-yellow/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                                  <IconEye className="w-6 h-6 lg:w-8 lg:h-8 text-viktoria-yellow" />
+                                </div>
+                                <p className="text-xs lg:text-sm text-viktoria-yellow/80">SV Viktoria Wertheim</p>
                               </div>
-                              <p className="text-xs lg:text-sm text-viktoria-yellow/80">SV Viktoria Wertheim</p>
                             </div>
-                          </div>
-                        )}
-                        
-                        {/* Category Badge */}
-                        {article.attributes.kategorie?.data && (
+                          )}
+                          {/* Category Badge - robust */}
                           <div className="absolute top-3 left-3">
                             <span className="bg-viktoria-yellow text-gray-800 text-xs lg:text-sm px-2 lg:px-3 py-1 rounded-full backdrop-blur-sm font-medium">
-                              {article.attributes.kategorie.data.attributes.name}
+                              {getKategorieName(article)}
                             </span>
                           </div>
-                        )}
-                      </div>
-
-                      {/* Content */}
-                      <div className="p-4 lg:p-6 space-y-3 lg:space-y-4 flex-grow flex flex-col">
-                        {/* Date */}
-                        <div className="flex items-center text-xs lg:text-sm text-gray-500">
-                          <IconClock className="w-3 h-3 lg:w-4 lg:h-4 mr-1" />
-                          <span>
-                            {new Date(article.attributes.datum).toLocaleDateString('de-DE', {
-                              day: '2-digit',
-                              month: '2-digit',
-                              year: 'numeric',
-                            })}
-                          </span>
                         </div>
 
-                        {/* Title */}
-                        <h3 className="text-sm lg:text-base font-bold text-gray-700 group-hover:text-gray-600 transition-colors line-clamp-2 leading-tight flex-grow">
-                          {article.attributes.titel}
-                        </h3>
+                        {/* Content */}
+                        <div className="p-4 lg:p-6 space-y-3 lg:space-y-4 flex-grow flex flex-col">
+                          {/* Date */}
+                          <div className="flex items-center text-xs lg:text-sm text-gray-500">
+                            <IconClock className="w-3 h-3 lg:w-4 lg:h-4 mr-1" />
+                            <span>
+                              {new Date(article.attributes.datum).toLocaleDateString('de-DE', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                              })}
+                            </span>
+                          </div>
 
-                        {/* Content Preview - Hidden on mobile, shown on desktop */}
-                        <p className="hidden lg:block text-gray-600 line-clamp-2 text-sm leading-relaxed">
-                          {typeof article.attributes.inhalt === 'string' 
-                            ? article.attributes.inhalt 
-                            : 'Artikel ansehen...'}
-                        </p>
+                          {/* Title */}
+                          <h3 className="text-sm lg:text-base font-bold text-gray-700 group-hover:text-gray-600 transition-colors line-clamp-2 leading-tight flex-grow">
+                            {article.attributes.titel}
+                          </h3>
 
-                        {/* Read More */}
-                        <div className="flex items-center text-gray-600 group-hover:text-viktoria-blue transition-colors pt-2 mt-auto">
-                          <span className="text-xs lg:text-sm font-medium">Weiterlesen</span>
-                          <IconArrowRight className="w-3 h-3 lg:w-4 lg:h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                          {/* Content Preview - Hidden on mobile, shown on desktop */}
+                          <p className="hidden lg:block text-gray-600 line-clamp-2 text-sm leading-relaxed">
+                            {typeof article.attributes.inhalt === 'string' 
+                              ? article.attributes.inhalt 
+                              : 'Artikel ansehen...'}
+                          </p>
+
+                          {/* Read More */}
+                          <div className="flex items-center text-gray-600 group-hover:text-viktoria-blue transition-colors pt-2 mt-auto">
+                            <span className="text-xs lg:text-sm font-medium">Weiterlesen</span>
+                            <IconArrowRight className="w-3 h-3 lg:w-4 lg:h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </motion.div>
-                ))}
+                    </motion.div>
+                  );
+                })}
               </div>
             </>
           )}
