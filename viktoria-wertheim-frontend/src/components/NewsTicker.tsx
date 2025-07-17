@@ -15,16 +15,15 @@ const mockNewsArticles: NewsArtikel[] = [
     attributes: {
       titel: "🏆 Derby-Sieg! Viktoria schlägt FC Eichel 3:1",
       inhalt: "Ein spannendes Derby endete mit einem verdienten Sieg...",
-      datum: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      datum: "2025-01-16T10:00:00.000Z",
       kategorie: {
         data: {
-          id: 1,
           attributes: { name: "Spielberichte" }
         }
       },
-      publishedAt: new Date().toISOString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      publishedAt: "2025-01-17T12:00:00.000Z",
+      createdAt: "2025-01-17T12:00:00.000Z",
+      updatedAt: "2025-01-17T12:00:00.000Z"
     }
   },
   {
@@ -32,16 +31,15 @@ const mockNewsArticles: NewsArtikel[] = [
     attributes: {
       titel: "⚽ Winterpause beendet - Training startet am 15. Januar",
       inhalt: "Nach der wohlverdienten Winterpause beginnt das Training...",
-      datum: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      datum: "2025-01-15T08:00:00.000Z",
       kategorie: {
         data: {
-          id: 2,
           attributes: { name: "Training" }
         }
       },
-      publishedAt: new Date().toISOString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      publishedAt: "2025-01-17T12:00:00.000Z",
+      createdAt: "2025-01-17T12:00:00.000Z",
+      updatedAt: "2025-01-17T12:00:00.000Z"
     }
   },
   {
@@ -49,16 +47,15 @@ const mockNewsArticles: NewsArtikel[] = [
     attributes: {
       titel: "👨‍💼 Neuer A-Jugend Trainer Marco Schneider verpflichtet",
       inhalt: "Mit Marco Schneider konnte ein erfahrener Trainer gewonnen werden...",
-      datum: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      datum: "2025-01-14T14:00:00.000Z",
       kategorie: {
         data: {
-          id: 3,
           attributes: { name: "Vereinsnews" }
         }
       },
-      publishedAt: new Date().toISOString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      publishedAt: "2025-01-17T12:00:00.000Z",
+      createdAt: "2025-01-17T12:00:00.000Z",
+      updatedAt: "2025-01-17T12:00:00.000Z"
     }
   },
   {
@@ -66,16 +63,15 @@ const mockNewsArticles: NewsArtikel[] = [
     attributes: {
       titel: "🎯 Neuzugang: Max Müller verstärkt die Offensive",
       inhalt: "Ein neuer Stürmer verstärkt das Team ab sofort...",
-      datum: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+      datum: "2025-01-13T16:00:00.000Z",
       kategorie: {
         data: {
-          id: 4,
           attributes: { name: "Transfers" }
         }
       },
-      publishedAt: new Date().toISOString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      publishedAt: "2025-01-17T12:00:00.000Z",
+      createdAt: "2025-01-17T12:00:00.000Z",
+      updatedAt: "2025-01-17T12:00:00.000Z"
     }
   }
 ]
@@ -84,6 +80,7 @@ export default function NewsTicker({ onNewsClick }: NewsTickerProps) {
   const [newsArticles, setNewsArticles] = useState<NewsArtikel[]>([])
   const [loading, setLoading] = useState(true)
   const [isPaused, setIsPaused] = useState(false)
+  const [animationStarted, setAnimationStarted] = useState(false)
 
   // Fetch news from API
   useEffect(() => {
@@ -92,8 +89,10 @@ export default function NewsTicker({ onNewsClick }: NewsTickerProps) {
         setLoading(true)
         const response = await strapi.get('/news-artikels', {
           params: {
-            populate: ['kategorie'],
-            sort: ['datum:desc'],
+            populate: {
+              kategorie: true
+            },
+            sort: 'datum:desc',
             pagination: {
               limit: 10
             }
@@ -101,10 +100,8 @@ export default function NewsTicker({ onNewsClick }: NewsTickerProps) {
         })
         
         const apiNews = response.data.data || []
-        console.log('API News:', apiNews) // Debug log
         setNewsArticles(apiNews.length > 0 ? apiNews : mockNewsArticles)
       } catch (err) {
-        console.log('News API Error, using mock data:', err)
         setNewsArticles(mockNewsArticles)
       } finally {
         setLoading(false)
@@ -114,7 +111,18 @@ export default function NewsTicker({ onNewsClick }: NewsTickerProps) {
     fetchNews()
   }, [])
 
-  console.log('NewsArticles state:', newsArticles) // Debug log
+  // Start animation after 5 seconds delay
+  useEffect(() => {
+    if (!loading && newsArticles.length > 0) {
+      const timer = setTimeout(() => {
+        setAnimationStarted(true)
+      }, 5000)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [loading, newsArticles])
+
+
 
   if (loading) {
     return (
@@ -150,9 +158,20 @@ export default function NewsTicker({ onNewsClick }: NewsTickerProps) {
     )
   }
 
-  // Kombiniere alle News-Titel zu einem langen String mit Separatoren
-  const newsText = newsArticles.map(article => article.attributes.titel).join(' • • • ')
-  const fullScrollText = Array(50).fill(newsText).join(' • • • ') + ' • • • '
+  // Kombiniere alle News-Titel zu einem langen String mit besseren Separatoren
+  const newsText = newsArticles
+    .filter(article => {
+      // Handle both API format and mock format
+      const titel = article.titel || (article.attributes && article.attributes.titel)
+      return article && titel
+    })
+    .map(article => {
+      // Handle both API format and mock format
+      return article.titel || article.attributes.titel
+    })
+    .join('\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0|\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0')
+  
+  const fullScrollText = Array(3).fill(newsText).join('\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0|\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0') + '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0|\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'
 
   return (
     <div 
@@ -173,7 +192,7 @@ export default function NewsTicker({ onNewsClick }: NewsTickerProps) {
           {/* Scrolling News Container */}
           <div className="flex-1 overflow-hidden relative">
             <div 
-              className={`whitespace-nowrap ${isPaused ? 'animate-none' : 'animate-scroll-left'} cursor-pointer`}
+              className={`whitespace-nowrap ${isPaused || !animationStarted ? 'animate-none' : 'animate-scroll-left'} cursor-pointer`}
               onClick={() => onNewsClick?.(newsArticles[0])}
             >
               <span className="text-gray-700 hover:text-viktoria-blue transition-colors duration-300 text-sm font-medium">

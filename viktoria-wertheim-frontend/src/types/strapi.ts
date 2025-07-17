@@ -1,12 +1,76 @@
+// Strapi 5 Block Content Type
+export interface StrapiBlock {
+  type: string;
+  children: Array<{
+    type: string;
+    text: string;
+  }>;
+}
+
 export interface NewsArtikel {
   id: number;
-  attributes: {
+  documentId?: string;
+  titel?: string;
+  inhalt?: StrapiBlock[] | string; // Support both formats
+  datum?: string;
+  autor?: string;
+  titelbild?: {
+    id: number;
+    documentId?: string;
+    name: string;
+    alternativeText?: string;
+    caption?: string;
+    width: number;
+    height: number;
+    formats?: any;
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl?: string;
+    provider: string;
+    provider_metadata?: any;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    data?: {
+      attributes: {
+        url: string;
+        alternativeText?: string;
+        caption?: string;
+        width: number;
+        height: number;
+      };
+    };
+  };
+  kategorie?: {
+    id: number;
+    documentId?: string;
+    name?: string;
+    beschreibung?: string;
+    farbe?: string;
+    reihenfolge?: number;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    data?: {
+      attributes: {
+        name: string;
+      };
+    };
+  };
+  publishedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  // Legacy format support
+  attributes?: {
     titel: string;
-    inhalt: string;
+    inhalt: StrapiBlock[] | string;
     datum: string;
+    autor?: string;
     titelbild?: {
-      data: {
-        id: number;
+      data?: {
         attributes: {
           url: string;
           alternativeText?: string;
@@ -17,8 +81,7 @@ export interface NewsArtikel {
       };
     };
     kategorie?: {
-      data: {
-        id: number;
+      data?: {
         attributes: {
           name: string;
         };
@@ -32,7 +95,16 @@ export interface NewsArtikel {
 
 export interface Kategorie {
   id: number;
-  attributes: {
+  documentId?: string;
+  name?: string;
+  beschreibung?: string;
+  farbe?: string;
+  reihenfolge?: number;
+  publishedAt: string;
+  createdAt: string;
+  updatedAt: string;
+  // Legacy format support
+  attributes?: {
     name: string;
     publishedAt: string;
     createdAt: string;

@@ -2,8 +2,8 @@ import { strapi, apiRequest, API_ENDPOINTS } from './strapi'
 import { AuthService } from './auth'
 
 export interface PlayerStats {
-  tore: number
-  spiele: number
+  tore_saison: number
+  spiele_saison: number
   position: string
   rueckennummer?: number
   foto?: {

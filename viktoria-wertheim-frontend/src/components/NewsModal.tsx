@@ -114,11 +114,19 @@ export default function NewsModal({ article, isOpen, onClose }: NewsModalProps) 
             {/* Modal Content */}
             <div className="overflow-y-auto max-h-[90vh]">
               {/* Header Image */}
-              {article.attributes.titelbild?.data && (
+              {((article.titelbild && article.titelbild.url) || (article.attributes?.titelbild?.data)) && (
                 <div className="relative h-48 md:h-64 bg-gradient-to-br from-viktoria-blue-light to-viktoria-blue overflow-hidden">
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${article.attributes.titelbild.data.attributes.url}`}
-                    alt={article.attributes.titelbild.data.attributes.alternativeText || article.attributes.titel}
+                    src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://192.168.178.59:1337'}${
+                      article.titelbild?.url || article.attributes?.titelbild?.data?.attributes?.url
+                    }`}
+                    alt={
+                      article.titelbild?.alternativeText || 
+                      article.attributes?.titelbild?.data?.attributes?.alternativeText || 
+                      article.titel || 
+                      article.attributes?.titel || 
+                      'News Artikel'
+                    }
                     fill
                     className="object-cover"
                   />
@@ -132,7 +140,7 @@ export default function NewsModal({ article, isOpen, onClose }: NewsModalProps) 
                   <div className="flex items-center">
                     <IconClock className="w-4 h-4 mr-2" />
                     <span>
-                      {new Date(article.attributes.datum).toLocaleDateString('de-DE', {
+                      {new Date(article.datum || article.attributes?.datum || '').toLocaleDateString('de-DE', {
                         day: '2-digit',
                         month: '2-digit',
                         year: 'numeric',
@@ -140,11 +148,11 @@ export default function NewsModal({ article, isOpen, onClose }: NewsModalProps) 
                     </span>
                   </div>
                   
-                  {article.attributes.kategorie?.data && (
+                  {((article.kategorie && article.kategorie.name) || (article.attributes?.kategorie?.data)) && (
                     <div className="flex items-center">
                       <IconTag className="w-4 h-4 mr-2" />
                       <span className="bg-viktoria-yellow/20 text-gray-700 px-3 py-1 rounded-full">
-                        {article.attributes.kategorie.data.attributes.name}
+                        {article.kategorie?.name || article.attributes?.kategorie?.data?.attributes?.name || 'Keine Kategorie'}
                       </span>
                     </div>
                   )}
@@ -157,12 +165,12 @@ export default function NewsModal({ article, isOpen, onClose }: NewsModalProps) 
 
                 {/* Title */}
                 <h1 className="text-2xl md:text-3xl font-permanent-marker text-gray-700 leading-tight">
-                  {article.attributes.titel}
+                  {article.titel || article.attributes?.titel || 'Unbekannter Titel'}
                 </h1>
 
                 {/* Content */}
                 <div className="space-y-4">
-                  {renderContent(article.attributes.inhalt)}
+                  {renderContent(article.inhalt || article.attributes?.inhalt)}
                 </div>
               </div>
             </div>

@@ -14,8 +14,8 @@ interface PlayerData {
     nachname: string
     position: string
     rueckennummer?: number
-    tore: number
-    spiele: number
+    tore_saison: number
+    spiele_saison: number
     foto?: {
       data: {
         id: number
@@ -269,11 +269,11 @@ export default function PlayerDashboard() {
             <div className="flex space-x-6 text-sm">
               <div>
                 <span className="text-green-200">Tore:</span>
-                <span className="font-bold ml-1">{playerData.attributes.tore}</span>
+                <span className="font-bold ml-1">{playerData.attributes.tore_saison}</span>
               </div>
               <div>
                 <span className="text-green-200">Spiele:</span>
-                <span className="font-bold ml-1">{playerData.attributes.spiele}</span>
+                <span className="font-bold ml-1">{playerData.attributes.spiele_saison}</span>
               </div>
               {trainingStats && (
                 <div>

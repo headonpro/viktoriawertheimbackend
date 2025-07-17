@@ -34,15 +34,13 @@ const shortenTeamName = (name: string): string => {
 const TeamNameDisplay = ({ team }: { team: { name: string } }) => (
   <>
     {/* Mobile: Gekürzte Namen */}
-    <span className={`font-medium text-sm lg:hidden ${
-      team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-700'
-    }`}>
+    <span className={`font-medium text-sm lg:hidden ${team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-700'
+      }`}>
       {shortenTeamName(team.name)}
     </span>
     {/* Desktop: Vollständige Namen */}
-    <span className={`font-medium text-base hidden lg:inline ${
-      team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-700'
-    }`}>
+    <span className={`font-medium text-base hidden lg:inline ${team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-700'
+      }`}>
       {team.name}
     </span>
   </>
@@ -78,17 +76,17 @@ const getTeamLogo = (teamName: string): string | undefined => {
     'VfB Reicholzheim': '/Reichholzheim.png',
     'TuS Großrinderfeld': '/Großrinderfeld.png',
   }
-  
+
   // Exakte Übereinstimmung
   if (teamLogos[teamName]) {
     return teamLogos[teamName]
   }
-  
+
   // Partielle Übereinstimmung für flexiblere Namen
   for (const [key, logo] of Object.entries(teamLogos)) {
     const teamWords = teamName.toLowerCase().split(' ')
     const keyWords = key.toLowerCase().split(' ')
-    
+
     // Prüfe ob mindestens ein charakteristisches Wort übereinstimmt
     for (const teamWord of teamWords) {
       for (const keyWord of keyWords) {
@@ -101,13 +99,13 @@ const getTeamLogo = (teamName: string): string | undefined => {
       }
     }
   }
-  
+
   return undefined
 }
 
 const LeagueTable = () => {
   const [isExpanded, setIsExpanded] = useState(false)
-  
+
   const teams: Team[] = [
     {
       position: 1,
@@ -320,24 +318,27 @@ const LeagueTable = () => {
   ]
 
   // Filter teams for compact view: show team above, Viktoria Wertheim, and team below
-  const displayedTeams = isExpanded ? teams : teams.filter(team => 
+  const displayedTeams = isExpanded ? teams : teams.filter(team =>
     team.position >= 7 && team.position <= 9
   )
 
   const toggleExpanded = () => setIsExpanded(!isExpanded)
 
   return (
-                      <AnimatedSection className="px-2 md:px-6 py-0" delay={0.1}>
-              <div className="container max-w-6xl">
-                                      <h2 className="text-sm md:text-lg font-semibold text-gray-600 uppercase tracking-wide mb-2 md:mb-3 text-center">
-          Kreisliga Tauberbischofsheim
-        </h2>
-        
-        <div 
-          className="bg-white/40 backdrop-blur-sm rounded-xl md:rounded-2xl border border-white/20 overflow-hidden cursor-pointer hover:bg-white/50 transition-all duration-300 md:shadow-lg md:hover:shadow-xl"
+    <AnimatedSection>
+      <div className="container max-w-6xl">
+        <div
+          className="bg-white/40 backdrop-blur-sm rounded-xl md:rounded-2xl border border-white/20 overflow-hidden cursor-pointer hover:bg-white/50 transition-all duration-300 shadow-lg hover:shadow-xl"
           onClick={toggleExpanded}
         >
-          {/* Header */}
+          {/* Title Header */}
+          <div className="bg-white/30 px-4 md:px-8 py-3 md:py-4 border-b border-white/20 text-center">
+            <h2 className="text-xs md:text-sm font-medium text-gray-600 uppercase tracking-wide">
+              Kreisliga Tauberbischofsheim
+            </h2>
+          </div>
+
+          {/* Table Header */}
           <div className="bg-white/20 px-4 md:px-8 py-3 md:py-3 border-b border-white/20">
             <div className="grid grid-cols-12 gap-2 md:gap-4 text-xs md:text-sm font-medium text-gray-600 uppercase tracking-wide">
               <div className="col-span-1">#</div>
@@ -354,21 +355,19 @@ const LeagueTable = () => {
 
           {/* Teams */}
           <div className="divide-y divide-white/10">
-            {displayedTeams.map((team, index) => (
+            {displayedTeams.map((team) => (
               <div
                 key={team.position}
-                className={`px-4 md:px-8 py-2.5 md:py-3 transition-all duration-300 ${
-                  team.name === 'SV Viktoria Wertheim' 
-                    ? 'bg-viktoria-blue-light rounded-lg md:rounded-xl hover:bg-viktoria-blue hover:shadow-lg hover:shadow-viktoria-blue/20 hover:scale-[1.02] cursor-pointer' 
-                    : 'hover:bg-white/20'
-                }`}
+                className={`px-4 md:px-8 py-2.5 md:py-3 transition-all duration-300 ${team.name === 'SV Viktoria Wertheim'
+                  ? 'bg-viktoria-blue-light rounded-lg md:rounded-xl hover:bg-viktoria-blue hover:shadow-lg hover:shadow-viktoria-blue/20 hover:scale-[1.02] cursor-pointer'
+                  : 'hover:bg-white/20'
+                  }`}
               >
                 <div className="grid grid-cols-12 gap-2 md:gap-4 items-center text-sm md:text-base">
                   {/* Position */}
                   <div className="col-span-1">
-                    <span className={`font-semibold text-sm md:text-lg ${
-                      team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-700'
-                    }`}>
+                    <span className={`font-semibold text-sm md:text-lg ${team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-700'
+                      }`}>
                       {team.position}.
                     </span>
                   </div>
@@ -376,8 +375,8 @@ const LeagueTable = () => {
                   {/* Team Name & Logo */}
                   <div className="col-span-4 lg:col-span-5 flex items-center space-x-2 md:space-x-3">
                     {team.logo ? (
-                      <Image 
-                        src={team.logo} 
+                      <Image
+                        src={team.logo}
                         alt={`${team.name} Logo`}
                         width={32}
                         height={32}
@@ -395,67 +394,60 @@ const LeagueTable = () => {
                   </div>
 
                   {/* Games */}
-                  <div className={`col-span-1 text-center text-sm md:text-base ${
-                    team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
-                  }`}>
+                  <div className={`col-span-1 text-center text-sm md:text-base ${team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
+                    }`}>
                     {team.games}
                   </div>
 
                   {/* Wins */}
-                  <div className={`col-span-1 text-center text-sm md:text-base ${
-                    team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
-                  }`}>
+                  <div className={`col-span-1 text-center text-sm md:text-base ${team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
+                    }`}>
                     {team.wins}
                   </div>
 
                   {/* Draws */}
-                  <div className={`col-span-1 text-center text-sm md:text-base ${
-                    team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
-                  }`}>
+                  <div className={`col-span-1 text-center text-sm md:text-base ${team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
+                    }`}>
                     {team.draws}
                   </div>
 
                   {/* Losses */}
-                  <div className={`col-span-1 text-center text-sm md:text-base ${
-                    team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
-                  }`}>
+                  <div className={`col-span-1 text-center text-sm md:text-base ${team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
+                    }`}>
                     {team.losses}
                   </div>
 
                   {/* Goals */}
-                  <div className={`col-span-1 lg:col-span-0 lg:hidden text-center text-xs md:text-sm ${
-                    team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
-                  }`}>
+                  <div className={`col-span-1 lg:col-span-0 lg:hidden text-center text-xs md:text-sm ${team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-600'
+                    }`}>
                     {team.goalsFor}:{team.goalsAgainst}
                   </div>
 
                   {/* Goal Difference */}
                   <div className="col-span-1 text-center">
-                    <span className={`text-xs md:text-sm font-medium ${
-                      team.name === 'SV Viktoria Wertheim' ? 'text-white' :
-                      team.goalDifference > 0 ? 'text-green-600' : 
-                      team.goalDifference < 0 ? 'text-red-600' : 'text-gray-600'
-                    }`}>
+                    <span className={`text-xs md:text-sm font-medium ${team.name === 'SV Viktoria Wertheim' ? 'text-white' :
+                      team.goalDifference > 0 ? 'text-green-600' :
+                        team.goalDifference < 0 ? 'text-red-600' : 'text-gray-600'
+                      }`}>
                       {team.goalDifference > 0 ? '+' : ''}{team.goalDifference}
                     </span>
                   </div>
 
                   {/* Points */}
                   <div className="col-span-1 text-center">
-                    <span className={`font-bold text-sm md:text-lg ${
-                      team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-800'
-                    }`}>
+                    <span className={`font-bold text-sm md:text-lg ${team.name === 'SV Viktoria Wertheim' ? 'text-white' : 'text-gray-800'
+                      }`}>
                       {team.points}
                     </span>
                   </div>
                 </div>
               </div>
-                          ))}
+            ))}
           </div>
-          
+
           {/* Expand/Collapse Indicator */}
           <div className="bg-white/30 px-4 md:px-8 py-4 md:py-5 border-t border-white/20 text-center hover:bg-white/40 transition-colors">
-            <div className="flex items-center justify-center space-x-2 text-sm md:text-base font-semibold text-gray-700">
+            <div className="flex items-center justify-center space-x-2 text-xs md:text-sm font-medium text-gray-600 uppercase tracking-wide">
               <span>{isExpanded ? 'Weniger anzeigen' : 'Vollständige Tabelle anzeigen'}</span>
               {isExpanded ? <ChevronUp size={16} className="md:w-5 md:h-5" /> : <ChevronDown size={16} className="md:w-5 md:h-5" />}
             </div>

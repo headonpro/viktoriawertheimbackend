@@ -9,13 +9,14 @@ const nextConfig = {
         pathname: '/uploads/**',
       },
       {
-        protocol: 'https',
-        hostname: 'strapi.viktoria-wertheim.de',
+        protocol: 'http',
+        hostname: '192.168.178.59',
+        port: '1337',
         pathname: '/uploads/**',
       },
       {
         protocol: 'https',
-        hostname: 'reliable-morning-f369ca7d6e.strapiapp.com',
+        hostname: 'strapi.viktoria-wertheim.de',
         pathname: '/uploads/**',
       },
     ],

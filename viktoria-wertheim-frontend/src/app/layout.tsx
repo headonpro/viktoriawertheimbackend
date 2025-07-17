@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   authors: [{ name: 'Viktoria Wertheim e.V.' }],
   creator: 'Viktoria Wertheim e.V.',
   publisher: 'Viktoria Wertheim e.V.',
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
+  },
   robots: {
     index: true,
     follow: true,

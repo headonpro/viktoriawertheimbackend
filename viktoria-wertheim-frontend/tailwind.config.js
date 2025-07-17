@@ -63,7 +63,7 @@ module.exports = {
           '100%': { transform: 'translateX(200%) rotate(180deg)', opacity: '0' },
         },
         scrollLeft: {
-          '0%': { transform: 'translateX(100%)' },
+          '0%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-100%)' },
         },
       },

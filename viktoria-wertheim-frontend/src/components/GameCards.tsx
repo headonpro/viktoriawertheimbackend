@@ -126,11 +126,11 @@ const GameCard = ({ type, homeTeam, awayTeam, homeScore, awayScore, date, time, 
   
   return (
     <div 
-      className="bg-white/40 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-8 border border-white/20 hover:bg-white/50 transition-all duration-300 cursor-pointer md:min-h-[280px] md:shadow-lg md:hover:shadow-xl"
+      className="bg-white/40 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-6 border border-white/20 hover:bg-white/50 transition-all duration-300 cursor-pointer md:min-h-[240px] shadow-lg hover:shadow-xl"
       onClick={onClick}
     >
-      <div className="flex items-center justify-between mb-3 md:mb-6">
-        <div className="text-sm md:text-base font-semibold text-gray-600 uppercase tracking-wide">
+      <div className="flex items-center justify-between mb-2 md:mb-4">
+        <div className="text-xs md:text-sm font-medium text-gray-600 uppercase tracking-wide">
           {type === 'last' ? 'Letztes Spiel' : 'Nächstes Spiel'}
         </div>
         <div className="text-xs md:text-sm text-gray-500">
@@ -242,13 +242,11 @@ export default function GameCards() {
     const fetchGames = async () => {
       try {
         setLoading(true)
-        const response = await strapi.get('/spiels', {
+        const response = await strapi.get('/spiele', {
           params: {
-            populate: ['mannschaft'],
-            sort: ['datum:desc'],
-            pagination: {
-              limit: 10
-            }
+            populate: ['heimmannschaft', 'auswaertsmannschaft'],
+            sort: 'datum:desc',
+            'pagination[limit]': 10
           }
         })
         
@@ -380,8 +378,8 @@ export default function GameCards() {
   return (
     <>
       <AnimatedSection className="py-0" delay={0}>
-        <div className="px-2 md:px-6 max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 gap-2 md:gap-8">
+        <div className="container max-w-6xl">
+          <div className="grid grid-cols-2 gap-4 md:gap-8">
             {/* Letztes Spiel */}
             {(lastGame || mockLastGameDetails) && (
               <GameCard

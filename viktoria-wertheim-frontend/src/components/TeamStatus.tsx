@@ -55,62 +55,70 @@ export default function TeamStatus() {
   }
 
   return (
-    <AnimatedSection className="py-0" delay={0}>
-      <div className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-        <div className="mb-0">
-          <AnimatedDiv
-            className="bg-white/40 backdrop-blur-sm rounded-lg sm:rounded-xl p-4 sm:p-6 border border-white/20 hover:bg-white/50 transition-all duration-300 md:shadow-lg md:hover:shadow-xl"
-            delay={0.1}
-          >
-            {/* Ultra-Compact: Single Row, 3 Columns */}
-            <div className="grid grid-cols-3 gap-4 md:gap-8">
-              
-              {/* Column 1: Form (Letzte 5 Spiele) */}
-              <div className="text-center">
-                <div className="mb-2 md:mb-3">
-                  <span className="text-xs md:text-sm font-semibold text-gray-700 uppercase tracking-wide">Form</span>
+    <div className="container max-w-6xl">
+      <AnimatedDiv
+        className="bg-white/40 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/50 transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden"
+        delay={0.1}
+      >
+        {/* Kompakte horizontale Anordnung */}
+        <div className="px-4 py-3 md:px-6 md:py-4">
+          <div className="relative">
+            
+            {/* Platz - Links mit festem Abstand */}
+            <div className="absolute left-0 text-center">
+              <div className="text-xs font-medium text-gray-600 uppercase tracking-wide mb-1">
+                Platz
+              </div>
+              <div className="flex items-center justify-center space-x-1">
+                <div className="text-xl md:text-2xl font-bold text-viktoria-blue">
+                  {teamData.tabellenplatz}
                 </div>
-                <div className="flex space-x-1.5 md:space-x-2 justify-center">
-                  {teamData.formLetzten5.map((result, index) => (
-                    <div
-                      key={index}
-                      className={`w-5 h-5 md:w-7 md:h-7 rounded-full flex items-center justify-center text-xs md:text-sm font-bold ${getFormColor(result)} transition-all duration-200 hover:scale-110 shadow-sm`}
-                    >
-                      {getFormText(result)}
-                    </div>
-                  ))}
+                <div className="flex items-center">
+                  {getTrendIcon(teamData.platzierungsveraenderung)}
                 </div>
               </div>
-
-              {/* Column 2: Platzierung mit Trend */}
-              <div className="text-center">
-                <div className="mb-2 md:mb-3">
-                  <span className="text-xs md:text-sm font-semibold text-gray-700 uppercase tracking-wide">Platz</span>
-                </div>
-                <div className="flex items-center justify-center space-x-1.5 md:space-x-2">
-                  <div className="text-2xl md:text-3xl font-bold text-viktoria-blue">
-                    {teamData.tabellenplatz}
-                  </div>
-                  <div className="flex items-center">
-                    {getTrendIcon(teamData.platzierungsveraenderung)}
-                  </div>
-                </div>
-              </div>
-
-              {/* Column 3: Liga */}
-              <div className="text-center">
-                <div className="mb-2 md:mb-3">
-                  <span className="text-xs md:text-sm font-semibold text-gray-700 uppercase tracking-wide">Liga</span>
-                </div>
-                <div className="text-sm md:text-base font-bold text-viktoria-blue">
-                  {teamData.liga}
-                </div>
-              </div>
-              
             </div>
-          </AnimatedDiv>
+
+            {/* Form - Absolut zentriert */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 text-center">
+              <div className="text-xs font-medium text-gray-600 uppercase tracking-wide mb-1">
+                Form
+              </div>
+              <div className="flex space-x-1 justify-center">
+                {teamData.formLetzten5.map((result, index) => (
+                  <div
+                    key={index}
+                    className={`w-4 h-4 md:w-5 md:h-5 rounded-full flex items-center justify-center text-xs font-bold ${getFormColor(result)} transition-all duration-200 hover:scale-110 shadow-sm`}
+                  >
+                    {getFormText(result)}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Liga - Rechts mit festem Abstand */}
+            <div className="absolute right-0 text-center">
+              <div className="text-xs font-medium text-gray-600 uppercase tracking-wide mb-1">
+                Liga
+              </div>
+              <div className="text-sm md:text-base font-semibold text-viktoria-blue">
+                {teamData.liga}
+              </div>
+            </div>
+
+            {/* Invisible spacer to maintain height */}
+            <div className="invisible">
+              <div className="text-xs font-medium text-gray-600 uppercase tracking-wide mb-1">
+                Platz
+              </div>
+              <div className="text-xl md:text-2xl font-bold">
+                0
+              </div>
+            </div>
+            
+          </div>
         </div>
-      </div>
-    </AnimatedSection>
+      </AnimatedDiv>
+    </div>
   )
 } 
