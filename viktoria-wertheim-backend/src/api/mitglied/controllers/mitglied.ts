@@ -2,7 +2,9 @@
  * mitglied controller
  */
 
-export default {
+import { factories } from '@strapi/strapi'
+
+export default factories.createCoreController('api::mitglied.mitglied' as any, ({ strapi }) => ({
   
   // Admin-Endpoint zum Erstellen neuer Mitglieder mit User-Account
   async createMemberWithUser(ctx) {
@@ -154,4 +156,4 @@ export default {
     }
   }
 
-}; 
+})); 

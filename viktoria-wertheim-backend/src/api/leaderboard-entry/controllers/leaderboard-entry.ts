@@ -4,4 +4,4 @@
 
 import { factories } from '@strapi/strapi'
 
-export default factories.createCoreController('api::leaderboard-entry.leaderboard-entry');
+export default factories.createCoreController('api::leaderboard-entry.leaderboard-entry' as any); 

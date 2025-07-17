@@ -140,11 +140,11 @@ export default function NewsModal({ article, isOpen, onClose }: NewsModalProps) 
                     </span>
                   </div>
                   
-                  {article.attributes.kategory?.data && (
+                  {article.attributes.kategorie?.data && (
                     <div className="flex items-center">
                       <IconTag className="w-4 h-4 mr-2" />
                       <span className="bg-viktoria-yellow/20 text-gray-700 px-3 py-1 rounded-full">
-                        {article.attributes.kategory.data.attributes.name}
+                        {article.attributes.kategorie.data.attributes.name}
                       </span>
                     </div>
                   )}

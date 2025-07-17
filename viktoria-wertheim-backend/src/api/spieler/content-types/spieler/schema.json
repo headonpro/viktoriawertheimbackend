@@ -1,6 +1,6 @@
 {
   "kind": "collectionType",
-  "collectionName": "spielers",
+  "collectionName": "spieler",
   "info": {
     "singularName": "spieler",
     "pluralName": "spielers",

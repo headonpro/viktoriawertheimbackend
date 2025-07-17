@@ -14,24 +14,27 @@ export const strapi = axios.create({
 // API-Endpunkte für Content Types
 export const API_ENDPOINTS = {
   // Content Types
-  mitglieder: '/mitglieds',
-  mannschaften: '/mannschafts',
+  mitglieder: '/mitglieder',
+  mannschaften: '/mannschaften',
   spielers: '/spielers',
+  spiele: '/spiele',
   trainings: '/trainings',
+  kategorien: '/kategorien',
+  newsArtikel: '/news-artikels',
   
   // Custom Endpoints
   mannschaft: {
-    withTrainers: '/mannschafts/with-trainers',
-    active: '/mannschafts/active',
-    byAgeGroup: '/mannschafts/by-age-group',
-    details: (id: number) => `/mannschafts/${id}/details`
+    withTrainers: '/mannschaften/with-trainers',
+    active: '/mannschaften/active',
+    byAgeGroup: (altersklasse: string) => `/mannschaften/age-group/${altersklasse}`,
+    details: (id: number) => `/mannschaften/${id}/details`
   },
   
   spieler: {
     stats: (id: number) => `/spielers/${id}/stats`,
-    byTeam: (teamId: number) => `/spielers/by-team/${teamId}`,
+    byTeam: (teamId: number) => `/spielers/team/${teamId}`,
     topScorers: '/spielers/top-scorers',
-    byPosition: (position: string) => `/spielers/by-position/${position}`,
+    byPosition: (position: string) => `/spielers/position/${position}`,
     injured: '/spielers/injured'
   },
   
@@ -45,9 +48,9 @@ export const API_ENDPOINTS = {
   },
 
   mitglied: {
-    register: '/mitglieds/register',
-    profile: '/mitglieds/profile',
-    updateProfile: '/mitglieds/update-profile'
+    register: '/mitglieder/register',
+    profile: '/mitglieder/profile',
+    updateProfile: '/mitglieder/update-profile'
   }
 } as const;
 

@@ -387,8 +387,8 @@ export default function PlayerDashboard() {
                         {game.attributes.heimmannschaft} vs {game.attributes.auswaertsmannschaft}
                       </span>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(game.attributes.status)}`}>
-                      {game.attributes.status}
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(game.attributes.spielstatus)}`}>
+                      {game.attributes.spielstatus}
                     </span>
                   </div>
                   

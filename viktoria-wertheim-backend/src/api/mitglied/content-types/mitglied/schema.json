@@ -1,9 +1,9 @@
 {
   "kind": "collectionType",
-  "collectionName": "mitglieds",
+  "collectionName": "mitglieder",
   "info": {
     "singularName": "mitglied",
-    "pluralName": "mitglieds",
+    "pluralName": "mitglieder",
     "displayName": "Mitglied",
     "description": "Vereinsmitglieder"
   },

@@ -18,7 +18,7 @@ const mockNewsArticles: NewsArtikel[] = [
         titel: 'Viktoria Wertheim gewinnt Derby mit 3:1',
         inhalt: 'Ein spannendes Spiel endete mit einem verdienten Sieg für unsere Mannschaft. Die Tore fielen in der zweiten Halbzeit, als unser Team das Tempo erhöhte und die Kontrolle übernahm.\n\nDie Zuschauer sahen eine kämpferische Leistung und wurden mit einem tollen Fußballabend belohnt. Bereits in der 15. Minute gingen wir durch einen schönen Angriff über die rechte Seite in Führung.\n\nIn der zweiten Halbzeit erhöhten wir das Tempo und konnten durch zwei weitere Treffer den verdienten Sieg einfahren. Die Mannschaft zeigte eine geschlossene Leistung und kämpfte bis zur letzten Minute.',
         datum: '2024-12-08',
-        kategory: {
+        kategorie: {
           data: {
             id: 1,
             attributes: {
@@ -37,7 +37,7 @@ const mockNewsArticles: NewsArtikel[] = [
         titel: 'Neuer Trainer für die Jugend',
         inhalt: 'Ab sofort wird unser Jugendbereich von einem erfahrenen Trainer geleitet. Mit seiner langjährigen Erfahrung im Nachwuchsbereich wird er unsere jungen Talente optimal fördern und weiterentwickeln.\n\nDer neue Trainer bringt moderne Trainingsmethoden mit und legt großen Wert auf die individuelle Förderung der Spieler. Wir freuen uns auf die Zusammenarbeit und sind gespannt auf die Entwicklung unserer Nachwuchstalente.',
         datum: '2024-12-05',
-        kategory: {
+        kategorie: {
           data: {
             id: 2,
             attributes: {
@@ -56,7 +56,7 @@ const mockNewsArticles: NewsArtikel[] = [
         titel: 'Saisonrückblick 2024',
         inhalt: 'Die Saison 2024 war geprägt von vielen Höhepunkten und Erfolgen. Unser Team hat sich kontinuierlich verbessert und konnte wichtige Siege einfahren.\n\nBesonders stolz sind wir auf die Entwicklung unserer jungen Spieler, die sich perfekt in die Mannschaft integriert haben. Die Zusammenarbeit zwischen erfahrenen und jungen Spielern funktioniert hervorragend.\n\nWir blicken stolz auf die erreichten Leistungen zurück und freuen uns bereits auf die kommende Saison, in der wir an diese Erfolge anknüpfen möchten.',
         datum: '2024-12-01',
-        kategory: {
+        kategorie: {
           data: {
             id: 3,
             attributes: {
@@ -79,7 +79,7 @@ const mockDetailedArticles: { [key: string]: NewsArtikel } = {
       titel: 'Viktoria Wertheim gewinnt Derby mit 3:1',
       inhalt: 'Ein spannendes Spiel endete mit einem verdienten Sieg für unsere Mannschaft. Die Tore fielen in der zweiten Halbzeit, als unser Team das Tempo erhöhte und die Kontrolle übernahm.\n\nDie Zuschauer sahen eine kämpferische Leistung und wurden mit einem tollen Fußballabend belohnt. Bereits in der 15. Minute gingen wir durch einen schönen Angriff über die rechte Seite in Führung.\n\nIn der zweiten Halbzeit erhöhten wir das Tempo und konnten durch zwei weitere Treffer den verdienten Sieg einfahren. Die Mannschaft zeigte eine geschlossene Leistung und kämpfte bis zur letzten Minute.',
       datum: '2024-12-08',
-      kategory: {
+      kategorie: {
         data: {
           id: 1,
           attributes: {
@@ -98,7 +98,7 @@ const mockDetailedArticles: { [key: string]: NewsArtikel } = {
       titel: 'Neuer Trainer für die Jugend',
       inhalt: 'Ab sofort wird unser Jugendbereich von einem erfahrenen Trainer geleitet. Mit seiner langjährigen Erfahrung im Nachwuchsbereich wird er unsere jungen Talente optimal fördern und weiterentwickeln.\n\nDer neue Trainer bringt moderne Trainingsmethoden mit und legt großen Wert auf die individuelle Förderung der Spieler. Wir freuen uns auf die Zusammenarbeit und sind gespannt auf die Entwicklung unserer Nachwuchstalente.',
       datum: '2024-12-05',
-      kategory: {
+      kategorie: {
         data: {
           id: 2,
           attributes: {
@@ -117,7 +117,7 @@ const mockDetailedArticles: { [key: string]: NewsArtikel } = {
       titel: 'Saisonrückblick 2024',
       inhalt: 'Die Saison 2024 war geprägt von vielen Höhepunkten und Erfolgen. Unser Team hat sich kontinuierlich verbessert und konnte wichtige Siege einfahren.\n\nBesonders stolz sind wir auf die Entwicklung unserer jungen Spieler, die sich perfekt in die Mannschaft integriert haben. Die Zusammenarbeit zwischen erfahrenen und jungen Spielern funktioniert hervorragend.\n\nWir blicken stolz auf die erreichten Leistungen zurück und freuen uns bereits auf die kommende Saison, in der wir an diese Erfolge anknüpfen möchten.',
       datum: '2024-12-01',
-      kategory: {
+      kategorie: {
         data: {
           id: 3,
           attributes: {
@@ -185,11 +185,11 @@ export default function NewsPage() {
         const [newsResponse, categoriesResponse] = await Promise.all([
           strapi.get('/news-artikels', {
             params: {
-              populate: ['titelbild', 'kategory'],
+              populate: ['titelbild', 'kategorie'],
               sort: ['datum:desc']
             }
           }),
-          strapi.get('/kategories')
+          strapi.get('/kategorien')
         ])
 
         // Use API data if available, otherwise use mock data
@@ -238,7 +238,7 @@ export default function NewsPage() {
       // Try to fetch full article from API
       const response = await strapi.get(`/news-artikels/${articleId}`, {
         params: {
-          populate: ['titelbild', 'kategory']
+          populate: ['titelbild', 'kategorie']
         }
       })
       
@@ -263,7 +263,7 @@ export default function NewsPage() {
   const filteredArticles = selectedCategory === 'Alle' 
     ? newsArticles 
     : newsArticles.filter(article => 
-        article.attributes.kategory?.data?.attributes.name === selectedCategory
+        article.attributes.kategorie?.data?.attributes.name === selectedCategory
       )
 
   // Loading state
@@ -418,10 +418,10 @@ export default function NewsPage() {
                         </div>
 
                         {/* Category Badge */}
-                        {filteredArticles[0].attributes.kategory?.data && (
+                        {filteredArticles[0].attributes.kategorie?.data && (
                           <div className="absolute top-4 right-4">
                             <span className="bg-white/90 text-gray-800 text-sm px-3 py-1 rounded-full font-medium backdrop-blur-sm">
-                              {filteredArticles[0].attributes.kategory.data.attributes.name}
+                              {filteredArticles[0].attributes.kategorie.data.attributes.name}
                             </span>
                           </div>
                         )}
@@ -498,10 +498,10 @@ export default function NewsPage() {
                         )}
                         
                         {/* Category Badge */}
-                        {article.attributes.kategory?.data && (
+                        {article.attributes.kategorie?.data && (
                           <div className="absolute top-3 left-3">
                             <span className="bg-viktoria-yellow text-gray-800 text-xs lg:text-sm px-2 lg:px-3 py-1 rounded-full backdrop-blur-sm font-medium">
-                              {article.attributes.kategory.data.attributes.name}
+                              {article.attributes.kategorie.data.attributes.name}
                             </span>
                           </div>
                         )}

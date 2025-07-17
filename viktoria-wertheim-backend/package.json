@@ -16,11 +16,11 @@
   },
   "dependencies": {
     "@strapi/plugin-cloud": "5.18.0",
+    "@strapi/plugin-graphql": "^5.18.1",
     "@strapi/plugin-users-permissions": "5.18.0",
     "@strapi/strapi": "5.18.0",
-    "bcryptjs": "^3.0.2",
+    "axios": "^1.10.0",
     "better-sqlite3": "11.3.0",
-    "puppeteer": "^24.13.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
@@ -37,7 +37,7 @@
     "npm": ">=6.0.0"
   },
   "strapi": {
-    "uuid": "665ec2a7-6be6-4279-8470-075832f91c80",
-    "installId": "c475251debd876eb9c9af4eb55f2bb5a0d7486b9192ad78605a09b9d686e48d1"
+    "uuid": "0b73a874-c78e-4cdf-b5dc-9ae2c7d69ffc",
+    "installId": "25ae1fa5b8226a0ea6a79a86f1f009a1812198c8f45061eb8bc0c8c6c2e11eee"
   }
 }

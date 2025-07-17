@@ -70,7 +70,7 @@ export interface Game {
     spielort: string
     liga?: string
     isHeimspiel: boolean
-    status: 'geplant' | 'live' | 'beendet' | 'abgesagt'
+    spielstatus: 'geplant' | 'live' | 'beendet' | 'abgesagt'
   }
 }
 

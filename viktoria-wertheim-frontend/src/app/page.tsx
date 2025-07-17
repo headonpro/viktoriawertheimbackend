@@ -104,7 +104,7 @@ const mockNewsArticles: NewsArtikel[] = [
       titel: "Viktoria Wertheim gewinnt Derby mit 3:1",
       inhalt: "Ein spannendes Spiel endete mit einem verdienten Sieg für unsere Mannschaft gegen FC Eichel. Die Tore fielen durch Okan Cirakoglu (2x) und Marco Schneider. Das Team zeigte eine starke Leistung vor heimischem Publikum.\n\nBereits in der 15. Minute ging Viktoria Wertheim durch einen Treffer von Okan Cirakoglu in Führung. Der Stürmer nutzte eine Flanke von der rechten Seite perfekt aus. FC Eichel kam zwar zum Ausgleich, aber die Antwort ließ nicht lange auf sich warten.\n\nIn der zweiten Halbzeit dominierte Viktoria das Spiel und belohnte sich mit zwei weiteren Treffern. Besonders die Defensive stand sicher und ließ kaum Chancen zu.",
       datum: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      kategory: {
+      kategorie: {
         data: {
           id: 1,
           attributes: {
@@ -123,7 +123,7 @@ const mockNewsArticles: NewsArtikel[] = [
       titel: "Neuer Trainer für die Jugend verpflichtet",
       inhalt: "Mit Marco Schneider konnte ein erfahrener Trainer für unsere A-Jugend gewonnen werden. Der 42-jährige bringt jahrelange Erfahrung im Nachwuchsbereich mit.\n\nSchneider war zuletzt beim TSV Tauberbischofsheim tätig und führte dort die A-Jugend zum Aufstieg in die Bezirksliga. Seine Philosophie: 'Jeder Spieler soll individuell gefördert werden, aber der Teamgedanke steht immer im Vordergrund.'\n\nDie erste Trainingseinheit ist für den 15. Januar geplant. Alle Spieler der A-Jugend sind herzlich eingeladen.",
       datum: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-      kategory: {
+      kategorie: {
         data: {
           id: 2,
           attributes: {
@@ -142,7 +142,7 @@ const mockNewsArticles: NewsArtikel[] = [
       titel: "Winterpause: Training startet am 15. Januar",
       inhalt: "Nach der wohlverdienten Winterpause beginnt das Training für alle Mannschaften wieder am 15. Januar. Die Vorbereitung auf die Rückrunde startet mit einem Fitnesstest.\n\nTrainer Hans Müller hat bereits einen detaillierten Trainingsplan erstellt: 'Wir werden sowohl an der Kondition als auch an der Taktik arbeiten. Die Winterpause war wichtig, aber jetzt geht es wieder richtig los.'\n\nDas erste Testspiel ist für den 25. Januar gegen den SV Königshofen geplant. Alle Fans sind herzlich eingeladen.",
       datum: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-      kategory: {
+      kategorie: {
         data: {
           id: 3,
           attributes: {
@@ -189,7 +189,7 @@ export default function HomePage() {
           }),
           strapi.get('/news-artikels', {
             params: {
-              populate: ['titelbild', 'kategory'],
+              populate: ['titelbild', 'kategorie'],
               sort: ['datum:desc'],
               pagination: {
                 limit: 3

@@ -16,7 +16,7 @@ const mockNewsArticles: NewsArtikel[] = [
       titel: "🏆 Derby-Sieg! Viktoria schlägt FC Eichel 3:1",
       inhalt: "Ein spannendes Derby endete mit einem verdienten Sieg...",
       datum: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      kategory: {
+      kategorie: {
         data: {
           id: 1,
           attributes: { name: "Spielberichte" }
@@ -33,7 +33,7 @@ const mockNewsArticles: NewsArtikel[] = [
       titel: "⚽ Winterpause beendet - Training startet am 15. Januar",
       inhalt: "Nach der wohlverdienten Winterpause beginnt das Training...",
       datum: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-      kategory: {
+      kategorie: {
         data: {
           id: 2,
           attributes: { name: "Training" }
@@ -50,7 +50,7 @@ const mockNewsArticles: NewsArtikel[] = [
       titel: "👨‍💼 Neuer A-Jugend Trainer Marco Schneider verpflichtet",
       inhalt: "Mit Marco Schneider konnte ein erfahrener Trainer gewonnen werden...",
       datum: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-      kategory: {
+      kategorie: {
         data: {
           id: 3,
           attributes: { name: "Vereinsnews" }
@@ -67,7 +67,7 @@ const mockNewsArticles: NewsArtikel[] = [
       titel: "🎯 Neuzugang: Max Müller verstärkt die Offensive",
       inhalt: "Ein neuer Stürmer verstärkt das Team ab sofort...",
       datum: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
-      kategory: {
+      kategorie: {
         data: {
           id: 4,
           attributes: { name: "Transfers" }
@@ -92,7 +92,7 @@ export default function NewsTicker({ onNewsClick }: NewsTickerProps) {
         setLoading(true)
         const response = await strapi.get('/news-artikels', {
           params: {
-            populate: ['kategory'],
+            populate: ['kategorie'],
             sort: ['datum:desc'],
             pagination: {
               limit: 10

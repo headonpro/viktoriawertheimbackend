@@ -19,7 +19,7 @@ const mockArticles: { [key: string]: NewsArtikel } = {
         titel: 'Viktoria Wertheim gewinnt Derby mit 3:1',
         inhalt: 'Ein spannendes Spiel endete mit einem verdienten Sieg für unsere Mannschaft. Die Tore fielen in der zweiten Halbzeit, als unser Team das Tempo erhöhte und die Kontrolle übernahm.\n\nDie Zuschauer sahen eine kämpferische Leistung und wurden mit einem tollen Fußballabend belohnt. Bereits in der 15. Minute gingen wir durch einen schönen Angriff über die rechte Seite in Führung.\n\nIn der zweiten Halbzeit erhöhten wir das Tempo und konnten durch zwei weitere Treffer den verdienten Sieg einfahren. Die Mannschaft zeigte eine geschlossene Leistung und kämpfte bis zur letzten Minute.',
         datum: '2024-12-08',
-        kategory: {
+        kategorie: {
           data: {
             id: 1,
             attributes: {
@@ -38,7 +38,7 @@ const mockArticles: { [key: string]: NewsArtikel } = {
         titel: 'Neuer Trainer für die Jugend',
         inhalt: 'Ab sofort wird unser Jugendbereich von einem erfahrenen Trainer geleitet. Mit seiner langjährigen Erfahrung im Nachwuchsbereich wird er unsere jungen Talente optimal fördern und weiterentwickeln.\n\nDer neue Trainer bringt moderne Trainingsmethoden mit und legt großen Wert auf die individuelle Förderung der Spieler. Wir freuen uns auf die Zusammenarbeit und sind gespannt auf die Entwicklung unserer Nachwuchstalente.',
         datum: '2024-12-05',
-        kategory: {
+        kategorie: {
           data: {
             id: 2,
             attributes: {
@@ -57,7 +57,7 @@ const mockArticles: { [key: string]: NewsArtikel } = {
         titel: 'Saisonrückblick 2024',
         inhalt: 'Die Saison 2024 war geprägt von vielen Höhepunkten und Erfolgen. Unser Team hat sich kontinuierlich verbessert und konnte wichtige Siege einfahren.\n\nBesonders stolz sind wir auf die Entwicklung unserer jungen Spieler, die sich perfekt in die Mannschaft integriert haben. Die Zusammenarbeit zwischen erfahrenen und jungen Spielern funktioniert hervorragend.\n\nWir blicken stolz auf die erreichten Leistungen zurück und freuen uns bereits auf die kommende Saison, in der wir an diese Erfolge anknüpfen möchten.',
         datum: '2024-12-01',
-        kategory: {
+        kategorie: {
           data: {
             id: 3,
             attributes: {
@@ -87,7 +87,7 @@ export default function NewsArticlePage() {
         
         const response = await strapi.get(`/news-artikels/${id}`, {
           params: {
-            populate: ['titelbild', 'kategory']
+            populate: ['titelbild', 'kategorie']
           }
         })
 
@@ -216,11 +216,11 @@ export default function NewsArticlePage() {
                 </span>
               </div>
               
-              {article.attributes.kategory?.data && (
+              {article.attributes.kategorie?.data && (
                 <div className="flex items-center">
                   <Tag className="w-4 h-4 mr-2" />
                   <span className="bg-gray-700/10 text-gray-700 px-3 py-1 rounded-full">
-                    {article.attributes.kategory.data.attributes.name}
+                    {article.attributes.kategorie.data.attributes.name}
                   </span>
                 </div>
               )}

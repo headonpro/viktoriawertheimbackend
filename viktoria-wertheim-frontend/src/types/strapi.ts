@@ -16,7 +16,7 @@ export interface NewsArtikel {
         };
       };
     };
-    kategory?: {
+    kategorie?: {
       data: {
         id: number;
         attributes: {
@@ -43,13 +43,17 @@ export interface Kategorie {
 export interface Spieler {
   id: number;
   attributes: {
-    vorname: string;
-    nachname: string;
-    position: 'Torwart' | 'Abwehr' | 'Mittelfeld' | 'Sturm';
+    position: 'torwart' | 'abwehr' | 'mittelfeld' | 'sturm';
     rueckennummer?: number;
-    tore: number;
-    spiele: number;
-    foto?: {
+    tore_saison: number;
+    spiele_saison: number;
+    gelbe_karten?: number;
+    rote_karten?: number;
+    status?: 'aktiv' | 'verletzt' | 'gesperrt' | 'pausiert' | 'inaktiv';
+    hauptposition?: string;
+    assists?: number;
+    einsatzminuten?: number;
+    spielerfoto?: {
       data: {
         id: number;
         attributes: {
@@ -58,6 +62,16 @@ export interface Spieler {
           caption?: string;
           width: number;
           height: number;
+        };
+      };
+    };
+    mitglied?: {
+      data: {
+        id: number;
+        attributes: {
+          vorname: string;
+          nachname: string;
+          email: string;
         };
       };
     };
@@ -109,15 +123,7 @@ export interface Spiel {
   id: number;
   attributes: {
     datum: string;
-    heimmannschaft: string;
-    auswaertsmannschaft: string;
-    toreHeim?: number;
-    toreAuswaerts?: number;
-    spielort?: string;
-    liga?: string;
-    isHeimspiel: boolean;
-    status: 'geplant' | 'live' | 'beendet' | 'abgesagt';
-    mannschaft?: {
+    heimmannschaft?: {
       data: {
         id: number;
         attributes: {
@@ -125,6 +131,26 @@ export interface Spiel {
         };
       };
     };
+    auswaertsmannschaft?: {
+      data: {
+        id: number;
+        attributes: {
+          name: string;
+        };
+      };
+    };
+    tore_heim?: number;
+    tore_auswaerts?: number;
+    spielort?: string;
+    liga?: string;
+    spieltag?: number;
+    saison?: string;
+    status: 'geplant' | 'live' | 'beendet' | 'abgesagt' | 'verschoben';
+    spielbericht?: string;
+    zuschauer?: number;
+    wetter?: 'sonnig' | 'bewoelkt' | 'regen' | 'schnee' | 'wind';
+    schiedsrichter?: string;
+    bemerkungen?: string;
     publishedAt: string;
     createdAt: string;
     updatedAt: string;

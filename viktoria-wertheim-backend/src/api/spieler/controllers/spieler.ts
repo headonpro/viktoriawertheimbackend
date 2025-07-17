@@ -2,7 +2,9 @@
  * spieler controller
  */
 
-export default {
+import { factories } from '@strapi/strapi'
+
+export default factories.createCoreController('api::spieler.spieler' as any, ({ strapi }) => ({
   
   // Spieler-Statistiken abrufen
   async getPlayerStats(ctx) {
@@ -100,7 +102,7 @@ export default {
           spielerfoto: true
         },
         orderBy: { tore_saison: 'desc' },
-        limit: parseInt(limit)
+        limit: parseInt(limit as string)
       });
 
       ctx.body = {
@@ -134,7 +136,7 @@ export default {
           mannschaft: true,
           spielerfoto: true
         },
-        orderBy: { 'mitglied.nachname': 'asc' }
+        orderBy: { rueckennummer: 'asc' }
       });
 
       ctx.body = {
@@ -161,12 +163,10 @@ export default {
       const verletzteSpiele = await strapi.db.query('api::spieler.spieler').findMany({
         where: whereClause,
         populate: {
-          mitglied: {
-            populate: ['profilfoto', 'notfallkontakt']
-          },
+          mitglied: true,
           mannschaft: true
         },
-        orderBy: { 'mitglied.nachname': 'asc' }
+        orderBy: { rueckennummer: 'asc' }
       });
 
       ctx.body = {
@@ -180,4 +180,4 @@ export default {
     }
   }
 
-}; 
+})); 

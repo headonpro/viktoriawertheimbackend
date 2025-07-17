@@ -2,37 +2,36 @@
  * training controller
  */
 
-export default {
-  
-  // Training erstellen (speziell für Trainer)
+import { factories } from '@strapi/strapi'
+
+export default factories.createCoreController('api::training.training' as any, ({ strapi }) => ({
+
+  // Training erstellen
   async createTraining(ctx) {
     try {
-      const trainingData = ctx.request.body;
-      
-      // Validiere Eingabedaten
-      if (!trainingData.titel || !trainingData.datum || !trainingData.mannschaft) {
-        return ctx.badRequest('Titel, Datum und Mannschaft sind erforderlich');
+      const { titel, datum, dauer, ort, beschreibung, trainingsziel, mannschaft, trainer } = ctx.request.body;
+
+      if (!titel || !datum || !mannschaft || !trainer) {
+        return ctx.badRequest('Titel, Datum, Mannschaft und Trainer sind erforderlich');
       }
 
       const newTraining = await strapi.db.query('api::training.training').create({
         data: {
-          ...trainingData,
+          titel,
+          datum,
+          dauer: dauer || 90,
+          ort: ort || 'Sportplatz Wertheim',
+          beschreibung,
+          trainingsziel,
+          mannschaft,
+          trainer,
+          status: 'geplant',
           publishedAt: new Date()
-        },
-        populate: {
-          trainer: {
-            populate: ['profilfoto']
-          },
-          mannschaft: true,
-          teilnehmer: {
-            populate: ['mitglied']
-          }
         }
       });
 
       ctx.body = {
         success: true,
-        message: 'Training erfolgreich erstellt',
         data: newTraining
       };
     } catch (error) {
@@ -41,26 +40,14 @@ export default {
     }
   },
 
-  // Trainings für eine Mannschaft abrufen
+  // Trainings nach Team
   async findByTeam(ctx) {
     try {
       const { teamId } = ctx.params;
-      const { status, limit = 20, startDate, endDate } = ctx.query;
-
-      let whereClause: any = { mannschaft: teamId };
-
-      if (status) {
-        whereClause.status = status;
-      }
-
-      if (startDate || endDate) {
-        whereClause.datum = {};
-        if (startDate) whereClause.datum.$gte = startDate;
-        if (endDate) whereClause.datum.$lte = endDate;
-      }
+      const { limit = 20 } = ctx.query;
 
       const trainings = await strapi.db.query('api::training.training').findMany({
-        where: whereClause,
+        where: { mannschaft: teamId },
         populate: {
           trainer: {
             populate: ['profilfoto']
@@ -74,53 +61,46 @@ export default {
           }
         },
         orderBy: { datum: 'desc' },
-        limit: parseInt(limit)
+        limit: parseInt(limit as string)
       });
 
       ctx.body = {
         success: true,
-        data: trainings,
-        count: trainings.length
+        data: trainings
       };
     } catch (error) {
-      console.error('Fehler beim Abrufen der Mannschafts-Trainings:', error);
-      ctx.internalServerError('Fehler beim Abrufen der Trainings');
+      console.error('Fehler beim Abrufen der Team-Trainings:', error);
+      ctx.internalServerError('Fehler beim Abrufen der Team-Trainings');
     }
   },
 
   // Kommende Trainings
   async getUpcoming(ctx) {
     try {
-      const { teamId, trainerId, limit = 10 } = ctx.query;
-      const now = new Date().toISOString();
+      const { teamId } = ctx.query;
+      const now = new Date();
 
       let whereClause: any = {
         datum: { $gte: now },
         status: { $in: ['geplant', 'laufend'] }
       };
 
-      if (teamId) whereClause.mannschaft = teamId;
-      if (trainerId) whereClause.trainer = trainerId;
+      if (teamId) {
+        whereClause.mannschaft = teamId;
+      }
 
-      const upcomingTrainings = await strapi.db.query('api::training.training').findMany({
+      const trainings = await strapi.db.query('api::training.training').findMany({
         where: whereClause,
         populate: {
-          trainer: {
-            populate: ['profilfoto']
-          },
-          mannschaft: true,
-          teilnehmer: {
-            populate: ['mitglied']
-          }
+          trainer: true,
+          mannschaft: true
         },
-        orderBy: { datum: 'asc' },
-        limit: parseInt(limit)
+        orderBy: { datum: 'asc' }
       });
 
       ctx.body = {
         success: true,
-        data: upcomingTrainings,
-        count: upcomingTrainings.length
+        data: trainings
       };
     } catch (error) {
       console.error('Fehler beim Abrufen der kommenden Trainings:', error);
@@ -128,36 +108,35 @@ export default {
     }
   },
 
-  // Training-Teilnahme verwalten
+  // Training-Anwesenheit aktualisieren
   async updateAttendance(ctx) {
     try {
       const { id } = ctx.params;
-      const { teilnehmer, abwesende } = ctx.request.body;
+      const { participantIds = [], absentIds = [] } = ctx.request.body;
 
-      const updatedTraining = await strapi.db.query('api::training.training').update({
+      const training = await strapi.db.query('api::training.training').findOne({
+        where: { id }
+      });
+
+      if (!training) {
+        return ctx.notFound('Training nicht gefunden');
+      }
+
+      await strapi.db.query('api::training.training').update({
         where: { id },
         data: {
-          teilnehmer,
-          abwesende
-        },
-        populate: {
-          teilnehmer: {
-            populate: ['mitglied']
-          },
-          abwesende: {
-            populate: ['mitglied']
-          }
+          teilnehmer: participantIds,
+          abwesende: absentIds
         }
       });
 
       ctx.body = {
         success: true,
-        message: 'Teilnahme erfolgreich aktualisiert',
-        data: updatedTraining
+        message: 'Anwesenheit aktualisiert'
       };
     } catch (error) {
-      console.error('Fehler beim Aktualisieren der Teilnahme:', error);
-      ctx.internalServerError('Fehler beim Aktualisieren der Teilnahme');
+      console.error('Fehler beim Aktualisieren der Anwesenheit:', error);
+      ctx.internalServerError('Fehler beim Aktualisieren der Anwesenheit');
     }
   },
 
@@ -165,22 +144,29 @@ export default {
   async completeTraining(ctx) {
     try {
       const { id } = ctx.params;
-      const { notizen, bewertung, verletzungen } = ctx.request.body;
+      const { wetter, notizen, uebungen } = ctx.request.body;
 
-      const completedTraining = await strapi.db.query('api::training.training').update({
+      const training = await strapi.db.query('api::training.training').findOne({
+        where: { id }
+      });
+
+      if (!training) {
+        return ctx.notFound('Training nicht gefunden');
+      }
+
+      await strapi.db.query('api::training.training').update({
         where: { id },
         data: {
           status: 'abgeschlossen',
+          wetter,
           notizen,
-          bewertung,
-          verletzungen
+          uebungen
         }
       });
 
       ctx.body = {
         success: true,
-        message: 'Training erfolgreich abgeschlossen',
-        data: completedTraining
+        message: 'Training abgeschlossen'
       };
     } catch (error) {
       console.error('Fehler beim Abschließen des Trainings:', error);
@@ -192,32 +178,26 @@ export default {
   async findByTrainer(ctx) {
     try {
       const { trainerId } = ctx.params;
-      const { status, limit = 20 } = ctx.query;
-
-      let whereClause: any = { trainer: trainerId };
-      if (status) whereClause.status = status;
 
       const trainings = await strapi.db.query('api::training.training').findMany({
-        where: whereClause,
+        where: { trainer: trainerId },
         populate: {
           mannschaft: true,
           teilnehmer: {
             populate: ['mitglied']
           }
         },
-        orderBy: { datum: 'desc' },
-        limit: parseInt(limit)
+        orderBy: { datum: 'desc' }
       });
 
       ctx.body = {
         success: true,
-        data: trainings,
-        count: trainings.length
+        data: trainings
       };
     } catch (error) {
       console.error('Fehler beim Abrufen der Trainer-Trainings:', error);
-      ctx.internalServerError('Fehler beim Abrufen der Trainings');
+      ctx.internalServerError('Fehler beim Abrufen der Trainer-Trainings');
     }
   }
 
-}; 
+})); 

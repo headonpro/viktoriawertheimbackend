@@ -1,6 +1,6 @@
 {
   "kind": "collectionType",
-  "collectionName": "news_artikels",
+  "collectionName": "news_artikel",
   "info": {
     "singularName": "news-artikel",
     "pluralName": "news-artikels",
@@ -33,11 +33,14 @@
         "audios"
       ]
     },
-    "kategorie": {
-      "type": "string"
-    },
     "autor": {
       "type": "string"
+    },
+    "kategorie": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::kategorie.kategorie",
+      "inversedBy": "news_artikel"
     }
   }
-}
+} 

@@ -107,6 +107,43 @@ export interface AdminApiTokenPermission extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface AdminAuditLog extends Struct.CollectionTypeSchema {
+  collectionName: 'strapi_audit_logs';
+  info: {
+    displayName: 'Audit Log';
+    pluralName: 'audit-logs';
+    singularName: 'audit-log';
+  };
+  options: {
+    draftAndPublish: false;
+    timestamps: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+    'content-type-builder': {
+      visible: false;
+    };
+  };
+  attributes: {
+    action: Schema.Attribute.String & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'admin::audit-log'> &
+      Schema.Attribute.Private;
+    payload: Schema.Attribute.JSON;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<'oneToOne', 'admin::user'>;
+  };
+}
+
 export interface AdminPermission extends Struct.CollectionTypeSchema {
   collectionName: 'admin_permissions';
   info: {
@@ -373,6 +410,44 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiKategorieKategorie extends Struct.CollectionTypeSchema {
+  collectionName: 'kategorien';
+  info: {
+    description: 'Kategorien f\u00FCr News-Artikel';
+    displayName: 'Kategorie';
+    pluralName: 'kategorien';
+    singularName: 'kategorie';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    beschreibung: Schema.Attribute.Text;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    farbe: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#3B82F6'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::kategorie.kategorie'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    news_artikel: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::news-artikel.news-artikel'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    reihenfolge: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiLeaderboardEntryLeaderboardEntry
   extends Struct.CollectionTypeSchema {
   collectionName: 'leaderboard_entries';
@@ -480,11 +555,11 @@ export interface ApiMannschaftMannschaft extends Struct.CollectionTypeSchema {
 }
 
 export interface ApiMitgliedMitglied extends Struct.CollectionTypeSchema {
-  collectionName: 'mitglieds';
+  collectionName: 'mitglieder';
   info: {
     description: 'Vereinsmitglieder';
     displayName: 'Mitglied';
-    pluralName: 'mitglieds';
+    pluralName: 'mitglieder';
     singularName: 'mitglied';
   };
   options: {
@@ -559,7 +634,7 @@ export interface ApiMitgliedMitglied extends Struct.CollectionTypeSchema {
 }
 
 export interface ApiNewsArtikelNewsArtikel extends Struct.CollectionTypeSchema {
-  collectionName: 'news_artikels';
+  collectionName: 'news_artikel';
   info: {
     displayName: 'news-artikel';
     pluralName: 'news-artikels';
@@ -575,7 +650,10 @@ export interface ApiNewsArtikelNewsArtikel extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     datum: Schema.Attribute.Date & Schema.Attribute.Required;
     inhalt: Schema.Attribute.Blocks & Schema.Attribute.Required;
-    kategorie: Schema.Attribute.String;
+    kategorie: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::kategorie.kategorie'
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -592,39 +670,85 @@ export interface ApiNewsArtikelNewsArtikel extends Struct.CollectionTypeSchema {
 }
 
 export interface ApiSpielSpiel extends Struct.CollectionTypeSchema {
-  collectionName: 'spiels';
+  collectionName: 'spiele';
   info: {
+    description: 'Fu\u00DFballspiele und Matches';
     displayName: 'Spiel';
-    pluralName: 'spiels';
+    pluralName: 'spiele';
     singularName: 'spiel';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    auswaertsmannschaft: Schema.Attribute.String;
+    auswaertsmannschaft: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::mannschaft.mannschaft'
+    >;
+    bemerkungen: Schema.Attribute.Text;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    datum: Schema.Attribute.Date & Schema.Attribute.Required;
-    heimmannschaft: Schema.Attribute.String;
+    datum: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    heimmannschaft: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::mannschaft.mannschaft'
+    >;
     liga: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::spiel.spiel'> &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    spielort: Schema.Attribute.String;
-    spielstatus: Schema.Attribute.String;
-    toreAuswaerts: Schema.Attribute.Integer;
-    toreHeim: Schema.Attribute.Integer;
+    saison: Schema.Attribute.String & Schema.Attribute.DefaultTo<'2024/25'>;
+    schiedsrichter: Schema.Attribute.String;
+    spielbericht: Schema.Attribute.RichText;
+    spielort: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Sportplatz Wertheim'>;
+    spieltag: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
+    status: Schema.Attribute.Enumeration<
+      ['geplant', 'live', 'beendet', 'abgesagt', 'verschoben']
+    > &
+      Schema.Attribute.DefaultTo<'geplant'>;
+    tore_auswaerts: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    tore_heim: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    wetter: Schema.Attribute.Enumeration<
+      ['sonnig', 'bewoelkt', 'regen', 'schnee', 'wind']
+    >;
+    zuschauer: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
   };
 }
 
 export interface ApiSpielerSpieler extends Struct.CollectionTypeSchema {
-  collectionName: 'spielers';
+  collectionName: 'spieler';
   info: {
     description: 'Vereinsspieler mit Statistiken und Team-Zugeh\u00F6rigkeit';
     displayName: 'Spieler';
@@ -1324,11 +1448,13 @@ declare module '@strapi/strapi' {
     export interface ContentTypeSchemas {
       'admin::api-token': AdminApiToken;
       'admin::api-token-permission': AdminApiTokenPermission;
+      'admin::audit-log': AdminAuditLog;
       'admin::permission': AdminPermission;
       'admin::role': AdminRole;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::kategorie.kategorie': ApiKategorieKategorie;
       'api::leaderboard-entry.leaderboard-entry': ApiLeaderboardEntryLeaderboardEntry;
       'api::mannschaft.mannschaft': ApiMannschaftMannschaft;
       'api::mitglied.mitglied': ApiMitgliedMitglied;
