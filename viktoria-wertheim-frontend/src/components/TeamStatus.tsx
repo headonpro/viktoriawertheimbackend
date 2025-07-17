@@ -1,8 +1,9 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import { IconTrendingUp, IconTrendingDown, IconMinus } from '@tabler/icons-react'
+import { IconTrendingUp, IconTrendingDown, IconArrowRight } from '@tabler/icons-react'
+import { leagueService } from '@/services/leagueService'
 
 const AnimatedSection = dynamic(
   () => import('@/components/AnimatedSection'),
@@ -15,32 +16,57 @@ const AnimatedDiv = dynamic(
 )
 
 export default function TeamStatus() {
-  // Mock team data - 1. Mannschaft (kann später dynamisch werden)
-  const teamData = {
-    formLetzten5: ['S', 'U', 'S', 'N', 'S'], // S=Sieg, U=Unentschieden, N=Niederlage
-    tabellenplatz: 3,
-    platzierungsveraenderung: 'S', // S=nach oben, U=gleich, N=nach unten
-    liga: 'Kreisliga' // 1. Mannschaft
-  }
-  
-  // Weitere Mannschaften (für später):
-  // 2. Mannschaft: { tabellenplatz: 5, liga: 'Kreisliga A', formLetzten5: ['S', 'S', 'U', 'S', 'N'], platzierungsveraenderung: 'U' }
-  // 3. Mannschaft: { tabellenplatz: 8, liga: 'Kreisliga B', formLetzten5: ['N', 'S', 'S', 'U', 'S'], platzierungsveraenderung: 'N' }
+  const [teamData, setTeamData] = useState({
+    formLetzten5: ['S', 'U', 'S', 'N', 'S'], // Fallback form data
+    tabellenplatz: 8, // Fallback position
+    platzierungsveraenderung: 'U', // U=gleich
+    liga: 'Kreisliga'
+  })
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchTeamData = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        // Get Viktoria Wertheim's data from the API
+        const viktoriaData = await leagueService.fetchViktoriaStanding()
+        
+        if (viktoriaData) {
+          setTeamData(prev => ({
+            ...prev,
+            tabellenplatz: viktoriaData.position,
+            // Keep other data as fallback for now since API doesn't provide form/trend yet
+          }))
+        }
+      } catch (err) {
+        console.error('Failed to fetch team data:', err)
+        setError('Daten konnten nicht geladen werden')
+        // Keep fallback data on error
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchTeamData()
+  }, [])
 
   const getFormColor = (result: string) => {
     switch (result) {
-      case 'S': return 'bg-green-500 text-white'
-      case 'U': return 'bg-yellow-500 text-white'
-      case 'N': return 'bg-red-500 text-white'
-      default: return 'bg-gray-400 text-white'
+      case 'S': return 'bg-green-500 text-gray-700 shadow-green-500/30 shadow-lg'
+      case 'U': return 'bg-gray-400 text-gray-700 shadow-gray-400/30 shadow-lg'
+      case 'N': return 'bg-red-500 text-gray-700 shadow-red-500/30 shadow-lg'
+      default: return 'bg-gray-400 text-gray-700 shadow-gray-400/30 shadow-lg'
     }
   }
 
   const getFormText = (result: string) => {
     switch (result) {
-      case 'S': return 'S'
-      case 'U': return 'U'
-      case 'N': return 'N'
+      case 'S': return ''
+      case 'U': return ''
+      case 'N': return ''
       default: return '?'
     }
   }
@@ -48,9 +74,9 @@ export default function TeamStatus() {
   const getTrendIcon = (trend: string) => {
     switch (trend) {
       case 'S': return <IconTrendingUp size={16} className="text-green-500" />
-      case 'U': return <IconMinus size={16} className="text-gray-400" />
+      case 'U': return <IconArrowRight size={16} className="text-gray-400" />
       case 'N': return <IconTrendingDown size={16} className="text-red-500" />
-      default: return <IconMinus size={16} className="text-gray-400" />
+      default: return <IconArrowRight size={16} className="text-gray-400" />
     }
   }
 

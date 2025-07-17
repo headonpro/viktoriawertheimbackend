@@ -80,8 +80,6 @@ export default function NewsTicker({ onNewsClick }: NewsTickerProps) {
   const [newsArticles, setNewsArticles] = useState<NewsArtikel[]>([])
   const [loading, setLoading] = useState(true)
   const [isPaused, setIsPaused] = useState(false)
-  const [animationStarted, setAnimationStarted] = useState(false)
-
   // Fetch news from API
   useEffect(() => {
     const fetchNews = async () => {
@@ -110,17 +108,6 @@ export default function NewsTicker({ onNewsClick }: NewsTickerProps) {
 
     fetchNews()
   }, [])
-
-  // Start animation after 5 seconds delay
-  useEffect(() => {
-    if (!loading && newsArticles.length > 0) {
-      const timer = setTimeout(() => {
-        setAnimationStarted(true)
-      }, 5000)
-      
-      return () => clearTimeout(timer)
-    }
-  }, [loading, newsArticles])
 
 
 
@@ -158,7 +145,7 @@ export default function NewsTicker({ onNewsClick }: NewsTickerProps) {
     )
   }
 
-  // Kombiniere alle News-Titel zu einem langen String mit besseren Separatoren
+  // Kombiniere alle News-Titel zu einem langen String mit gelben Separatoren
   const newsText = newsArticles
     .filter(article => {
       // Handle both API format and mock format
@@ -170,8 +157,19 @@ export default function NewsTicker({ onNewsClick }: NewsTickerProps) {
       return article.titel || article.attributes?.titel
     })
     .join('\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0|\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0')
-  
-  const fullScrollText = Array(3).fill(newsText).join('\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0|\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0') + '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0|\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'
+
+  // Erstelle News-Elemente mit gelben Separatoren für die Anzeige
+  const createNewsContent = (text: string) => {
+    const parts = text.split('|')
+    return parts.map((part, index) => (
+      <React.Fragment key={index}>
+        {part}
+        {index < parts.length - 1 && (
+          <span className="text-viktoria-yellow">|</span>
+        )}
+      </React.Fragment>
+    ))
+  }
 
   return (
     <div 
@@ -192,14 +190,35 @@ export default function NewsTicker({ onNewsClick }: NewsTickerProps) {
           {/* Scrolling News Container */}
           <div className="flex-1 overflow-hidden relative">
             <div 
-              className={`whitespace-nowrap ${isPaused || !animationStarted ? 'animate-none' : 'animate-scroll-left'} cursor-pointer`}
+              className="cursor-pointer"
               onClick={() => onNewsClick?.(newsArticles[0])}
+              style={{
+                display: 'flex',
+                animation: isPaused ? 'none' : 'scroll-seamless 8s linear infinite',
+              }}
             >
-              <span className="text-gray-700 hover:text-viktoria-blue transition-colors duration-300 text-sm font-medium">
-                {fullScrollText}
+              {/* Original text */}
+              <span className="text-gray-700 hover:text-viktoria-blue transition-colors duration-300 text-sm font-medium whitespace-nowrap flex-shrink-0 pr-8">
+                {createNewsContent(newsText)}
+              </span>
+              {/* Duplicate for seamless loop */}
+              <span className="text-gray-700 hover:text-viktoria-blue transition-colors duration-300 text-sm font-medium whitespace-nowrap flex-shrink-0 pr-8">
+                {createNewsContent(newsText)}
               </span>
             </div>
           </div>
+          
+          {/* CSS Animation */}
+          <style jsx>{`
+            @keyframes scroll-seamless {
+              0% {
+                transform: translateX(0);
+              }
+              100% {
+                transform: translateX(-50%);
+              }
+            }
+          `}</style>
         </div>
       </div>
     </div>

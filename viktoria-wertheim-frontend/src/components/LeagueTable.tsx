@@ -1,28 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import dynamic from 'next/dynamic'
-import Image from "next/image";
+import Image from "next/image"
+import { leagueService, Team } from '@/services/leagueService'
 
 const AnimatedSection = dynamic(
   () => import('@/components/AnimatedSection'),
   { ssr: false }
 )
 
-interface Team {
-  position: number
-  name: string
-  logo?: string
-  games: number
-  wins: number
-  draws: number
-  losses: number
-  goalsFor: number
-  goalsAgainst: number
-  goalDifference: number
-  points: number
-}
+// Team interface is now imported from leagueService
 
 // Funktion zur Kürzung der Teamnamen (8 Zeichen um Zeilenumbruch zu verhindern)
 const shortenTeamName = (name: string): string => {
@@ -105,8 +94,13 @@ const getTeamLogo = (teamName: string): string | undefined => {
 
 const LeagueTable = () => {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [teams, setTeams] = useState<Team[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
-  const teams: Team[] = [
+  // Mock data as fallback
+  const mockTeams: Team[] = [
     {
       position: 1,
       name: 'FC Umpfertal',
@@ -213,8 +207,8 @@ const LeagueTable = () => {
     },
     {
       position: 9,
-      name: 'SpG Impfingen/Tauberb.heim 2',
-      logo: getTeamLogo('SpG Impfingen/Tauberb.heim 2'),
+      name: 'SpG Impfingen/Tauberbischofsheim 2',
+      logo: getTeamLogo('SpG Impfingen/Tauberbischofsheim 2'),
       games: 0,
       wins: 0,
       draws: 0,
@@ -317,6 +311,47 @@ const LeagueTable = () => {
     }
   ]
 
+  // Fetch league standings from API
+  const fetchLeagueData = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const apiTeams = await leagueService.fetchLeagueStandings()
+      
+      if (apiTeams && apiTeams.length > 0) {
+        // Use API data and add fallback logos for teams without logos
+        const teamsWithLogos = apiTeams.map(team => ({
+          ...team,
+          logo: team.logo || getTeamLogo(team.name)
+        }))
+        setTeams(teamsWithLogos)
+        setLastUpdated(new Date())
+      } else {
+        // Fallback to mock data if API returns empty
+        console.warn('API returned empty data, using mock data')
+        setTeams(mockTeams)
+      }
+      
+    } catch (err) {
+      console.error('Failed to fetch league standings:', err)
+      setError('Tabelle konnte nicht geladen werden')
+      // Fallback to mock data on error
+      setTeams(mockTeams)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchLeagueData()
+  }, [])
+
+  // Add refresh function for manual updates
+  const refreshData = async () => {
+    await fetchLeagueData()
+  }
+
   // Filter teams for compact view: show team above, Viktoria Wertheim, and team below
   const displayedTeams = isExpanded ? teams : teams.filter(team =>
     team.position >= 7 && team.position <= 9
@@ -353,9 +388,36 @@ const LeagueTable = () => {
             </div>
           </div>
 
+          {/* Loading State */}
+          {loading && (
+            <div className="px-4 md:px-8 py-8 text-center">
+              <div className="flex items-center justify-center space-x-2">
+                <div className="w-4 h-4 bg-viktoria-blue rounded-full animate-pulse"></div>
+                <div className="w-4 h-4 bg-viktoria-blue rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-4 h-4 bg-viktoria-blue rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+              </div>
+              <p className="text-sm text-gray-600 mt-2">Tabelle wird geladen...</p>
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && !loading && (
+            <div className="px-4 md:px-8 py-6 text-center">
+              <div className="text-red-500 mb-2">⚠️</div>
+              <p className="text-sm text-red-600 mb-3">{error}</p>
+              <button
+                onClick={refreshData}
+                className="px-4 py-2 bg-viktoria-blue text-white rounded-lg text-sm hover:bg-viktoria-blue-light transition-colors"
+              >
+                Erneut versuchen
+              </button>
+            </div>
+          )}
+
           {/* Teams */}
-          <div className="divide-y divide-white/10">
-            {displayedTeams.map((team) => (
+          {!loading && !error && (
+            <div className="divide-y divide-white/10">
+              {displayedTeams.map((team) => (
               <div
                 key={team.position}
                 className={`px-4 md:px-8 py-2.5 md:py-3 transition-all duration-300 ${team.name === 'SV Viktoria Wertheim'
@@ -443,7 +505,8 @@ const LeagueTable = () => {
                 </div>
               </div>
             ))}
-          </div>
+            </div>
+          )}
 
           {/* Expand/Collapse Indicator */}
           <div className="bg-white/30 px-4 md:px-8 py-4 md:py-5 border-t border-white/20 text-center hover:bg-white/40 transition-colors">
