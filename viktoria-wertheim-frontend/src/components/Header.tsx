@@ -265,14 +265,14 @@ export default function Header() {
               <div className="h-full bg-white/95 backdrop-blur-xl border-l border-white/20 shadow-2xl">
                 
                 {/* Header Section */}
-                <div className="relative p-6 border-b border-gray-100/50">
+                <div className="relative p-4 border-b border-gray-100/50">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-viktoria-blue to-viktoria-blue-light rounded-xl flex items-center justify-center">
-                        <IconTrophy size={20} className="text-viktoria-yellow" />
+                      <div className="w-8 h-8 bg-gradient-to-br from-viktoria-blue to-viktoria-blue-light rounded-lg flex items-center justify-center">
+                        <IconTrophy size={16} className="text-viktoria-yellow" />
                       </div>
                       <div>
-                        <h2 className="text-lg font-semibold text-gray-800">Navigation</h2>
+                        <h2 className="text-base font-semibold text-gray-800">Navigation</h2>
                         <p className="text-xs text-gray-500">SV Viktoria Wertheim</p>
                       </div>
                     </div>
@@ -281,17 +281,17 @@ export default function Header() {
                       whileHover={{ scale: 1.1, rotate: 90 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={toggleMenu}
-                      className="w-10 h-10 bg-gray-100/80 hover:bg-gray-200/80 rounded-xl flex items-center justify-center transition-all duration-200"
+                      className="w-8 h-8 bg-gray-100/80 hover:bg-gray-200/80 rounded-lg flex items-center justify-center transition-all duration-200"
                       aria-label="Menü schließen"
                     >
-                      <IconX size={18} className="text-gray-600" />
+                      <IconX size={16} className="text-gray-600" />
                     </motion.button>
                   </div>
                 </div>
 
                 {/* Hauptnavigation - große Buttons */}
-                <div className="p-6 pt-8">
-                  <nav className="space-y-1">
+                <div className="p-4 pt-4">
+                  <nav className="space-y-0.5">
                     {mainNavigationItems.map((item, index) => {
                       const isActive = pathname === item.href
                       const Icon = item.icon
@@ -310,20 +310,20 @@ export default function Header() {
                           <Link
                             href={item.href}
                             onClick={toggleMenu}
-                            className={`group relative flex items-center p-3 rounded-2xl transition-all duration-300 ${
+                            className={`group relative flex items-center p-2.5 rounded-xl transition-all duration-300 ${
                               isActive
                                 ? 'bg-gradient-to-r from-viktoria-blue to-viktoria-blue-light text-white shadow-lg shadow-viktoria-blue/25'
                                 : 'hover:bg-gray-100/80 text-gray-700 hover:text-viktoria-blue'
                             }`}
                           >
                             {/* Icon Container */}
-                            <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center mr-3 transition-all duration-300 ${
+                            <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition-all duration-300 ${
                               isActive
                                 ? 'bg-white/20 backdrop-blur-sm'
                                 : 'bg-gray-100/80 group-hover:bg-viktoria-blue/10'
                             }`}>
                               <Icon 
-                                size={18} 
+                                size={16} 
                                 className={`transition-all duration-300 ${
                                   isActive
                                     ? 'text-viktoria-yellow'
@@ -339,7 +339,7 @@ export default function Header() {
                               }`}>
                                 {item.label}
                               </h3>
-                              <p className={`text-xs mt-0.5 transition-colors duration-300 ${
+                              <p className={`text-xs transition-colors duration-300 ${
                                 isActive ? 'text-white/80' : 'text-gray-500 group-hover:text-viktoria-blue/70'
                               }`}>
                                 {item.description}
@@ -350,7 +350,7 @@ export default function Header() {
                             {isActive && (
                               <motion.div
                                 layoutId="activeIndicator"
-                                className="absolute right-4 w-2 h-2 bg-viktoria-yellow rounded-full"
+                                className="absolute right-3 w-2 h-2 bg-viktoria-yellow rounded-full"
                                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                               />
                             )}
@@ -369,8 +369,8 @@ export default function Header() {
                 </div>
 
                 {/* Auth Section */}
-                <div className="px-6 pb-4">
-                  <div className="border-t border-gray-200/50 pt-4">
+                <div className="px-4 pb-3">
+                  <div className="border-t border-gray-200/50 pt-3">
                     {isAuthenticated ? (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
@@ -434,12 +434,12 @@ export default function Header() {
                 </div>
 
                 {/* Sekundärnavigation - kleine Textlinks unten */}
-                <div className="px-6 pb-20">
-                  <div className="border-t border-gray-200/50 pt-4">
-                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                <div className="px-4 pb-16">
+                  <div className="border-t border-gray-200/50 pt-3">
+                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
                       Vereinsinformationen
                     </h3>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-2 gap-1">
                       {secondaryNavigationItems.map((item, index) => {
                         const isActive = pathname === item.href
                         
@@ -457,7 +457,7 @@ export default function Header() {
                             <Link
                               href={item.href}
                               onClick={toggleMenu}
-                              className={`block px-2 py-2 text-xs rounded-lg transition-all duration-200 ${
+                              className={`block px-2 py-1.5 text-xs rounded-lg transition-all duration-200 ${
                                 isActive
                                   ? 'text-viktoria-blue font-medium bg-viktoria-blue/10'
                                   : 'text-gray-600 hover:text-viktoria-blue hover:bg-gray-100/80'
@@ -473,18 +473,18 @@ export default function Header() {
                 </div>
 
                 {/* Footer Section */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-100/50">
+                <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-100/50">
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.8, duration: 0.5 }}
                     className="text-center"
                   >
-                    <div className="flex items-center justify-center space-x-2 mb-2">
-                      <div className="w-6 h-6 bg-gradient-to-br from-viktoria-blue to-viktoria-blue-light rounded-lg flex items-center justify-center">
-                        <IconTrophy size={12} className="text-viktoria-yellow" />
+                    <div className="flex items-center justify-center space-x-2 mb-1">
+                      <div className="w-5 h-5 bg-gradient-to-br from-viktoria-blue to-viktoria-blue-light rounded-lg flex items-center justify-center">
+                        <IconTrophy size={10} className="text-viktoria-yellow" />
                       </div>
-                      <span className="text-sm font-medium text-gray-700">Seit 1920</span>
+                      <span className="text-xs font-medium text-gray-700">Seit 1945</span>
                     </div>
                     <p className="text-xs text-gray-500">Tradition • Leidenschaft • Gemeinschaft</p>
                   </motion.div>
