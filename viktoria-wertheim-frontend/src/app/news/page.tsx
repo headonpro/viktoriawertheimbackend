@@ -38,7 +38,6 @@ const mockNewsArticles: NewsArtikel[] = [
         datum: '2024-12-05',
         kategorie: {
           data: {
-            id: 2,
             attributes: {
               name: 'Vereinsnachrichten'
             }
@@ -57,7 +56,6 @@ const mockNewsArticles: NewsArtikel[] = [
         datum: '2024-12-01',
         kategorie: {
           data: {
-            id: 3,
             attributes: {
               name: 'Allgemein'
             }
@@ -80,7 +78,6 @@ const mockDetailedArticles: { [key: string]: NewsArtikel } = {
       datum: '2024-12-08',
       kategorie: {
         data: {
-          id: 1,
           attributes: {
             name: 'Spielberichte'
           }
@@ -99,7 +96,6 @@ const mockDetailedArticles: { [key: string]: NewsArtikel } = {
       datum: '2024-12-05',
       kategorie: {
         data: {
-          id: 2,
           attributes: {
             name: 'Vereinsnachrichten'
           }
@@ -118,7 +114,6 @@ const mockDetailedArticles: { [key: string]: NewsArtikel } = {
       datum: '2024-12-01',
       kategorie: {
         data: {
-          id: 3,
           attributes: {
             name: 'Allgemein'
           }
@@ -139,7 +134,10 @@ const mockCategories: Kategorie[] = [
       publishedAt: '2024-12-01T10:00:00.000Z',
       createdAt: '2024-12-01T10:00:00.000Z',
       updatedAt: '2024-12-01T10:00:00.000Z'
-    }
+    },
+    publishedAt: '2024-12-01T10:00:00.000Z',
+    createdAt: '2024-12-01T10:00:00.000Z',
+    updatedAt: '2024-12-01T10:00:00.000Z'
   },
   {
     id: 2,
@@ -148,7 +146,10 @@ const mockCategories: Kategorie[] = [
       publishedAt: '2024-12-01T10:00:00.000Z',
       createdAt: '2024-12-01T10:00:00.000Z',
       updatedAt: '2024-12-01T10:00:00.000Z'
-    }
+    },
+    publishedAt: '2024-12-01T10:00:00.000Z',
+    createdAt: '2024-12-01T10:00:00.000Z',
+    updatedAt: '2024-12-01T10:00:00.000Z'
   },
   {
     id: 3,
@@ -157,7 +158,10 @@ const mockCategories: Kategorie[] = [
       publishedAt: '2024-12-01T10:00:00.000Z',
       createdAt: '2024-12-01T10:00:00.000Z',
       updatedAt: '2024-12-01T10:00:00.000Z'
-    }
+    },
+    publishedAt: '2024-12-01T10:00:00.000Z',
+    createdAt: '2024-12-01T10:00:00.000Z',
+    updatedAt: '2024-12-01T10:00:00.000Z'
   }
 ]
 
@@ -169,7 +173,7 @@ function getKategorieName(article: NewsArtikel): string {
   
   // Handle Strapi 5 format (direct properties)
   if (article.kategorie && typeof article.kategorie === 'object' && 'name' in article.kategorie) {
-    return article.kategorie.name;
+    return article.kategorie.name || 'Unbekannt';
   }
   
   // Handle legacy format (attributes wrapper)
@@ -346,7 +350,7 @@ export default function NewsPage() {
   // Kategorien-Filter (Dropdown und Chips) - robuste Verarbeitung
   const categoryNames = ['Alle', ...categories
     .filter(cat => cat && cat.attributes && cat.attributes.name)
-    .map(cat => cat.attributes.name)];
+    .map(cat => cat.attributes?.name || 'Unbekannt')];
 
   // Loading state
   if (loading) {
@@ -453,8 +457,8 @@ export default function NewsPage() {
                       <div className="relative h-64 lg:h-72 bg-gradient-to-br from-viktoria-blue-light to-viktoria-blue overflow-hidden">
                         {getArticleImage(filteredArticles[0]) ? (
                           <Image
-                            src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://192.168.178.59:1337'}${getArticleImage(filteredArticles[0])?.url}`}
-                            alt={getArticleImage(filteredArticles[0])?.alternativeText || getArticleTitle(filteredArticles[0])}
+                            src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://192.168.178.59:1337'}${(getArticleImage(filteredArticles[0]) as any)?.url || (getArticleImage(filteredArticles[0]) as any)?.attributes?.url}`}
+                            alt={(getArticleImage(filteredArticles[0]) as any)?.alternativeText || (getArticleImage(filteredArticles[0]) as any)?.attributes?.alternativeText || getArticleTitle(filteredArticles[0])}
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                           />
@@ -536,8 +540,8 @@ export default function NewsPage() {
                         <div className="relative h-48 bg-gradient-to-br from-viktoria-blue-light to-viktoria-blue overflow-hidden flex-shrink-0">
                           {getArticleImage(article) ? (
                             <Image
-                              src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://192.168.178.59:1337'}${getArticleImage(article)?.url}`}
-                              alt={getArticleImage(article)?.alternativeText || getArticleTitle(article)}
+                              src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://192.168.178.59:1337'}${(getArticleImage(article) as any)?.url || (getArticleImage(article) as any)?.attributes?.url}`}
+                              alt={(getArticleImage(article) as any)?.alternativeText || (getArticleImage(article) as any)?.attributes?.alternativeText || getArticleTitle(article)}
                               fill
                               className="object-cover group-hover:scale-105 transition-transform duration-300"
                             />

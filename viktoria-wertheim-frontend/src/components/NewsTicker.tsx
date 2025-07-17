@@ -167,7 +167,7 @@ export default function NewsTicker({ onNewsClick }: NewsTickerProps) {
     })
     .map(article => {
       // Handle both API format and mock format
-      return article.titel || article.attributes.titel
+      return article.titel || article.attributes?.titel
     })
     .join('\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0|\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0')
   

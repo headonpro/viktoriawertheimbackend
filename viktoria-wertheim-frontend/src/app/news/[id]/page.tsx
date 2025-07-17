@@ -21,7 +21,6 @@ const mockArticles: { [key: string]: NewsArtikel } = {
         datum: '2024-12-08',
         kategorie: {
           data: {
-            id: 1,
             attributes: {
               name: 'Spielberichte'
             }
@@ -40,7 +39,6 @@ const mockArticles: { [key: string]: NewsArtikel } = {
         datum: '2024-12-05',
         kategorie: {
           data: {
-            id: 2,
             attributes: {
               name: 'Vereinsnachrichten'
             }
@@ -59,7 +57,6 @@ const mockArticles: { [key: string]: NewsArtikel } = {
         datum: '2024-12-01',
         kategorie: {
           data: {
-            id: 3,
             attributes: {
               name: 'Allgemein'
             }
@@ -208,7 +205,7 @@ export default function NewsArticlePage() {
               <div className="flex items-center">
                 <Clock className="w-4 h-4 mr-2" />
                 <span>
-                  {new Date(article.attributes.datum).toLocaleDateString('de-DE', {
+                  {new Date(article.attributes?.datum || '').toLocaleDateString('de-DE', {
                     day: '2-digit',
                     month: '2-digit',
                     year: 'numeric',
@@ -216,7 +213,7 @@ export default function NewsArticlePage() {
                 </span>
               </div>
               
-              {article.attributes.kategorie?.data && (
+              {article.attributes?.kategorie?.data && (
                 <div className="flex items-center">
                   <Tag className="w-4 h-4 mr-2" />
                   <span className="bg-gray-700/10 text-gray-700 px-3 py-1 rounded-full">
@@ -233,13 +230,13 @@ export default function NewsArticlePage() {
 
             {/* Title */}
             <h1 className="text-3xl md:text-4xl font-permanent-marker text-gray-700 leading-tight">
-              {article.attributes.titel}
+              {article.attributes?.titel}
             </h1>
           </div>
         </AnimatedSection>
 
         {/* Article Image */}
-        {article.attributes.titelbild?.data && (
+        {article.attributes?.titelbild?.data && (
           <AnimatedSection delay={0.3}>
             <div className="relative h-64 md:h-96 bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl overflow-hidden">
               <Image
@@ -255,7 +252,7 @@ export default function NewsArticlePage() {
         {/* Article Content */}
         <AnimatedSection delay={0.4}>
           <div className="bg-white/50 backdrop-blur-sm border border-white/20 rounded-2xl p-8">
-            {renderContent(article.attributes.inhalt)}
+            {renderContent(article.attributes?.inhalt)}
           </div>
         </AnimatedSection>
 

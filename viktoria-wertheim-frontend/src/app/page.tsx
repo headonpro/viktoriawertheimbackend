@@ -11,6 +11,7 @@ import TeamStatus from '@/components/TeamStatus'
 import { IconClock, IconTrophy } from '@tabler/icons-react'
 import { NewsArtikel, Spieler } from '@/types/strapi'
 import { strapi } from '@/lib/strapi'
+import Image from 'next/image'
 
 // Dynamic Import für animierte Komponenten - löst SSR-Probleme
 const AnimatedSection = dynamic(
@@ -449,7 +450,7 @@ export default function HomePage() {
                                       // Alternative formats
                                       (titelbild as any).url ||
                                       (titelbild as any).attributes?.url ||
-                                      titelbild.data?.url
+                                      (titelbild as any).data?.url
                           }
                           
                           console.log('Final imageUrl:', imageUrl)
@@ -472,10 +473,11 @@ export default function HomePage() {
                                 {/* Image - Fixed aspect ratio 8:5 for consistency */}
                                 <div className="relative w-32 md:w-40 flex-shrink-0 rounded-lg overflow-hidden bg-gradient-to-br from-viktoria-blue-light to-viktoria-blue" style={{ aspectRatio: '8/5' }}>
                                   {imageUrl ? (
-                                    <img
+                                    <Image
                                       src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://192.168.178.59:1337'}${imageUrl}`}
-                                      alt={titel}
-                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                      alt={titel || 'News Artikel'}
+                                      fill
+                                      className="object-cover group-hover:scale-105 transition-transform duration-300"
                                       style={{ objectPosition: 'top center' }}
                                     />
                                   ) : (
@@ -593,7 +595,7 @@ export default function HomePage() {
                                   // Alternative formats
                                   (titelbild as any).url ||
                                   (titelbild as any).attributes?.url ||
-                                  titelbild.data?.url
+                                  (titelbild as any).data?.url
                       }
                       
                       console.log('Mobile Final imageUrl:', imageUrl)
@@ -616,10 +618,11 @@ export default function HomePage() {
                             {/* Image - Fixed aspect ratio 8:5 for consistency */}
                             <div className="relative w-32 md:w-40 flex-shrink-0 rounded-lg overflow-hidden bg-gradient-to-br from-viktoria-blue-light to-viktoria-blue" style={{ aspectRatio: '8/5' }}>
                               {imageUrl ? (
-                                <img
+                                <Image
                                   src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://192.168.178.59:1337'}${imageUrl}`}
-                                  alt={titel}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                  alt={titel || 'News Artikel'}
+                                  fill
+                                  className="object-cover group-hover:scale-105 transition-transform duration-300"
                                   style={{ objectPosition: 'top center' }}
                                 />
                               ) : (
