@@ -14,7 +14,9 @@
     "upgrade": "npx @strapi/upgrade latest",
     "upgrade:dry": "npx @strapi/upgrade latest --dry",
     "seed:leaderboard": "node scripts/seed-leaderboard.js",
-    "seed:leaderboard:clear": "node scripts/seed-leaderboard.js --clear"
+    "seed:leaderboard:clear": "node scripts/seed-leaderboard.js --clear",
+    "build:no-admin": "strapi build --no-optimization",
+    "build:production": "NODE_ENV=production strapi build --minify"
   },
   "dependencies": {
     "@strapi/plugin-cloud": "5.18.0",
